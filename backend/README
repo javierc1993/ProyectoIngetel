@@ -1,0 +1,11 @@
+INIT PROYECT
+ - Install node
+ - Install npm
+ - Install Mongo
+  - 
+
+
+Run proyect 
+ - Import DB
+ - npm i
+ - npm start
