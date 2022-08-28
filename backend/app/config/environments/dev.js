@@ -7,6 +7,9 @@ const config = {
     username: 'root',
     password: 'root',
     database: 'db_ingetel'
+  },
+  security: {
+    secretWord: "ingetelsecret_20220723"
   }
 }
 

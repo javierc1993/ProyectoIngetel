@@ -2,9 +2,10 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const AppRoute = require('./routes/app.route');
+const AppRoute = require('./app/routes/app.route');
+const AuthRoute = require('./app/routes/auth.route');
 
-const sequelize = require('./db/conection')
+const { connection } = require('./app/db/db')
 
 
 const app = express();
@@ -23,13 +24,14 @@ app.use(cors({ origin: ['http://localhost:4200'] }))
 
 
 //Routes
+app.use('/api/v1/auth/', AuthRoute);
 app.use('/api/v1/', AppRoute);
 
 
 app.listen(app.get('port'), async () => {
   console.log('Server on port', app.get('port'));
   try {
-    await sequelize.authenticate();
+    await connection.sync({ force: true });
     console.log('Connection db OK');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
