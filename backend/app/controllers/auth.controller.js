@@ -33,14 +33,25 @@ class AuthController {
 
         await UserService.createUser({ userName, password });
         return res.status(200).json({
-          messageResult: 'app ok',
-          contentResult: 'content response'
+          messageResult: 'OK',
+          contentResult: 'User created'
         })
       }
       return res.status(404).json({ auth: false, token: null });
     } catch (error) {
       console.log(error);
       return res.status(404).json({ auth: false, token: null });
+    }
+  }
+
+  async validateToken (req, res) {
+
+    try {
+      console.log(req.headers)
+      const validate = await AuthService.validateToken(req.headers.authorization, req.body.userName)
+      return res.status(200).json({ auth: validate })
+    } catch (err) {
+      return res.status(400).json({ auth: false })
     }
   }
 };
