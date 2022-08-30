@@ -1,11 +1,11 @@
 'use strict';
-const UserModel = require('../models/user.model');
+const {User} = require('../db/db');
 
 class UserRepository {
   async createUser (user) {
     try {
 
-      const newUser = new UserModel(user);
+      const newUser = new User(user);
       const resp = await newUser.save();
       return true;
     } catch (err) {
@@ -16,7 +16,7 @@ class UserRepository {
 
   async getUserByUserName (username) {
     try {
-      const user = await UserModel.findAll({
+      const user = await User.findAll({
         limit: 1,
         where: {
           userName: username
@@ -25,12 +25,13 @@ class UserRepository {
       if (user.length) return user[0].dataValues;
       return null;
     } catch (err) {
+      console.log(err)
       throw new Error(err)
     }
   }
 
   async getUsers () {
-    return UserModel.findAll();
+    return User.findAll();
 
   }
 
