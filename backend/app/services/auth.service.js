@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const {security} = require('../config');
+const { security } = require('../config');
 class AuthService {
   async validatePass (password, passwordDB) {
     return bcrypt.compare(password, passwordDB);
@@ -10,6 +10,14 @@ class AuthService {
     return jwt.sign({ username: username }, security.secretWord, {
       expiresIn: 60 * 60 * 1
     })
+  }
+
+  async validateToken (token, username) {
+    console.log(token);
+    const decoded = jwt.verify(token, security.secretWord);
+    console.log(decoded)
+    if (decoded.username == username) return true;
+    throw new Error('Token invalid');
   }
 }
 
