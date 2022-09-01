@@ -74,7 +74,8 @@ export class AuthMockApi
                         {
                             user       : cloneDeep(this._user),
                             accessToken: this._generateJWTToken(),
-                            tokenType  : 'bearer'
+                            tokenType  : 'bearer',
+                            rol: 'admin'
                         }
                     ];
                 }
