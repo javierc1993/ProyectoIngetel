@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: Swagger Ingetel - OpenAPI 3.0
+  description: |-
+    This api contain modules 
+    - auth
+    - admin
+    - production
+    - productive balance
+    
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://ingetel.com/api/v1
+tags:
+  - name: Auth
+    description: Services to login and register
+  - name: Admin
+    description: Configurations of sistem, users and process
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login user in platform
+      description: Login with email and password
+      operationId: loginUser
+      requestBody:
+        description: email and password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bodyLogin'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/respLogin'          
+        '405':
+          description: Invalid input
+
+            
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Add a new user to the store
+      description: Add a new user to the platform
+      operationId: registerUser
+      requestBody:
+        description: Create a new user in the platform
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bodyRegister'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/respRegister'          
+        '405':
+          description: Invalid input
+
+ 
+components:
+  schemas:
+    bodyLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          example: pepito@gmail.com
+        password:
+          type: string
+          example: fasdtavcasdfvasdf
+    bodyRegister:
+      type: object
+      properties:
+        email:
+          type: string
+          example: pepito@gmail.com
+        name:
+          type: string
+          example: pepito perez
+        password:
+          type: string
+          example: asfasfdasdfasdf
+        roll:
+          type: string
+          example: 2
+          
+          
+          
+          
+          
+          
+          
+    respLogin:
+      type: object
+      properties:
+        idToken:
+          type: string
+          example: lasdf98asf0as8d7f8.asfdasf98asfasf.asfsafd987
+        accessToken:
+          type: string
+          example: asdfalsfdjas7986as8df.fasdf98sa7fdasfd97saf.asfdasdf9879saf7987asfasf
+    respRegister:
+      type: object
+      properties:
+        idToken:
+          type: string
+          example: lasdf98asf0as8d7f8.asfdasf98asfasf.asfsafd987
+        accessToken:
+          type: string
+          example: asdfalsfdjas7986as8df.fasdf98sa7fdasfd97saf.asfdasdf9879saf7987asfasf
+    
+    
