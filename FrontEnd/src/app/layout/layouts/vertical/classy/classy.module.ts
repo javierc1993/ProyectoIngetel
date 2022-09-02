@@ -30,7 +30,7 @@ import { ClassyLayoutComponent } from 'app/layout/layouts/vertical/classy/classy
         FuseFullscreenModule,
         FuseLoadingBarModule,
         FuseNavigationModule,
-        NotificationsModule,
+        //NotificationsModule,
         // LanguagesModule,
         // MessagesModule,
         // QuickChatModule,
