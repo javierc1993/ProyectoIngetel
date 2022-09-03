@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-
+import {GLOBAL} from 'GLOBAL';
 @Injectable()
 export class AuthService
 {
@@ -73,7 +73,7 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('http://127.0.0.1:3000/api/v1/auth/login', credentials).pipe(
+        return this._httpClient.post(GLOBAL.urlBackend+'/auth/login', credentials).pipe(
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
