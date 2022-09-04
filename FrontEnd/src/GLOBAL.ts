@@ -1,4 +1,4 @@
-export var GLOBAL = {
+export var variablesGlobales = {
 
     urlBackend: 'http://127.0.0.1:3000/api/v1'
 }
