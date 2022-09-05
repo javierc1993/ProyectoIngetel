@@ -4,17 +4,23 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    userName: DataTypes.STRING,
-    password: DataTypes.STRING,
-    state: DataTypes.STRING,
-    idRole: DataTypes.INTEGER,
-    idPerson: DataTypes.INTEGER
+    document: DataTypes.STRING,
+    name: DataTypes.STRING,
+    lastname: DataTypes.STRING,
+    address: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    email: DataTypes.STRING,
+
+
   }, {
     tableName: 'users'
   });
 
   User.associate = function (models) {
     //associations 
+
+    User.belongsTo(models.Account, {as: 'account', foreignKey:'userId'});
+
   };
 
   return User;

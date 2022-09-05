@@ -1,5 +1,5 @@
 'use strict';
-const {User} = require('../db/db');
+const { User } = require('../models');
 
 class UserRepository {
   async createUser (user) {
