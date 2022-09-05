@@ -1,12 +1,19 @@
 'use strict';
+const XLSX = require('xlsx');
+
+const FileService = require('../services/file.service')
 
 
 class ProductionController {
   async upload (req, res) {
-    console.log(req);
+    const registerUploadFile = await FileService.registerUploadFile(req.file)
+    const file = XLSX.readFile(process.env.NODE_PATH + '/' + req.file.path);
+    const data = XLSX.utils.sheet_to_json(file.Sheets[file.SheetNames[0]]);
+
+
     return res.status(200).json({
       resultMsg: 'OK',
-      result: 'req'
+      result: data
     })
   }
 
