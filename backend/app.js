@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 const AppRoute = require('./app/routes/app.route');
 const AuthRoute = require('./app/routes/auth.route');
 const ProductionRoute = require('./app/routes/production.route');
@@ -10,6 +11,9 @@ const { sequelize } = require('./app/models');
 
 
 const app = express();
+
+//define global data
+process.env.NODE_PATH= path.resolve(__dirname);
 
 
 //Settings
