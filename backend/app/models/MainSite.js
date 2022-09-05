@@ -7,14 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     smp: DataTypes.STRING
   }, {
-    tableName: 'main_sites'
+    tableName: 'mainSites'
   });
 
   MainSite.associate = function (models) {
     //associations 
-
-
-
+    MainSite.hasMany(models.Site, {as:'site', foreignKey:'mainSiteId'})
   };
 
   return MainSite;

@@ -18,8 +18,10 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     //associations 
+    User.hasOne(models.Invoice, { as: 'invoice', foreignKey: 'idClient' })
 
-    User.belongsTo(models.Account, {as: 'account', foreignKey:'userId'});
+    User.belongsTo(models.Account, {as: 'account', foreignKey:'accountId'});
+    
 
   };
 

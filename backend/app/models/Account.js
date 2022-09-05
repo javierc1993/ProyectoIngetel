@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
     //associations 
     Account.belongsToMany(models.Role, {through:'account_role'})
 
-    Account.hasOne(models.User, {as:'user', foreignKey:'userId'});
+    Account.hasOne(models.User, {as:'user', foreignKey:'accountId'});
+    
   };
 
   return Account;
