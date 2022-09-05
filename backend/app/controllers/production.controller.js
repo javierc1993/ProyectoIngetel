@@ -3,7 +3,7 @@
 
 class ProductionController {
   async upload (req, res) {
-    console.log(req);
+    console.log(req.file);
     return res.status(200).json({
       resultMsg: 'OK',
       result: 'req'
