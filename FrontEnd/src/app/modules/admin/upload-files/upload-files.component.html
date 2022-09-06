@@ -1,11 +1,45 @@
-<div class="grid grid-cols-1 xl:grid-cols-1 gap-8 w-full m-8">
-    <!-- Recent transactions table -->
-    <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
-        <div class="p-6 mx-auto">
-            <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">
-                Recent transactions
-            </div>
-            <div class="text-secondary font-medium">1 pending, 4 completed</div>
+<div class="flex flex-col flex-auto items-center p-6 sm:p-10 ng-tns-c307-259">
+    <div class="flex flex-col w-full max-w-4xl ng-tns-c307-259">
+        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight ng-tns-c307-259">
+            Formulario de carga!
+        </div>
+        <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card ng-tns-c307-259">
+            <form class="flex flex-col mt-4 bg-card shadow rounded overflow-hidden">
+                <div class="bg-gray-50 dark:bg-gray-700 p-8 border-b">
+                    <p class="text-2xl font-bold tracking-tight ng-tns-c307-259">
+                        Selecciona el tipo y carga el archivo a procesar
+                    </p>
+                    <p class="text-secondary">
+                        Recuerda que el archivo debe ser .xlsx o .csv
+                    </p>
+                </div>
+                <div class="flex flex-col p-8 flex-auto">
+                    <mat-form-field class="fuse-mat-dense flex-auto">
+                        <mat-label>Seleccione el archivo a subir</mat-label>
+                        <mat-select>
+                            <mat-option>None</mat-option>
+                            <mat-option value="option1">Formato producción</mat-option>
+                            <mat-option value="option2">Formato liberación</mat-option>
+                            <mat-option value="option3">Formato Syncro</mat-option>
+                            <mat-option value="option4">Formato facturación</mat-option>
+                            <mat-option value="option5">Formato banco</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br />
+
+                    <div class="">
+                        <input type="file" />
+                    </div>
+
+                    <br />
+
+                    <label>Selecciona la extensión del archivo</label>
+                    <mat-radio-group class="flex flex-col flex-auto">
+                        <mat-radio-button value="1">.CSV</mat-radio-button>
+                        <mat-radio-button value="2">.XLSX</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </form>
         </div>
     </div>
 </div>
