@@ -20,7 +20,7 @@ app.set('port', process.env.PORT || 3000);
 //Middlewares
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(cors({ origin: ['http://localhost:4200'] }))
+app.use(cors({ origin: ['http://localhost:4200','http://localhost:4201'] }))
 
 
 //Routes
@@ -31,7 +31,7 @@ app.use('/api/v1/', AppRoute);
 app.listen(app.get('port'), async () => {
   console.log('Server on port', app.get('port'));
   try {
-    await connection.sync({ force: true });
+    await connection.sync({ force: false });
     console.log('Connection db OK');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
