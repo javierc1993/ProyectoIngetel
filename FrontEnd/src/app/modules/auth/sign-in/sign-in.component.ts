@@ -46,9 +46,9 @@ export class AuthSignInComponent implements OnInit {
     ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            userName     : ['', [Validators.required]],
-            password  : ['', Validators.required],
-            rememberMe: ['']
+            username: ['', [Validators.required]],
+            password: ['', Validators.required],
+            rememberMe: [''],
         });
     }
 
@@ -61,7 +61,7 @@ export class AuthSignInComponent implements OnInit {
      */
     signIn(): void {
         // Return if the form is invalid
-      /*  if (this.signInForm.invalid) {
+        /*  if (this.signInForm.invalid) {
             return;
         }*/
 
