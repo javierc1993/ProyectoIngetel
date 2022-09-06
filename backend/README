@@ -1,11 +1,8 @@
 INIT PROYECT
  - Install node
  - Install npm
- - Install Mongo
-  - 
+ - Install mysql
+ - Asing permision folder backend/filesUploaded
 
 
-Run proyect 
- - Import DB
- - npm i
- - npm start
+
