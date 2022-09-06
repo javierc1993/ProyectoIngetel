@@ -26,11 +26,11 @@
                 <!-- Email field -->
                 <mat-form-field class="w-full">
                     <mat-label>Correo electrónico</mat-label>
-                 <input id="userName" matInput [formControlName]="'userName'" />
-                    <mat-error *ngIf="signInForm.get('userName').hasError('required')">
+                    <input id="username" matInput [formControlName]="'username'" />
+                    <mat-error *ngIf="signInForm.get('username').hasError('required')">
                         Correo electrónico es obligatoria
                     </mat-error>
-                    <mat-error *ngIf="signInForm.get('userName').hasError('email')">
+                    <mat-error *ngIf="signInForm.get('username').hasError('email')">
                         Ingresa una dirección de correo válida
                     </mat-error>
                 </mat-form-field>
