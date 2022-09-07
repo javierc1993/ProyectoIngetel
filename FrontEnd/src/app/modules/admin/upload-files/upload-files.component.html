@@ -35,7 +35,7 @@
                     <br />
 
                     <div class="">
-                        <input (change)="seleccionFile($event.target.files[0])" type="file" id="thisFile" name="thisFile" formControlName="thisFile" required />
+                        <input (change)="getFile($event)" type="file" id="thisFile" name="thisFile" formControlName="thisFile" required />
                     </div>
                     <div *ngIf="uploadForm.get('thisFile')?.touched && uploadForm.get('thisFile')?.errors?.['required']">
                         <fuse-alert [type]="'warning'">

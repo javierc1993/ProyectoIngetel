@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { variablesGlobales } from 'GLOBAL';
+import { uploadFileService } from './uploadFile.services';
 
 @Component({
     selector: 'app-upload-files',
@@ -10,10 +11,12 @@ import { variablesGlobales } from 'GLOBAL';
 })
 export class UploadFilesComponent implements OnInit {
     uploadForm!: FormGroup;
+    private fileTemp:any;
 
     constructor(
         private readonly fb: FormBuilder,
-        private _httpClient: HttpClient
+        private _httpClient: HttpClient,
+        private uploadFileService: uploadFileService
     ) {}
 
     ngOnInit(): void {
@@ -22,16 +25,10 @@ export class UploadFilesComponent implements OnInit {
         // this.onSetValue();
     }
 
-    // onPathValue(): void {
-    //     this.uploadForm.patchValue({ name: 'Bezael' });
-    // }
 
-    // onSetValue(): void {
-    //     // this.uploadForm.setValue({ comment: 'Hola mundo' });
-    // }
 
     onSubmit(): void {
-        console.log('test sendForm');
+      /*  console.log('test sendForm');
         console.log('Form ->', this.uploadForm.value);
         var formData: any = new FormData();
         formData.append('file', this.uploadForm.value.thisFile);
@@ -50,7 +47,24 @@ export class UploadFilesComponent implements OnInit {
                 (error) => {
                     console.log(error);
                 }
-            );
+            );*/
+         this.sendFile();
+    }
+
+    getFile($event: any): void{
+        const [ file ]= $event.target.files;
+        this.fileTemp ={
+            fileRaw:file,
+            fileName:file.name
+        }
+        console.log(this.fileTemp);
+    }
+    sendFile(): void{
+        const body = new FormData();
+        body.append('file',this.fileTemp.fileRaw, this.fileTemp.fileName);
+       // console.log(body.fileUp);
+        this.uploadFileService.sendFilePost(body)
+        .subscribe(res => console.log(res))
     }
 
     initForm(): FormGroup {
@@ -62,8 +76,10 @@ export class UploadFilesComponent implements OnInit {
     }
 
     seleccionFile(file) {
+        console.log(file);
         console.log(file.name);
         console.log(file.size);
+        console.log(file.fileRaw);
         console.log('formatType: ' + file.type);
     }
 }
