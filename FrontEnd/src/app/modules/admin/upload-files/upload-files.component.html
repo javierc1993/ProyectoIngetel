@@ -1,10 +1,11 @@
 <div class="flex flex-col flex-auto items-center p-6 sm:p-10 ng-tns-c307-259">
     <div class="flex flex-col w-full max-w-4xl ng-tns-c307-259">
-        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight ng-tns-c307-259">
+        <div class="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight ng-tns-c307-259">
             Formulario de carga!
+            <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon>
         </div>
         <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card ng-tns-c307-259">
-            <form class="flex flex-col mt-4 bg-card shadow rounded overflow-hidden">
+            <form class="flex flex-col mt-4 bg-card shadow rounded overflow-hidden" (ngSubmit)="onSubmit()" [formGroup]="uploadForm">
                 <div class="bg-gray-50 dark:bg-gray-700 p-8 border-b">
                     <p class="text-2xl font-bold tracking-tight ng-tns-c307-259">
                         Selecciona el tipo y carga el archivo a procesar
@@ -16,28 +17,45 @@
                 <div class="flex flex-col p-8 flex-auto">
                     <mat-form-field class="fuse-mat-dense flex-auto">
                         <mat-label>Seleccione el archivo a subir</mat-label>
-                        <mat-select>
+                        <mat-select id="typeUpload" name="typeUpload" formControlName="typeUpload" required>
                             <mat-option>None</mat-option>
-                            <mat-option value="option1">Formato producción</mat-option>
-                            <mat-option value="option2">Formato liberación</mat-option>
-                            <mat-option value="option3">Formato Syncro</mat-option>
-                            <mat-option value="option4">Formato facturación</mat-option>
-                            <mat-option value="option5">Formato banco</mat-option>
+                            <mat-option value="production">Formato producción</mat-option>
+                            <mat-option value="liberation">Formato liberación</mat-option>
+                            <mat-option value="syncro">Formato Syncro</mat-option>
+                            <mat-option value="biling">Formato facturación</mat-option>
+                            <mat-option value="bank">Formato banco</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <div *ngIf="uploadForm.get('typeUpload')?.touched && uploadForm.get('typeUpload')?.errors?.['required']">
+                        <fuse-alert [type]="'warning'">
+                            <span fuseAlertTitle>Dato pendiente</span> Selecciona el formato a subir
+                        </fuse-alert>
+                    </div>
+
                     <br />
 
                     <div class="">
-                        <input type="file" />
+                        <input (change)="seleccionFile($event.target.files[0])" type="file" id="thisFile" name="thisFile" formControlName="thisFile" required />
+                    </div>
+                    <div *ngIf="uploadForm.get('thisFile')?.touched && uploadForm.get('thisFile')?.errors?.['required']">
+                        <fuse-alert [type]="'warning'">
+                            <span fuseAlertTitle>Dato pendiente</span> Debes subir un archivo
+                        </fuse-alert>
                     </div>
 
                     <br />
 
                     <label>Selecciona la extensión del archivo</label>
-                    <mat-radio-group class="flex flex-col flex-auto">
+                    <mat-radio-group class="flex flex-col flex-auto" id="typeFile" name="typeFile" formControlName="typeFile">
                         <mat-radio-button value="1">.CSV</mat-radio-button>
                         <mat-radio-button value="2">.XLSX</mat-radio-button>
                     </mat-radio-group>
+                </div>
+
+                <div class="flex mx-auto">
+                    <button type="submit" class="px-6 mb-3" mat-flat-button [color]="'primary'" [disabled]="uploadForm.invalid">
+                        Enviar archivo
+                    </button>
                 </div>
             </form>
         </div>

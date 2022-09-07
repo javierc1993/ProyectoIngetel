@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { variablesGlobales } from 'GLOBAL';
 
 @Component({
     selector: 'app-upload-files',
@@ -7,34 +9,61 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     encapsulation: ViewEncapsulation.None,
 })
 export class UploadFilesComponent implements OnInit {
-    contactForm!: FormGroup;
+    uploadForm!: FormGroup;
 
-    constructor(private readonly fb: FormBuilder) {}
+    constructor(
+        private readonly fb: FormBuilder,
+        private _httpClient: HttpClient
+    ) {}
 
     ngOnInit(): void {
-        this.contactForm = this.initForm();
+        this.uploadForm = this.initForm();
         // this.onPathValue();
         // this.onSetValue();
     }
 
-    onPathValue(): void {
-        this.contactForm.patchValue({ name: 'Bezael' });
-    }
+    // onPathValue(): void {
+    //     this.uploadForm.patchValue({ name: 'Bezael' });
+    // }
 
-    onSetValue(): void {
-        // this.contactForm.setValue({ comment: 'Hola mundo' });
-    }
+    // onSetValue(): void {
+    //     // this.uploadForm.setValue({ comment: 'Hola mundo' });
+    // }
 
     onSubmit(): void {
-        console.log('Form ->', this.contactForm.value);
+        console.log('test sendForm');
+        console.log('Form ->', this.uploadForm.value);
+        var formData: any = new FormData();
+        formData.append('file', this.uploadForm.value.thisFile);
+        console.log(formData);
+        var typeUpload = this.uploadForm.value.typeUpload;
+
+        this._httpClient
+            .post(
+                variablesGlobales.urlBackend + '/' + typeUpload + '/upload',
+                formData
+            )
+            .subscribe(
+                (response) => {
+                    console.log(response);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
     }
 
     initForm(): FormGroup {
         return this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(3)]],
-            checkAdult: ['', [Validators.required]],
-            department: [''],
-            comment: ['', [Validators.required]],
+            typeUpload: ['', [Validators.required]],
+            thisFile: ['', [Validators.required]],
+            typeFile: [''],
         });
+    }
+
+    seleccionFile(file) {
+        console.log(file.name);
+        console.log(file.size);
+        console.log('formatType: ' + file.type);
     }
 }
