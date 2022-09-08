@@ -1,11 +1,38 @@
 'use strict';
-const { PayOrder, Instalation, Integration, MosHw, OnAir } = require('../models');
+const { PayOrder, Instalation, Integration, MosHw, OnAir, Site } = require('../models');
 const SiteRepository = require('./site.repository');
 
 
 class PayOrderRepository {
   async getAll () {
-    return PayOrder.findAll();
+    return PayOrder.findAll({
+      include:[
+        {
+          model: Instalation,
+          as: 'instalation',
+          attributes:['date']
+        },
+        {
+          model: Integration,
+          as: 'integration',
+          attributes:['date']
+        },
+        {
+          model: MosHw,
+          as: 'mosHw',
+          attributes:['date']
+        },
+        {
+          model: OnAir,
+          as: 'onAir',
+          attributes:['date']
+        },
+        {
+          model: Site,
+          as: 'site'
+        }
+      ]
+    });
   };
 
   async getPoByReference (reference) {
