@@ -17,6 +17,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
 {
     isScreenSmall: boolean;
     navigation: Navigation;
+    navigationAppearance: 'default' | 'dense' = 'dense';
     user: User;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -59,6 +60,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
+                debugger;
                 this.navigation = navigation;
             });
 
@@ -108,5 +110,10 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
             // Toggle the opened status
             navigation.toggle();
         }
+    }
+
+    toggleNavigationAppearance(): void
+    {
+        this.navigationAppearance = (this.navigationAppearance === 'default' ? 'dense' : 'default');
     }
 }

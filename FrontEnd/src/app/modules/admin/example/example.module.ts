@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import { Route, RouterModule } from '@angular/router';
 import { ExampleComponent } from 'app/modules/admin/example/example.component';
+import { FuseCardModule } from '@fuse/components/card';
 
 const exampleRoutes: Route[] = [
     {
-        path     : '',
-        component: ExampleComponent
-    }
+        path: '',
+        component: ExampleComponent,
+    },
 ];
 
 @NgModule({
@@ -14,9 +16,8 @@ const exampleRoutes: Route[] = [
         ExampleComponent
     ],
     imports     : [
-        RouterModule.forChild(exampleRoutes)
+        RouterModule.forChild(exampleRoutes),
+        MatTableModule
     ]
 })
-export class ExampleModule
-{
-}
+export class ExampleModule {}
