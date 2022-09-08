@@ -7,7 +7,7 @@ class UserRepository {
 
       const newUser = new User(user);
       const resp = await newUser.save();
-      return true;
+      return resp;
     } catch (err) {
       console.log(err);
       return false;

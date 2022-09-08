@@ -4,7 +4,6 @@ const { UploadedFile } = require('../models');
 class FileRepository {
   async saveFile (file) {
     try {
-      console.log(file)
       const resp = await UploadedFile.create(file);
       return resp;
     } catch (err) {

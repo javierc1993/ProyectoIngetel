@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   const Site = sequelize.define('Site', {
     name: DataTypes.STRING,
     smp: DataTypes.STRING,
-    scenary: DataTypes.STRING,
     region: DataTypes.STRING,
+    scenery: DataTypes.STRING,
     band: DataTypes.STRING
 
 

@@ -35,7 +35,7 @@ app.use('/api/v1/', AppRoute);
 app.listen(app.get('port'), async () => {
   console.log('Server on port', app.get('port'));
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
     console.log('Connection db OK');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
