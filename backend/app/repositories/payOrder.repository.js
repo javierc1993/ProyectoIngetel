@@ -1,5 +1,5 @@
 'use strict';
-const { PayOrder, Instalation, Integration, MosHw, OnAir } = require('../models');
+const { PayOrder, Instalation, Integration, MosHw, OnAir, Site } = require('../models');
 const SiteRepository = require('./site.repository');
 
 
@@ -26,6 +26,10 @@ class PayOrderRepository {
           model: OnAir,
           as: 'onAir',
           attributes:['date']
+        },
+        {
+          model: Site,
+          as: 'site'
         }
       ]
     });
