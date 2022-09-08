@@ -1,5 +1,7 @@
 'use strict';
-const { PayOrder } = require('../models');
+const { PayOrder, Site } = require('../models');
+const SiteRepository = require('./site.repository');
+
 
 class PayOrderRepository {
   async getPoByReference (reference) {
@@ -8,14 +10,19 @@ class PayOrderRepository {
         reference: reference
       }
     });
-    if (po.length) return po[0].dataValues;
-    return null;
+    return po;
   }
 
   async createPayOrder (po) {
     try {
+      let site;
       let resp = await this.getPoByReference(po.reference);
       if (!resp) resp = await PayOrder.create(po);
+      if (po.Sites.smp) {
+        site = await SiteRepository.createSite(po.Sites)
+      }
+      
+      resp.setSite(site.id);
       return resp;
     } catch (err) {
       console.log(err);

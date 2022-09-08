@@ -1,23 +1,34 @@
 'use strict';
 const { Site } = require('../models');
 
-class PayOrderRepository {
+class SiteRepository {
   async getSiteBySmp (smp) {
     const site = await Site.findOne({
+      attributes: ['id','name','smp', 'region', 'scenery', 'band'],
       where: {
         smp: smp
       }
     });
-    if (site.length) return site[0].dataValues;
-    return null;
+    return site;
   }
 
   async createSite (site) {
     try {
-      const site = this.getSiteBySmp(site.smp);
-      if (site) return site;
-      const resp = await Site.create(site);
-      return resp;
+      let siteDb = await this.getSiteBySmp(site.smp);
+      if (siteDb) return site;
+      siteDb = await this.newSite(site);
+      console.log('site', siteDb)
+      return siteDb;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
+  async newSite (site) {
+    try {
+      return Site.create(site);
+      
     } catch (err) {
       console.log(err);
       return null;
@@ -25,4 +36,5 @@ class PayOrderRepository {
   }
 }
 
-module.exports = new PayOrderRepository();
+
+module.exports = new SiteRepository();
