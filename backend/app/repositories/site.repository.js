@@ -4,7 +4,6 @@ const { Site } = require('../models');
 class SiteRepository {
   async getSiteBySmp (smp) {
     const site = await Site.findOne({
-      attributes: ['id','name','smp', 'region', 'scenery', 'band'],
       where: {
         smp: smp
       }
