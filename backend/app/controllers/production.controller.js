@@ -30,11 +30,11 @@ class ProductionController {
   async getProduction (req, res) {
     try {
 
-
+      const resp = await PayOrderService.getPayOrders();
 
       return res.status(200).json({
         resultMsg: 'OK',
-        result: 'data'
+        result: resp
       })
 
       // return res.status(404).json({ resultMsg: 'NOT FOUND', result: 'Data production not found' });

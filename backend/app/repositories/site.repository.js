@@ -14,9 +14,8 @@ class SiteRepository {
   async createSite (site) {
     try {
       let siteDb = await this.getSiteBySmp(site.smp);
-      if (siteDb) return site;
+      if (siteDb) return siteDb;
       siteDb = await this.newSite(site);
-      console.log('site', siteDb)
       return siteDb;
     } catch (err) {
       console.log(err);

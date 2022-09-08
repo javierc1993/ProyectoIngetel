@@ -4,6 +4,9 @@ const SiteRepository = require('../repositories/site.repository');
 const { deleteDuplicateByLabel } = require('../lib/formatData');
 
 class PayOrderService {
+  async getPayOrders (){
+    return PayOrderRepository.getAll();
+  }
 
 
   async createPayOrders (request) {
@@ -13,29 +16,41 @@ class PayOrderService {
         name: po['SITE NAME'],
         smp: po.SMP,
         region: po['Regional'],
-        scenery: po['Escenario'],
+        scenery: po['Escenario '],
         band: po['Banda']
       }
       SiteRepository.newSite(site);
     })
     );
 
-    const response = await Promise.all(request.filter(po => po.PO != '' ).map(async po => {
+    const response = await Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO').map(async po => {
       const payOrder = {
         reference: po['PO'],
         value: po[' VALOR PO '],
         Sites: {
           name: po['SITE NAME'],
           smp: po['SMP'],
-          scenery: po['Escenario'],
+          scenery: po['Escenario '],
           region: po['Regional'],
           band: po['Banda']
-        }
+        },
+        Instalations:{
+          date: po['instalacion']
+        },
+        Integrations:{
+          date: po['Fecha de Integracion']
+        },
+        MosHws:{
+          date: po['mos_HW']
+        },
+        OnAirs:{
+          date: po['ON AIR']
+        },
       }
-      await PayOrderRepository.createPayOrder(payOrder);
+      PayOrderRepository.createPayOrder(payOrder);
     })
     );
-    // return response;
+    console.log(response)
     return response;
   }
 }
