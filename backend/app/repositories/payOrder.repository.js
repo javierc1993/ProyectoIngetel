@@ -1,6 +1,7 @@
 'use strict';
-const { PayOrder, Instalation, Integration, MosHw, OnAir, Site } = require('../models');
+const { PayOrder, Instalation, Integration, MosHw, OnAir, Site, User } = require('../models');
 const SiteRepository = require('./site.repository');
+const UserRepository = require('./user.repository');
 
 
 class PayOrderRepository {
@@ -30,6 +31,10 @@ class PayOrderRepository {
         {
           model: Site,
           as: 'site'
+        },
+        {
+          model: User,
+          as: 'leader'
         }
       ]
     });
@@ -45,19 +50,26 @@ class PayOrderRepository {
   }
 
   async createPayOrder (po) {
-
+    
     try {
       let site;
-      let resp = await this.getPoByReference(po.reference);
-      if (!resp) resp = await PayOrder.create(po);
-      Instalation.create({ date: po.Instalations.date, payOrderId: resp.id })
-      Integration.create({ date: po.Integrations.date, payOrderId: resp.id })
-      MosHw.create({ date: po.MosHws.date, payOrderId: resp.id })
-      OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id })
+      let leader;
       if (po.Sites.smp) {
         site = await SiteRepository.createSite(po.Sites)
+        po.siteId = site[0].dataValues.id
       }
-      resp.setSite(site.id);
+      if (po.Leaders.name) {
+        leader = await UserRepository.newLeader(po.Leaders.name)
+        po.leaderId = leader[0].dataValues.id
+      }
+      let resp = await this.getPoByReference(po.reference);
+      if (!resp) {
+        resp = await PayOrder.create(po);
+        Instalation.create({ date: po.Instalations.date, payOrderId: resp.id });
+        Integration.create({ date: po.Integrations.date, payOrderId: resp.id });
+        MosHw.create({ date: po.MosHws.date, payOrderId: resp.id });
+        OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id });
+      }
       return resp;
     } catch (err) {
       console.log(err);
