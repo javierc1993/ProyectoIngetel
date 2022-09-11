@@ -13,10 +13,13 @@ class SiteRepository {
 
   async createSite (site) {
     try {
-      let siteDb = await this.getSiteBySmp(site.smp);
-      if (siteDb) return siteDb;
-      siteDb = await this.newSite(site);
-      return siteDb;
+      return Site.findOrCreate({
+        where: {
+          name: site.name,
+          smp: site.smp,
+          region: site.region
+        }
+      })
     } catch (err) {
       console.log(err);
       return null;
@@ -26,7 +29,7 @@ class SiteRepository {
   async newSite (site) {
     try {
       return Site.create(site);
-      
+
     } catch (err) {
       console.log(err);
       return null;

@@ -5,6 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   const PayOrder = sequelize.define('PayOrder', {
     reference: DataTypes.STRING,
+    scenery: DataTypes.STRING,
+    band: DataTypes.STRING,
     value: DataTypes.INTEGER
   }, {
     tableName: 'payOrders'
@@ -19,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     PayOrder.hasOne(models.Integration, {as:'integration', foreignKey:'payOrderId'});
     PayOrder.hasOne(models.MosHw, {as:'mosHw', foreignKey:'payOrderId'});
     PayOrder.hasOne(models.OnAir, {as:'onAir', foreignKey:'payOrderId'});
+    PayOrder.belongsTo(models.User, {as:'leader', foreignKey:'leaderId'});
 
   };
 
