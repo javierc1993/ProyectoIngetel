@@ -1,5 +1,5 @@
 'use strict';
-const { PayOrder, Instalation, Integration, MosHw, OnAir } = require('../models');
+const { PayOrder, Instalation, Integration, MosHw, OnAir, User } = require('../models');
 const SiteRepository = require('./site.repository');
 
 
@@ -23,10 +23,11 @@ class PayOrderRepository {
       let site;
       let resp = await this.getPoByReference(po.reference);
       if (!resp) resp = await PayOrder.create(po);
-      Instalation.create({ date: po.Instalations.date, payOrderId: resp.id })
-      Integration.create({ date: po.Integrations.date, payOrderId: resp.id })
-      MosHw.create({ date: po.MosHws.date, payOrderId: resp.id })
-      OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id })
+      Instalation.create({ date: po.Instalations.date, payOrderId: resp.id });
+      Integration.create({ date: po.Integrations.date, payOrderId: resp.id });
+      MosHw.create({ date: po.MosHws.date, payOrderId: resp.id });
+      OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id });
+      User.newLeader(po.Leaders.leader);
       if (po.Sites.smp) {
         site = await SiteRepository.createSite(po.Sites)
       }

@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     PayOrder.hasOne(models.Integration, {as:'integration', foreignKey:'payOrderId'});
     PayOrder.hasOne(models.MosHw, {as:'mosHw', foreignKey:'payOrderId'});
     PayOrder.hasOne(models.OnAir, {as:'onAir', foreignKey:'payOrderId'});
+    PayOrder.belongsTo(models.User, {as:'leader', foreignKey:'leaderId'});
 
   };
 
