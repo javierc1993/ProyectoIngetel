@@ -13,6 +13,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { MatTableModule } from '@angular/material/table';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -39,7 +40,8 @@ const routerConfig: ExtraOptions = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-        MatTableModule
+        MatTableModule,
+        MatExpansionModule
     ],
     bootstrap: [AppComponent],
 })
