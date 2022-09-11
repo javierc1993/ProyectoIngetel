@@ -5,6 +5,15 @@
             <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon>
         </div>
         <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card ng-tns-c307-259">
+            <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'uploadFileOk'" [type]="'success'">
+                El archivo fue cargado corectamente!!!
+            </fuse-alert>
+            <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'uploadFileBad'" [type]="'error'">
+                Ocurrió un problema al cargar el archivo!!!
+            </fuse-alert>
+            <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'badFileType'" [type]="'error'">
+                RECUERDA QUE EL FORMATO DEBE SER .XLSX o .CSV
+            </fuse-alert>
             <form class="flex flex-col mt-4 bg-card shadow rounded overflow-hidden" (ngSubmit)="onSubmit()" [formGroup]="uploadForm">
                 <div class="bg-gray-50 dark:bg-gray-700 p-8 border-b">
                     <p class="text-2xl font-bold tracking-tight ng-tns-c307-259">
@@ -27,7 +36,7 @@
                         </mat-select>
                     </mat-form-field>
                     <div *ngIf="uploadForm.get('typeUpload')?.touched && uploadForm.get('typeUpload')?.errors?.['required']">
-                        <fuse-alert [type]="'warning'">
+                        <fuse-alert [appearance]="'outline'" [dismissible]="true" [type]="'warning'">
                             <span fuseAlertTitle>Dato pendiente</span> Selecciona el formato a subir
                         </fuse-alert>
                     </div>
@@ -38,18 +47,18 @@
                         <input (change)="getFile($event)" type="file" id="thisFile" name="thisFile" formControlName="thisFile" required />
                     </div>
                     <div *ngIf="uploadForm.get('thisFile')?.touched && uploadForm.get('thisFile')?.errors?.['required']">
-                        <fuse-alert [type]="'warning'">
+                        <fuse-alert [appearance]="'outline'" [dismissible]="true" [type]="'warning'">
                             <span fuseAlertTitle>Dato pendiente</span> Debes subir un archivo
                         </fuse-alert>
                     </div>
 
                     <br />
 
-                    <label>Selecciona la extensión del archivo</label>
+                    <!-- <label>Selecciona la extensión del archivo</label>
                     <mat-radio-group class="flex flex-col flex-auto" id="typeFile" name="typeFile" formControlName="typeFile">
                         <mat-radio-button value="1">.CSV</mat-radio-button>
                         <mat-radio-button value="2">.XLSX</mat-radio-button>
-                    </mat-radio-group>
+                    </mat-radio-group> -->
                 </div>
 
                 <div class="flex mx-auto">

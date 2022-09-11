@@ -135,6 +135,13 @@ export const appRoutes: Route[] = [
                         'app/modules/admin/upload-files/upload-files.module'
                     ).then((m) => m.UploadFilesModule),
             },
+            {
+                path: 'inicio',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/inicio/inicio.module'
+                    ).then((m) => m.InicioModule),
+            },
         ],
     },
 ];

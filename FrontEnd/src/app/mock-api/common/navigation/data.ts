@@ -3,11 +3,11 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
-        id: 'example',
-        title: 'Ejemplo',
+        id: 'inicio',
+        title: 'Inicio',
         type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/example',
+        icon: 'heroicons_outline:home',
+        link: '/inicio',
     },
     {
         id: 'uploadFiles',
@@ -16,6 +16,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon: 'heroicons_outline:upload',
         link: '/uploadFiles',
     },
+    {
+        id: 'example',
+        title: 'Ejemplo',
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/example',
+    },    
 ];
 export const compactNavigation: FuseNavigationItem[] = [
     {
