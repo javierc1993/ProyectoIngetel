@@ -60,7 +60,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
-                debugger;
                 this.navigation = navigation;
             });
 
