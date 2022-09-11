@@ -24,45 +24,43 @@ class PayOrderService {
       const site = {
         name: po['SITE NAME'],
         smp: po.SMP,
-        region: po['Regional'],
-        scenery: po['Escenario '],
-        band: po['Banda']
+        region: po['Regional']
       }
-      SiteRepository.newSite(site);
+      SiteRepository.createSite(site);
     })
     );
 
-    const response = await Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO').map(async po => {
+    const response = Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO').map(async po => {
       const payOrder = {
         reference: po['PO'],
+        scenery: po['Escenario '],
         value: po[' VALOR PO '],
+        band: po['Banda'],
         Sites: {
           name: po['SITE NAME'],
           smp: po['SMP'],
-          scenery: po['Escenario '],
           region: po['Regional'],
-          band: po['Banda']
         },
-        Instalations:{
+        Instalations: {
           date: po['instalacion']
         },
-        Integrations:{
+        Integrations: {
           date: po['Fecha de Integracion']
         },
-        MosHws:{
+        MosHws: {
           date: po['mos_HW']
         },
-        OnAirs:{
+        OnAirs: {
           date: po['ON AIR']
         },
-        Leaders:{
+        Leaders: {
           name: po['Lider ']
         }
       }
-      PayOrderRepository.createPayOrder(payOrder);
+      return PayOrderRepository.createPayOrder(payOrder);
     })
     );
-    console.log(response)
+    
     return response;
   }
 }

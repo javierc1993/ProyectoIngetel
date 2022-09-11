@@ -5,6 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   const PayOrder = sequelize.define('PayOrder', {
     reference: DataTypes.STRING,
+    scenery: DataTypes.STRING,
+    band: DataTypes.STRING,
     value: DataTypes.INTEGER
   }, {
     tableName: 'payOrders'
