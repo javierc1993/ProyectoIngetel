@@ -1,5 +1,5 @@
 'use strict';
-const { PayOrder, Instalation, Integration, MosHw, OnAir, Site } = require('../models');
+const { PayOrder, Instalation, Integration, MosHw, OnAir, Site, User } = require('../models');
 const SiteRepository = require('./site.repository');
 const UserRepository = require('./user.repository');
 
@@ -31,6 +31,10 @@ class PayOrderRepository {
         {
           model: Site,
           as: 'site'
+        },
+        {
+          model: User,
+          as: 'leader'
         }
       ]
     });
