@@ -32,13 +32,19 @@ export class ExampleComponent implements OnInit{
     // @ViewChild(MatAccordion) accordion: MatAccordion;
      private _data: BehaviorSubject<any> = new BehaviorSubject(null);
      recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
-     recentTransactionsTableColumns: string[] = ['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
+     recentTransactionsTableColumns: string[] = [];
      datosHoja: transaction[] =[];
      constructor (private _httpClient: HttpClient) {
 
     }
 
     ngOnInit(): void {
+      this.cargueCompleto();
+    }
+
+    cargueCompleto(){
+
+        this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
         this._httpClient
             .get(
                 variablesGlobales.urlBackend + '/production/'
@@ -49,7 +55,7 @@ export class ExampleComponent implements OnInit{
                     for (let index = 0; index < response.result.length; index++) {
                         const element = response.result[index];
                         
-                        this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.site.scenery, Banda:element.site.band, Lider:'Jesus Carrillo', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
+                        this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:'Jesus Carrillo', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
                         );
                         console.log(this.datosHoja);
                     }
@@ -64,6 +70,7 @@ export class ExampleComponent implements OnInit{
             );
     }
    filtrosBusqueda(strategy){
+    this.recentTransactionsTableColumns=['SMP','SITE Name', 'PO', 'Valor PO', 'Escenario'];
     var data=this.datosHoja;
     console.log(strategy);
     interface transaction {
