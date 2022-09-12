@@ -42,15 +42,15 @@
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    Personal data
+                    Perfiles de visualizaciòn.
                   </mat-panel-title>
                   <mat-panel-description>
-                    Type your name and age
+                    
                   </mat-panel-description>
                 </mat-expansion-panel-header>
             
                 <section class="example-section">
-                    <label class="example-margin">Align:</label>
+                    <label class="example-margin">Perfíl:</label>
                     <mat-radio-group>
                       <mat-radio-button 
                       class="example-margin" 
@@ -58,7 +58,11 @@
                       (change)="filtrosBusqueda('value')">
                       
                       Producción</mat-radio-button>
-                      <mat-radio-button class="example-margin" value="before">Before</mat-radio-button>
+                      <mat-radio-button
+                       class="example-margin" 
+                       value="before"
+                       (change)="cargueCompleto()"
+                       >Before</mat-radio-button>
                     </mat-radio-group>
                   </section>
             
