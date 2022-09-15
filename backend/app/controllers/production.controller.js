@@ -28,7 +28,8 @@ class ProductionController {
   async getProduction (req, res) {
     try {
 
-      const resp = await PayOrderService.getPayOrders();
+      
+      const resp = await PayOrderService.getPayOrders(req.queryStrings);
 
       return res.status(200).json({
         resultMsg: 'OK',

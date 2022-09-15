@@ -5,36 +5,43 @@ const UserRepository = require('./user.repository');
 
 
 class PayOrderRepository {
-  async getAll () {
+  async getAll (filters = null) {
     return PayOrder.findAll({
+      where:filters?.payOrder ?? {},
       include:[
         {
           model: Instalation,
           as: 'instalation',
-          attributes:['date']
+          attributes:['date'],
+          where:filters?.instalation ?? {}
         },
         {
           model: Integration,
           as: 'integration',
-          attributes:['date']
+          attributes:['date'],
+          where:filters?.integration ?? {}
         },
         {
           model: MosHw,
           as: 'mosHw',
-          attributes:['date']
+          attributes:['date'],
+          where:filters?.mosHw ?? {}
         },
         {
           model: OnAir,
           as: 'onAir',
-          attributes:['date']
+          attributes:['date'],
+          where:filters?.onAir ?? {}
         },
         {
           model: Site,
-          as: 'site'
+          as: 'site',
+          where:filters?.site ?? {}
         },
         {
           model: User,
-          as: 'leader'
+          as: 'leader',
+          where:filters?.user ?? {}
         }
       ]
     });

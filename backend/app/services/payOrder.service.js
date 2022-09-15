@@ -6,8 +6,8 @@ const UserRepository = require('../repositories/user.repository');
 const { deleteDuplicateByLabel } = require('../lib/formatData');
 
 class PayOrderService {
-  async getPayOrders () {
-    return PayOrderRepository.getAll();
+  async getPayOrders (queryStrings) {
+    return PayOrderRepository.getAll(queryStrings);
   }
 
 
