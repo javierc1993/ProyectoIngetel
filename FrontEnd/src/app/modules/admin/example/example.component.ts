@@ -5,7 +5,13 @@ import { variablesGlobales } from 'GLOBAL';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import {MatDividerModule} from '@angular/material/divider';
-
+import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
+import {
+    UntypedFormBuilder,
+    UntypedFormGroup,
+    NgForm,
+    Validators,
+} from '@angular/forms';
 export interface transaction {
     SMP: string;
     SITE_Name:string;
@@ -37,6 +43,10 @@ export class ExampleComponent implements OnInit{
      datosHoja: transaction[] =[];
      drawerOpened=false;
      drawerMode='side';
+     range = new FormGroup({
+        start: new FormControl<Date | null>(null),
+        end: new FormControl<Date | null>(null),
+      });
      constructor (private _httpClient: HttpClient) {
 
     }
