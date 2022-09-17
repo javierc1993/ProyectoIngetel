@@ -7,6 +7,11 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
+import { FuseDrawerModule } from '@fuse/components/drawer';
+import { MatButton, MatButtonModule } from '@angular/material/button';
+import {MatGridListModule} from '@angular/material/grid-list';
+import { MatDividerModule } from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
 const exampleRoutes: Route[] = [
     {
         path: '',
@@ -24,7 +29,12 @@ const exampleRoutes: Route[] = [
         MatRadioModule,
         FormsModule,
         CommonModule,
-        MatExpansionModule
+        MatExpansionModule,
+        FuseDrawerModule,
+        MatButtonModule,
+        MatGridListModule,
+        MatDividerModule,
+        MatListModule
     ]
 })
 export class ExampleModule {}

@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { variablesGlobales } from 'GLOBAL';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import {MatDividerModule} from '@angular/material/divider';
 
 export interface transaction {
     SMP: string;
@@ -34,6 +35,8 @@ export class ExampleComponent implements OnInit{
      recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
      recentTransactionsTableColumns: string[] = [];
      datosHoja: transaction[] =[];
+     drawerOpened=false;
+     drawerMode='side';
      constructor (private _httpClient: HttpClient) {
 
     }
@@ -96,4 +99,17 @@ export class ExampleComponent implements OnInit{
    filtroSuma(){
 
    }
+   toggleDrawerOpen(): void
+{
+    this.drawerOpened = !this.drawerOpened;
+}
+/**
+ * Drawer opened changed
+ *
+ * @param opened
+ */
+ drawerOpenedChanged(opened: boolean): void
+ {
+     this.drawerOpened = opened;
+ }
 }
