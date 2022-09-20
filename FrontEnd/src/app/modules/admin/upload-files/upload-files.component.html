@@ -11,7 +11,7 @@
             <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'uploadFileBad'" [type]="'error'">
                 Ocurrió un problema al cargar el archivo!!!
             </fuse-alert>
-            <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'badFileType'" [type]="'error'">
+            <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="true" [name]="'badFileType'" [type]="'error'">
                 RECUERDA QUE EL FORMATO DEBE SER .XLSX o .CSV
             </fuse-alert>
             <form class="flex flex-col mt-4 bg-card shadow rounded overflow-hidden" (ngSubmit)="onSubmit()" [formGroup]="uploadForm">
