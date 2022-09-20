@@ -15,6 +15,14 @@ import {MatListModule} from '@angular/material/list';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { FuseHighlightModule } from '@fuse/components/highlight';
+import { SharedModule } from 'app/shared/shared.module';
 const exampleRoutes: Route[] = [
     {
         path: '',
@@ -41,7 +49,15 @@ const exampleRoutes: Route[] = [
         MatDatepickerModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        MatMomentDateModule
+        MatMomentDateModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatIconModule,
+        MatInputModule,
+        MatMenuModule,
+        MatSelectModule,
+        FuseHighlightModule,
+        SharedModule
     ]
 })
 export class ExampleModule {}

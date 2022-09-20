@@ -37,6 +37,8 @@ export class ExampleComponent implements OnInit{
      * Constructor
      */
     // @ViewChild(MatAccordion) accordion: MatAccordion;
+     filterForm: UntypedFormGroup;
+     formFieldHelpers: UntypedFormGroup;
      private _data: BehaviorSubject<any> = new BehaviorSubject(null);
      recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
      recentTransactionsTableColumns: string[] = [];
@@ -47,11 +49,19 @@ export class ExampleComponent implements OnInit{
         start: new FormControl<Date | null>(null),
         end: new FormControl<Date | null>(null),
       });
-     constructor (private _httpClient: HttpClient) {
-
+     constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) {
+        
+        
     }
 
     ngOnInit(): void {
+        this.filterForm = this._formBuilder.group({
+            SMPControl:['']
+        });
+        this.range = new FormGroup({
+            start: new FormControl<Date | null>(null),
+            end: new FormControl<Date | null>(null),
+          });
       this.cargueCompleto();
     }
 
@@ -107,7 +117,7 @@ export class ExampleComponent implements OnInit{
    }
 
    filtroSuma(){
-
+    console.log(this.filterForm.value)
    }
    toggleDrawerOpen(): void
 {
