@@ -14,14 +14,34 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Cargar archivos',
         type: 'basic',
         icon: 'heroicons_outline:upload',
-        link: '/uploadFiles',
+        link: '/subirArchivos',
     },
     {
-        id: 'example',
-        title: 'Ejemplo',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/example',
+        id: 'Archivos',
+        title: 'Archvios',
+        type: 'collapsable',
+        icon: 'heroicons_outline:table',
+        children:[
+            {
+                id: 'example',
+                title: 'Ver producción',
+                type: 'basic',
+                link: '/archivoProduccion',
+            },
+            {
+                id: 'billingStatus',
+                title: 'Ver facturación',
+                type: 'basic',
+                link: '/archivoFacturacion',
+            },
+            {
+                id: 'poStatus',
+                title: 'Ver estado po',
+                type: 'basic',
+                link: '/ordenesCompra',
+            }
+        ]
+        
     },    
 ];
 export const compactNavigation: FuseNavigationItem[] = [

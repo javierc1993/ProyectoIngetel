@@ -12,10 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { NgApexchartsModule } from 'ng-apexcharts';
-
-
-
-
+import { MatTableModule } from '@angular/material/table';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, FuseAlertModule,  MatButtonModule,
@@ -27,7 +25,10 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         MatMenuModule,
         MatRadioModule,
         MatSelectModule,
-    NgApexchartsModule],
+        NgApexchartsModule,
+        MatTableModule,
+        MatExpansionModule
+    ],
     exports: [CommonModule, FormsModule, ReactiveFormsModule, FuseAlertModule, MatButtonModule,
         MatCheckboxModule,
         MatDividerModule,
@@ -37,6 +38,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         MatMenuModule,
         MatRadioModule,
         MatSelectModule,
-        NgApexchartsModule],
+        NgApexchartsModule,
+        MatTableModule,
+        MatExpansionModule
+    ],
 })
 export class SharedModule {}

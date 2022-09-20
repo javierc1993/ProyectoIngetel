@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { variablesGlobales } from 'GLOBAL';
 import { uploadFileService } from './uploadFile.services';
 import { catchError } from 'rxjs';
 import { FuseAlertService } from '@fuse/components/alert';
-import { FuseAlertComponent } from '../../../../@fuse/components/alert/alert.component';
 
 @Component({
     selector: 'app-upload-files',
