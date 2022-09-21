@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js",
+    "seed:all": "sequelize db:seed:all",
+    "seed:all:undo": "sequelize db:seed:undo:all",
     "test": "jest"
   },
   "keywords": [],

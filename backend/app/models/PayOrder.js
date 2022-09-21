@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
   PayOrder.associate = function (models) {
     //associations 
-    PayOrder.hasMany(models.ReleasePercent, { as: 'releasePercent', foreignKey: 'payOrderId' })
+    PayOrder.hasMany(models.Release, { as: 'release', foreignKey: 'payOrderId' })
     PayOrder.belongsTo(models.Site, { as: 'site' });
 
     PayOrder.hasOne(models.Instalation, {as:'instalation', foreignKey:'payOrderId'});

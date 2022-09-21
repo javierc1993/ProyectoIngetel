@@ -6,6 +6,7 @@ const path = require('path');
 const AppRoute = require('./app/routes/app.route');
 const AuthRoute = require('./app/routes/auth.route');
 const ProductionRoute = require('./app/routes/production.route');
+const ReleaseRoute = require('./app/routes/release.route');
 
 const { sequelize } = require('./app/models');
 
@@ -28,6 +29,7 @@ app.use(cors({ origin: ['http://localhost:4200'] }))
 
 
 //Routes
+app.use('/api/v1/release/', ReleaseRoute);
 app.use('/api/v1/production/', ProductionRoute);
 app.use('/api/v1/auth/', AuthRoute);
 app.use('/api/v1/', AppRoute);
