@@ -37,9 +37,10 @@
 
   
 <div class="relative flex overflow-hidden border mt-8 min-h-80">
-
+         
     <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
-        <button
+        <div class="overflow-x-auto mx-6">
+            <button
         class="ml-4"
         mat-flat-button
         [color]="'primary'"
@@ -266,7 +267,8 @@
                         class="h-16 border-0"
                         mat-footer-row
                         *matFooterRowDef="['recentOrdersTableFooter']"></tr>
-                </table>
+        </table>
+        </div>
     </div>
 
     <!-- Right drawer must be positioned after the content-->
@@ -297,6 +299,7 @@
                         <mat-label>Búsqueda por PO</mat-label>
                         <input
                             matInput
+                            [formControlName]="'PO'"
                             [placeholder]="'Ingresa una PO a buscar'">
                         <mat-hint>PO</mat-hint>
                     </mat-form-field>
@@ -308,7 +311,8 @@
                         <mat-label>Búsqueda por valor de la PO</mat-label>
                         <input
                             class="text-right"
-                            matInput>
+                            matInput
+                            [formControlName]="'valorPO'">
                         <span matPrefix>$</span>
                     </mat-form-field>
                 </div>
@@ -317,13 +321,15 @@
                         [ngClass]="filterForm"
                         class="flex-auto">
                         <mat-label>Búsqueda por fecha de instalación</mat-label>
-                        <input
-                            matInput
-                            [matDatepicker]="picker1">
+        
+                            <mat-date-range-input  [formGroup]="filterForm" [rangePicker]="picker">
+                                <input matStartDate [formControlName]="'fechaDesdeInstalacion'" placeholder="Start date">
+                                <input matEndDate formControlName="fechaHastaInstalacion" placeholder="End date">
+                              </mat-date-range-input>
                         <mat-datepicker-toggle
                             matSuffix
-                            [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
+                            [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
                     </mat-form-field>
                 </div>
                 <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"  (click)="filtroSuma()">

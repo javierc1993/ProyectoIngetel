@@ -48,6 +48,7 @@ export class ExampleComponent implements OnInit{
      range = new FormGroup({
         start: new FormControl<Date | null>(null),
         end: new FormControl<Date | null>(null),
+        fechaDesdeInstalacion:new FormControl<Date | null>(null),
       });
      constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) {
         
@@ -56,11 +57,16 @@ export class ExampleComponent implements OnInit{
 
     ngOnInit(): void {
         this.filterForm = this._formBuilder.group({
-            SMPControl:['']
+            SMPControl:[''],
+            PO:[''],
+            valorPO:[''],
+            fechaDesdeInstalacion:[''],
+            fechaHastaInstalacion:[''],
         });
         this.range = new FormGroup({
             start: new FormControl<Date | null>(null),
             end: new FormControl<Date | null>(null),
+            fechaDesdeInstalacion:new FormControl<Date | null>(null),
           });
       this.cargueCompleto();
     }
@@ -117,7 +123,8 @@ export class ExampleComponent implements OnInit{
    }
 
    filtroSuma(){
-    console.log(this.filterForm.value)
+   var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
+    console.log(fechaDesde)
    }
    toggleDrawerOpen(): void
 {
