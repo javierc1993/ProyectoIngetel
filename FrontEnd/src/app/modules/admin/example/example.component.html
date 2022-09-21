@@ -287,7 +287,7 @@
                         <mat-label>Búsqueda por SMP</mat-label>
                         <input id="SMPControl"
                             matInput
-                            [formControlName]="'SMPControl'"
+                            [formControlName]="'SMP'"
                             [placeholder]="'Ingresa un SMP a buscar'">
                         <mat-hint>SMP</mat-hint>
                     </mat-form-field>
@@ -336,7 +336,36 @@
                     <span> Buscar </span>
                 </button>
             </form>
-       
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Perfiles de visualizaciòn.
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                
+                    <section class="example-section">
+                        <label class="example-margin">Perfíl:</label>
+                        <mat-radio-group>
+                          <mat-radio-button 
+                          class="example-margin" 
+                          value="after"
+                          (change)="filtrosBusqueda('value')">
+                          
+                          Producción</mat-radio-button>
+                          <mat-radio-button
+                           class="example-margin" 
+                           value="before"
+                           (change)="cargueCompleto()"
+                           >Before</mat-radio-button>
+                        </mat-radio-group>
+                      </section>
+                
+                  </mat-expansion-panel>
+            </mat-accordion>
         </fuse-drawer>
 
     

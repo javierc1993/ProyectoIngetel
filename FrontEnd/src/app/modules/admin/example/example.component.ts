@@ -57,7 +57,7 @@ export class ExampleComponent implements OnInit{
 
     ngOnInit(): void {
         this.filterForm = this._formBuilder.group({
-            SMPControl:[''],
+            SMP:[''],
             PO:[''],
             valorPO:[''],
             fechaDesdeInstalacion:[''],
@@ -124,7 +124,15 @@ export class ExampleComponent implements OnInit{
 
    filtroSuma(){
    var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
-    console.log(fechaDesde)
+   var formFiltros = {
+    'SMP':this.filterForm.value.SMP,
+    'PO':this.filterForm.value.PO,
+    'valorPO':this.filterForm.value.valorPO,
+    'fechaDesdeInstalacion':this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY'),
+    'fechaHastaInstalacion': this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY')
+
+   };
+    console.log(formFiltros);
    }
    toggleDrawerOpen(): void
 {
