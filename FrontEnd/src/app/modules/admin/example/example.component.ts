@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import {MatDividerModule} from '@angular/material/divider';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
+import {MatPaginator} from '@angular/material/paginator';
 import {
     UntypedFormBuilder,
     UntypedFormGroup,
@@ -37,6 +38,7 @@ export class ExampleComponent implements OnInit{
      * Constructor
      */
     // @ViewChild(MatAccordion) accordion: MatAccordion;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
      filterForm: UntypedFormGroup;
      formFieldHelpers: UntypedFormGroup;
      private _data: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -70,7 +72,9 @@ export class ExampleComponent implements OnInit{
           });
       this.cargueCompleto();
     }
-
+    ngAfterViewInit() {
+        this.recentTransactionsDataSource.paginator = this.paginator;
+      }
     cargueCompleto(){
 
         this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
@@ -86,7 +90,6 @@ export class ExampleComponent implements OnInit{
                         
                         this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:'Jesus Carrillo', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
                         );
-                        console.log(this.datosHoja);
                     }
                    /* const datosHoja: transaction[] =[
                         {SMP:'SMP-WO-0139510',SITE_Name:'BOY.Puerto Boyaca', Escenario:'LTE700', Banda:'LTE700', Lider:'Jesus Carrillo', Fecha_de_integracion:'26/05/2022',ON_AIR:'21?06/2022', mos_HW:'09/05/2022', PO:'45619783', Valor_PO :'14935377', instalacion:' '},
@@ -98,7 +101,7 @@ export class ExampleComponent implements OnInit{
                 }
             );
     }
-   filtrosBusqueda(strategy){
+   perfilesVisualizacion(strategy){
     this.recentTransactionsTableColumns=['SMP','SITE Name', 'PO', 'Valor PO', 'Escenario'];
     var data=this.datosHoja;
     console.log(strategy);
@@ -147,4 +150,5 @@ export class ExampleComponent implements OnInit{
  {
      this.drawerOpened = opened;
  }
+
 }

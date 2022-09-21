@@ -23,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { FuseHighlightModule } from '@fuse/components/highlight';
 import { SharedModule } from 'app/shared/shared.module';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 const exampleRoutes: Route[] = [
     {
         path: '',
@@ -57,6 +58,7 @@ const exampleRoutes: Route[] = [
         MatMenuModule,
         MatSelectModule,
         FuseHighlightModule,
+        MatPaginatorModule,
         SharedModule
     ]
 })

@@ -268,7 +268,12 @@
                         mat-footer-row
                         *matFooterRowDef="['recentOrdersTableFooter']"></tr>
         </table>
+        
         </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons 
+        aria-label="Cantidad de elementos">
+        </mat-paginator>
     </div>
 
     <!-- Right drawer must be positioned after the content-->
@@ -353,14 +358,14 @@
                           <mat-radio-button 
                           class="example-margin" 
                           value="after"
-                          (change)="filtrosBusqueda('value')">
+                          (change)="perfilesVisualizacion('value')">
                           
                           Producción</mat-radio-button>
                           <mat-radio-button
                            class="example-margin" 
                            value="before"
                            (change)="cargueCompleto()"
-                           >Before</mat-radio-button>
+                           >Completo</mat-radio-button>
                         </mat-radio-group>
                       </section>
                 
