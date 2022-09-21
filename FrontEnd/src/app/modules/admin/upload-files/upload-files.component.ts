@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { uploadFileService } from './uploadFile.services';
 import { catchError } from 'rxjs';
 import { FuseAlertService } from '@fuse/components/alert';
+import { LocalizedString } from '@angular/compiler';
 
 @Component({
     selector: 'app-upload-files',
@@ -15,6 +16,7 @@ export class UploadFilesComponent implements OnInit {
     private fileTemp:any;
 
     constructor(
+        //public fileType : String,
         private readonly fb: FormBuilder,
         private _httpClient: HttpClient,
         private uploadFileService: uploadFileService,
@@ -38,11 +40,13 @@ export class UploadFilesComponent implements OnInit {
             fileRaw:file,
             fileName:file.name
         }        
-        console.log(this.fileTemp);
+        // console.log(this.fileTemp);
     }
     sendFile(): void{
+        // this.fileType = 
         const body = new FormData();
-
+        
+        const fileType = this.uploadForm.value.typeUpload;
         var validFormat = this.validFormat(this.fileTemp.fileName);
         if(!validFormat){
             this._fuseAlertService.show('badFileType');   
@@ -51,7 +55,7 @@ export class UploadFilesComponent implements OnInit {
             this._fuseAlertService.dismiss('badFileType');
             body.append('file',this.fileTemp.fileRaw, this.fileTemp.fileName);
            // console.log(body.fileUp);        
-            this.uploadFileService.sendFilePost(body)
+            this.uploadFileService.sendFilePost(body, fileType)
             .subscribe(
                 data => {
                     this._fuseAlertService.dismiss('uploadFileBad');
