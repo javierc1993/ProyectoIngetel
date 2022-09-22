@@ -140,34 +140,28 @@ export class InicioComponent implements OnInit {
   cargueCompleto (): void{
 
         // this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-        this._httpClient
-            .get(
-                variablesGlobales.urlBackend + '/production/'
-            )
-            .subscribe(
-                (response:any) => {
-                    
-                  this.datosHoja = response.result.map(function(thisPO){
-                    //console.log(thisPO);
-                    return {
-                      SMP: thisPO.site.smp,
-                      SITE_Name: thisPO.site.name,
-                      Escenario: thisPO.scenery,
-                      Banda: thisPO.band,
-                      Lider: 'Jesus Carrillo',
-                      Fecha_de_integracion: thisPO.integration.date,
-                      ON_AIR:thisPO.onAir.date,
-                      mos_HW: thisPO.mosHw.date,
-                      PO: thisPO.reference,
-                      Valor_PO: thisPO.value,
-                      instalacion: thisPO.instalation.date? thisPO.instalation.date :'pendiente'}
-                  });                  
-                  this.updateGrafica1();
-                },
-                (error) => {
-                    console.log(error);
-                }                
-            );            
+        this._httpClient.get(variablesGlobales.urlBackend + '/production/')
+        .subscribe(
+          (response:any) => {
+            this.datosHoja = response.result.map(function(thisPO){
+              //console.log(thisPO);
+              return {
+                SMP: thisPO.site.smp,
+                SITE_Name: thisPO.site.name,
+                Escenario: thisPO.scenery,
+                Banda: thisPO.band,
+                Lider: 'Jesus Carrillo',
+                Fecha_de_integracion: thisPO.integration.date,
+                ON_AIR:thisPO.onAir.date,
+                mos_HW: thisPO.mosHw.date,
+                PO: thisPO.reference,
+                Valor_PO: thisPO.value,
+                instalacion: thisPO.instalation.date? thisPO.instalation.date :'pendiente'}
+            }); 
+            this.updateGrafica1();
+          },
+          (error) => {console.log(error);}                
+        );            
     }
     updateGrafica1(){
       var dataSeries = new Array();
