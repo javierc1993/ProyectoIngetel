@@ -19,9 +19,9 @@ export class uploadFileService {
      * send file to backend
      */
 
-    sendFilePost(body: FormData): Observable<any> {
+    sendFilePost(body: FormData, fileType: string): Observable<any> {
         return this._httpClient.post(
-            variablesGlobales.urlBackend + '/production/upload',
+            variablesGlobales.urlBackend + '/'+fileType+'/upload',
             body
         );
     }

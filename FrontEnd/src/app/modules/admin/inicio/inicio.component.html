@@ -2,14 +2,16 @@
     <div class="grid grid-cols-1 gap-4 w-full m-4">
         <!-- Recent transactions table -->
         <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
-            <div id="chart" style="text-align:center">
+            <div id="chart" style="text-align:center;">
                 <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis" [title]="chartOptions.title"></apx-chart>
             </div>
 
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+
                 <apx-chart [series]="Grafica1Options.series" [chart]="Grafica1Options.chart" [labels]="Grafica1Options.labels" [responsive]="Grafica1Options.responsive" [title]="Grafica1Options.title"></apx-chart>
+
             </div>
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <apx-chart [series]="Grafica2Options.series" [chart]="Grafica2Options.chart" [labels]="Grafica2Options.labels" [title]="Grafica2Options.title"></apx-chart>
