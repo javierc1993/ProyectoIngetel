@@ -18,7 +18,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'Archivos',
-        title: 'Archvios',
+        title: 'Archivos',
         type: 'collapsable',
         icon: 'heroicons_outline:table',
         children:[
@@ -36,7 +36,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'poStatus',
-                title: 'Ver estado po',
+                title: 'Ver estado PO',
                 type: 'basic',
                 link: '/ordenesCompra',
             }
