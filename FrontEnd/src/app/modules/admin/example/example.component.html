@@ -42,10 +42,12 @@
 <div class="relative flex overflow-hidden border mt-8 min-h-80">
 
     <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
-        <div class="overflow-x-auto mx-6">
-            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="toggleDrawerOpen();">
-        Lista de filtros
+        <button class="m-5" mat-flat-button [color]="'primary'" (click)="toggleDrawerOpen();">
+        <mat-icon>filter_list</mat-icon>
+            Filtros
         </button>
+        <div class="overflow-x-auto mx-6">
+
             <table class="w-full bg-transparent" mat-table matSort [dataSource]="recentTransactionsDataSource" #recentTransactionsTable>
 
                 <!-- Transaction ID -->
@@ -185,7 +187,7 @@
                 <!-- Footer -->
                 <ng-container matColumnDef="recentOrdersTableFooter">
                     <td class="py-6 px-0 border-0" mat-footer-cell *matFooterCellDef colspan="6">
-                        <button mat-stroked-button (click)="filtrosBusqueda()">See all transactions</button>
+                        <!--<button mat-stroked-button (click)="filtrosBusqueda()">See all transactions</button>-->
                     </td>
                 </ng-container>
 
@@ -193,13 +195,15 @@
                 <tr class="order-row h-16" mat-row *matRowDef="let row; columns: recentTransactionsTableColumns;"></tr>
                 <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recentOrdersTableFooter']"></tr>
             </table>
+
         </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Cantidad de elementos">
+        </mat-paginator>
     </div>
 
     <!-- Right drawer must be positioned after the content-->
 
     <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
-
         <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
@@ -252,16 +256,37 @@
                 <section class="example-section">
                     <label class="example-margin">Perfíl:</label>
                     <mat-radio-group>
-                        <mat-radio-button class="example-margin" value="after" (change)="filtrosBusqueda('value')">
+                        <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('value')">
 
                             Producción</mat-radio-button>
-                        <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Before</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Completo</mat-radio-button>
                     </mat-radio-group>
                 </section>
 
             </mat-expansion-panel>
         </mat-accordion>
     </fuse-drawer>
+
+
+</div>
+
+
+</mat-panel-description>
+</mat-expansion-panel-header>
+
+<section class="example-section">
+    <label class="example-margin">Perfíl:</label>
+    <mat-radio-group>
+        <mat-radio-button class="example-margin" value="after" (change)="filtrosBusqueda('value')">
+
+            Producción</mat-radio-button>
+        <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Before</mat-radio-button>
+    </mat-radio-group>
+</section>
+
+</mat-expansion-panel>
+</mat-accordion>
+</fuse-drawer>
 
 
 </div>

@@ -36,7 +36,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'poStatus',
-                title: 'Ver estado po',
+                title: 'Ver estado PO',
                 type: 'basic',
                 link: '/ordenesCompra',
             }
