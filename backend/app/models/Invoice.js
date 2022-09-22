@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     Invoice.belongsTo(models.User, { as: 'client', foreignKey: 'idClient' });
 
 
-    Invoice.belongsTo(models.ReleasePercent,{as:'releasePercent', foreignKey:'releasePercentId'})
+    // Invoice.belongsTo(models.ReleasePercent,{as:'releasePercent', foreignKey:'releasePercentId'})
 
     
 

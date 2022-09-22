@@ -5,7 +5,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   const Site = sequelize.define('Site', {
     name: DataTypes.STRING,
+    reference: DataTypes.STRING,
     smp: DataTypes.STRING,
+    smpName: DataTypes.STRING,
     region: DataTypes.STRING
   }, {
     tableName: 'sites'
@@ -15,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     //associations 
     Site.belongsTo(models.MainSite, { as: 'mainSite' })
     Site.hasMany(models.PayOrder, { as: 'payOrder', foreignKey: 'siteId' })
-
   };
 
   return Site;
