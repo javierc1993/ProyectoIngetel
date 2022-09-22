@@ -23,6 +23,7 @@ module.exports = {
       { name: 'Site Process - TSS', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
       { name: 'Site Process - TSS Report', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
       { name: 'TSS_Site Process', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { name: 'IMP_Process_2600', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
     ], {});
     await queryInterface.bulkInsert('percentsFields', [
       { fieldDateName: 'Execute CW+Reg Fotografico Date', fieldPpaName: 'Execute CW+Reg Fotografico PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
@@ -78,6 +79,9 @@ module.exports = {
       { percent: '50', releaseTypeId: '18', percentFieldId: '8', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
       { percent: '50', releaseTypeId: '19', percentFieldId: '9', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
       { percent: '50', releaseTypeId: '19', percentFieldId: '10', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { percent: '50', releaseTypeId: '20', percentFieldId: '6', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { percent: '30', releaseTypeId: '20', percentFieldId: '7', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { percent: '20', releaseTypeId: '20', percentFieldId: '4', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
 
     ], {});
 

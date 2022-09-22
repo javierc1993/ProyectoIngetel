@@ -5,6 +5,7 @@ class ReleaseEntity {
     this.proyect = data['Project'] || null;
     this.woName = data['WO Name'] || null;
     this.vendorSapName = data['Vendor SAP Name'] || null;
+    this.poNumber = data['SPO Number'] || null;
     this.iaDate = data['IA Date'] || null;
     this.grDate = data['GR Date'] || null;
     this.sgrNumber = data['Services Good receipt number (sGR)'] || null;

@@ -1,5 +1,5 @@
 'use strict';
-const { Release } = require('../models');
+const { Release, PayOrder } = require('../models');
 
 
 
@@ -23,8 +23,6 @@ class PayOrderRepository {
 
   async createRelease (release) {
     try {
-      console.log(release);
-      // return release;
       let resp;
       resp = await this.getReleaseBySgr(release.sgrNumber);
       console.log(resp);
@@ -36,6 +34,14 @@ class PayOrderRepository {
       console.log(err);
       return null;
     }
+  }
+
+  async setPayOrder (release, payOrderId) {
+    return release.setPayOrder(payOrderId);
+  }
+
+  async setReleaseType (release, releaseTypeId) {
+    return release.setReleaseType(releaseTypeId);
   }
 }
 
