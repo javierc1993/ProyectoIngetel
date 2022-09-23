@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     //associations 
 
     ReleaseType.hasOne(models.Release, { as: 'release', foreignKey: 'releaseTypeId' })
+    ReleaseType.hasMany(models.Percent, { as: 'percent', foreignKey: 'releaseTypeId' })
 
   };
 

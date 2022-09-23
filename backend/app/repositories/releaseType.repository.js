@@ -1,5 +1,5 @@
 'use strict';
-const { ReleaseType } = require('../models');
+const { ReleaseType, Percent, PercentField } = require('../models');
 
 
 
@@ -16,7 +16,19 @@ class ReleaseTypeRepository {
     const resp = await ReleaseType.findOne({
       where: {
         name: name
-      }
+      },
+      include:[
+        {
+          model: Percent,
+          as: 'percent',
+          include:[
+            {
+              model: PercentField,
+              as: 'percentField'
+            }
+          ]
+        }
+      ]
     });
     return resp;
   }

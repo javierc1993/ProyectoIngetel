@@ -25,11 +25,11 @@ class PayOrderRepository {
     try {
       let resp;
       resp = await this.getReleaseBySgr(release.sgrNumber);
-      console.log(resp);
       if (!resp) {
-        resp = await Release.create(release);
+        return Release.create(release);
       }
-      return resp;
+      resp.set(release);
+      return resp.save();
     } catch (err) {
       console.log(err);
       return null;
