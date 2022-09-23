@@ -1,4 +1,5 @@
 'use strict';
+const { ReleaseDocEntity } = require('../entities/releaseDoc.entity');
 const { ReleaseEntity } = require('../entities/release.entity');
 const ReleaseRepository = require('../repositories/release.repository');
 const ReleaseTypeRepository = require('../repositories/releaseType.repository');
@@ -6,16 +7,22 @@ const PayOrderRepository = require('../repositories/payOrder.repository');
 const { hashText } = require('../lib/crypto');
 class ReleaseService {
   async createRelease (releases) {
-    // const resp = await Promise.all(releases.filter(rel => rel['Services Good receipt number (sGR)']).map(async release => {
-    const resp = releases.filter(rel => rel['Services Good receipt number (sGR)']).map(async release => {
-      const releaseModel = new ReleaseEntity(release);
-      const releaseNew = await ReleaseRepository.createRelease(releaseModel);
-      setPoToRelease(releaseNew, releaseModel.poNumber);
-      // console.log(releaseModel.woName);
-      setReleaseTypeToRelease(releaseNew, releaseModel.woName);
-      return releaseNew;
-    });
-    return resp;
+    return Promise.all(releases.filter(rel => rel['Services Good receipt number (sGR)']).map(async release => {
+      const releaseDoc = new ReleaseDocEntity(release);
+      const payOrder = await PayOrderRepository.getPoByReference(releaseDoc.poNumber)
+      const releaseType = await ReleaseTypeRepository.getReleaseTypeByName(releaseDoc.woName);
+      await releaseType.percent.forEach(async percent => {
+        const releaseToCreate = new ReleaseEntity({
+          ...releaseDoc,
+          percent: percent.dataValues.percent,
+          date: releaseDoc[percent.dataValues.percentField.dataValues.fieldDateName],
+          ppa: releaseDoc[percent.dataValues.percentField.dataValues.fieldPpaName],
+          payOrder: payOrder?.id,
+          releaseType: releaseType?.id
+        });
+        return ReleaseRepository.createRelease(releaseToCreate);
+      });
+    }));
   }
 }
 

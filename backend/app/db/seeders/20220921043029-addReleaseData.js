@@ -26,16 +26,16 @@ module.exports = {
       { name: 'IMP_Process_2600', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
     ], {});
     await queryInterface.bulkInsert('percentsFields', [
-      { fieldDateName: 'Execute CW+Reg Fotografico Date', fieldPpaName: 'Execute CW+Reg Fotografico PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'Documento Final Ok Date', fieldPpaName: 'Doc Final ok PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'executeCw', fieldPpaName: 'executeCwPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'finalDocument', fieldPpaName: 'finalDocumentPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
       { fieldDateName: 'Servicio Ejecutado', fieldPpaName: 'Servicio Ejecutado PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'Site Folder Approved by Cust. Date', fieldPpaName: 'Site Folder Approved by Cust. PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'OnAir Complete', fieldPpaName: 'OnAir Completed. PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'Installation Doc. Ok Date', fieldPpaName: 'Doc. Installation PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'Integration Doc. Ok Date', fieldPpaName: 'Doc. Integration PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'RFE Notified by Partner Date', fieldPpaName: 'RFE Notified by Partner PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'TSSR Enviado al Cliente', fieldPpaName: 'TSSR Enviado al Cliente PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
-      { fieldDateName: 'IS5.1 TSSR Approved', fieldPpaName: 'IS5.1 TSSR Approved PPA Date', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'siteFolderApproved', fieldPpaName: 'siteFolderApprovedPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'onAirCompleted', fieldPpaName: 'onAirCompletedPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'instalation', fieldPpaName: 'instalationPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'integrationDocument', fieldPpaName: 'integrationDocumentPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'rfeNotified', fieldPpaName: 'rfeNotifiedPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'tssrClient', fieldPpaName: 'tssrClientPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
+      { fieldDateName: 'tssrApproved', fieldPpaName: 'tssrApprovedPpa', createdAt: '2022-09-17 08:13:40', updatedAt: '2022-09-17 08:13:40' },
 
 
     ], {});

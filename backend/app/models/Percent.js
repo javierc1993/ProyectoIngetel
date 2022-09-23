@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   Percent.associate = function (models) {
     //associations 
 
-    Percent.belongsTo(models.ReleaseType, { as: 'releaseType', foreignKey: 'releaseTypeId' })
+    Percent.belongsTo(models.ReleaseType, { as: 'releaseType' })
     Percent.belongsTo(models.PercentField, { as: 'percentField', foreignKey: 'percentFieldId' })
 
   };

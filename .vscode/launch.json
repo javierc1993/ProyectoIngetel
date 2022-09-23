@@ -5,11 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "firefox",
-			"request": "launch",
-			"name": "web test",
-			"debugServer": 4200,
-			"file": "${workspaceFolder}/FrontEnd/src/index.html"
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "backend",
+      "program": "${workspaceFolder}/backend/app.js",
+      "request": "launch",
+      "restart": true,
+      "runtimeExecutable": "node",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "cwd": "${fileDirname}",
+      "type": "pwa-node"
     }
   ]
 }
