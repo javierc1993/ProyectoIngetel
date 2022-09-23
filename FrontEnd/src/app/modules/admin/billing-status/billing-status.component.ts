@@ -1,9 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
+
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
 import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angular/forms';
+import {MatPaginator} from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
 
 export interface transaction {
     fechaFactura: string;
@@ -29,6 +32,7 @@ export interface transaction {
 })
 export class BillingStatusComponent implements OnInit {
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
     recentTransactionsTableColumns: string[] = [];
@@ -58,6 +62,11 @@ export class BillingStatusComponent implements OnInit {
     this.cargueCompleto()    
   }
 
+  ngAfterViewInit() {
+        this.recentTransactionsDataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel="Cantidad";
+  }
+
   cargueCompleto(){
     console.log("cargando el componente billing status")
     // this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Fecha pago', 'Sitio', 'Proyecto', 'Porcentaje factura'];
@@ -65,20 +74,32 @@ export class BillingStatusComponent implements OnInit {
 
     this._httpClient.get(variablesGlobales.urlBackend + '/production/')
       .subscribe((response:any) => {
-        this.datosHoja = response.result.map(function(thisPO){
-          //console.log(thisPO);
+        this.datosHoja = response.result.map(function(thisBill){
+          //console.log(thisBill);
           return {
-            SMP: thisPO.site.smp,
-            SITE_Name: thisPO.site.name,
-            Escenario: thisPO.scenery,
-            Banda: thisPO.band,
+            SMP: thisBill.site.smp,
+            SITE_Name: thisBill.site.name,
+            Escenario: thisBill.scenery,
+            Banda: thisBill.band,
             Lider: 'Jesus Carrillo',
-            Fecha_de_integracion: thisPO.integration.date,
-            ON_AIR:thisPO.onAir.date,
-            mos_HW: thisPO.mosHw.date,
-            PO: thisPO.reference,
-            Valor_PO: thisPO.value,
-            instalacion: thisPO.instalation.date? thisPO.instalation.date :'pendiente'
+            Fecha_de_integracion: thisBill.integration.date,
+            ON_AIR:thisBill.onAir.date,
+            mos_HW: thisBill.mosHw.date,
+            PO: thisBill.reference,
+            Valor_PO: thisBill.value,
+            instalacion: thisBill.instalation.date? thisBill.instalation.date :'pendiente'
+
+            // SMP: thisBill.site.smp,
+            // SITE_Name: thisBill.site.name,
+            // Escenario: thisBill.scenery,
+            // Banda: thisBill.band,
+            // Lider: 'Jesus Carrillo',
+            // Fecha_de_integracion: thisBill.integration.date,
+            // ON_AIR:thisBill.onAir.date,
+            // mos_HW: thisBill.mosHw.date,
+            // PO: thisBill.reference,
+            // Valor_PO: thisBill.value,
+            // instalacion: thisBill.instalation.date? thisBill.instalation.date :'pendiente'
           }
         }); 
         this.recentTransactionsDataSource.data = this.datosHoja;
