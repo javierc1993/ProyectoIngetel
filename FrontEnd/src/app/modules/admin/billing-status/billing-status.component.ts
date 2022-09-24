@@ -33,32 +33,34 @@ export interface transaction {
 export class BillingStatusComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  filterForm: UntypedFormGroup;
+  formFieldHelpers: UntypedFormGroup;
   private _data: BehaviorSubject<any> = new BehaviorSubject(null);
-    recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
-    recentTransactionsTableColumns: string[] = [];
-    datosHoja: transaction[] =[];
-    // drawerOpened=false;
-    //  drawerMode='side';
-    //  range = new FormGroup({
-    //     start: new FormControl<Date | null>(null),
-    //     end: new FormControl<Date | null>(null),
-    //     fechaDesdeInstalacion:new FormControl<Date | null>(null),
-    //   });
+  recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
+  recentTransactionsTableColumns: string[] = [];
+  datosHoja: transaction[] =[];
+  drawerOpened=false;
+  drawerMode='side';
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+    fechaDesdeInstalacion:new FormControl<Date | null>(null),
+  });
   constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
-    // this.filterForm = this._formBuilder.group({
-    //         SMP:[''],
-    //         PO:[''],
-    //         valorPO:[''],
-    //         fechaDesdeInstalacion:[''],
-    //         fechaHastaInstalacion:[''],
-    //     });
-    // this.range = new FormGroup({
-    //         start: new FormControl<Date | null>(null),
-    //         end: new FormControl<Date | null>(null),
-    //         fechaDesdeInstalacion:new FormControl<Date | null>(null),
-    //       });
+    this.filterForm = this._formBuilder.group({
+            SMP:[''],
+            PO:[''],
+            valorPO:[''],
+            fechaDesdeInstalacion:[''],
+            fechaHastaInstalacion:[''],
+        });
+    this.range = new FormGroup({
+            start: new FormControl<Date | null>(null),
+            end: new FormControl<Date | null>(null),
+            fechaDesdeInstalacion:new FormControl<Date | null>(null),
+          });
     this.cargueCompleto()    
   }
 
@@ -108,4 +110,6 @@ export class BillingStatusComponent implements OnInit {
       (error) => {console.log(error);}                
     );
   }
+  toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
+  drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
 }

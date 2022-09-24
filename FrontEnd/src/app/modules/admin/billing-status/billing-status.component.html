@@ -29,10 +29,10 @@
 <div class="relative flex overflow-hidden border mt-8 min-h-80">
 
     <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
-        <!-- <button class="m-5" mat-flat-button [color]="'primary'" (click)="toggleDrawerOpen();">
+        <button class="m-5" mat-flat-button [color]="'primary'" (click)="toggleDrawerOpen();">
         <mat-icon>filter_list</mat-icon>
             Filtros
-        </button> -->
+        </button>
         <div class="overflow-x-auto mx-6">
 
             <table class="w-full bg-transparent" mat-table matSort [dataSource]="recentTransactionsDataSource" #recentTransactionsTable>
@@ -184,13 +184,13 @@
             </table>
 
         </div>
-        <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Cantidad de elementos">
-        </mat-paginator> -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Cantidad de elementos">
+        </mat-paginator>
     </div>
 
     <!-- Right drawer must be positioned after the content-->
 
-    <!-- <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
+    <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
         <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
@@ -225,9 +225,9 @@
                     <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
             </div>
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
+            <!-- <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
                     <span> Buscar </span>
-                </button>
+                </button> -->
         </form>
         <mat-accordion class="example-headers-align" multi>
             <mat-expansion-panel>
@@ -240,7 +240,7 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <section class="example-section">
+                <!-- <section class="example-section">
                     <label class="example-margin">Perfíl:</label>
                     <mat-radio-group>
                         <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('value')">
@@ -248,11 +248,11 @@
                             Producción</mat-radio-button>
                         <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Completo</mat-radio-button>
                     </mat-radio-group>
-                </section>
+                </section> -->
 
             </mat-expansion-panel>
         </mat-accordion>
-    </fuse-drawer> -->
+    </fuse-drawer>
 
 
 </div>
