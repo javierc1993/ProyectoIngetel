@@ -6,7 +6,7 @@ const ProductionController = require('../controllers/production.controller');
 const ProductionRoute = express.Router();
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './filesUploaded/production')
+    cb(null, process.env.NODE_PATH + '/filesUploaded/production')
   },
   filename: (req, file, cb) => {
     cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);

@@ -6,7 +6,7 @@ const ReleaseController = require('../controllers/release.controller');
 const ReleaseRoute = express.Router();
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './filesUploaded/release')
+    cb(null, process.env.NODE_PATH + '/filesUploaded/release')
   },
   filename: (req, file, cb) => {
     cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
