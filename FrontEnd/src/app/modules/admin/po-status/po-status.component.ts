@@ -8,19 +8,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
 
 export interface transaction {
-    fechaFactura: string;
-    numeroFactura:string;
-    subtotal: string;
-    totalFactura: string;
-    rtf: string;
-    rtiva: string;
-    totalPagar:string;
-    poID: string;
-    smpID: string;
-    fechaPago: string;
-    sitio: string;
-    proyecto: string;
-    porcentajeFactura: string;
+    smpId: string;
+    nombreSitio:string;
+    poId: string;
+    escenario: string;
+    valorPo: string;
+    //instalacion: string;
+    porcentajeLiberado:string;
+    porcentajeFacturado: string;
+    porcentajePagado: string;
+    estado: string;
 }
 
 @Component({
@@ -39,27 +36,15 @@ export class PoStatusComponent implements OnInit {
   datosHoja: transaction[] =[];
   drawerOpened=false;
   drawerMode='side';
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-    fechaDesdeInstalacion:new FormControl<Date | null>(null),
-  });
 
   constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
-            SMP:[''],
-            PO:[''],
-            valorPO:[''],
-            fechaDesdeInstalacion:[''],
-            fechaHastaInstalacion:[''],
-        });
-    this.range = new FormGroup({
-            start: new FormControl<Date | null>(null),
-            end: new FormControl<Date | null>(null),
-            fechaDesdeInstalacion:new FormControl<Date | null>(null),
-          });
+            valorPo:[''],
+            porcentajeLiberado:[''],
+            porcentajePagado:['']
+        });    
     this.cargueCompleto();
   }
 
@@ -70,36 +55,49 @@ export class PoStatusComponent implements OnInit {
 
   cargueCompleto(){
     // this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Fecha pago', 'Sitio', 'Proyecto', 'Porcentaje factura'];
-    this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
+    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'Estado'];
 
     this._httpClient.get(variablesGlobales.urlBackend + '/production/')
       .subscribe((response:any) => {
-        this.datosHoja = response.result.map(function(thisBill){
+        //console.log(response.result);
+        this.datosHoja = response.result.map(function(thisBill : any){
           //console.log(thisBill);
-          return {
-            SMP: thisBill.site.smp,
-            SITE_Name: thisBill.site.name,
-            Escenario: thisBill.scenery,
-            Banda: thisBill.band,
-            Lider: 'Jesus Carrillo',
-            Fecha_de_integracion: thisBill.integration.date,
-            ON_AIR:thisBill.onAir.date,
-            mos_HW: thisBill.mosHw.date,
-            PO: thisBill.reference,
-            Valor_PO: thisBill.value,
-            instalacion: thisBill.instalation.date? thisBill.instalation.date :'pendiente'
+          var poLiberado = 0;
+          var poFacturado = 0;
+          var poPagado = 0;
+          var estado = '';
+          if(thisBill.value >= 2000000){
+              poLiberado = 70;
+              poFacturado = 50;
+              poPagado = 20;
+              estado = 'Liberado';
+          }
 
-            // SMP: thisBill.site.smp,
-            // SITE_Name: thisBill.site.name,
-            // Escenario: thisBill.scenery,
-            // Banda: thisBill.band,
-            // Lider: 'Jesus Carrillo',
-            // Fecha_de_integracion: thisBill.integration.date,
-            // ON_AIR:thisBill.onAir.date,
-            // mos_HW: thisBill.mosHw.date,
-            // PO: thisBill.reference,
-            // Valor_PO: thisBill.value,
-            // instalacion: thisBill.instalation.date? thisBill.instalation.date :'pendiente'
+          if(thisBill.value < 2000000 && thisBill.value >= 1000000){
+              poLiberado = 100;
+              poFacturado = 100;
+              poPagado = 50;
+              estado = 'Por pagar';
+          }
+
+          if(thisBill.value < 1000000){
+              poLiberado = 100;
+              poFacturado = 100;
+              poPagado = 100;
+              estado = 'Finalizado';
+          }
+
+          return {
+            smpId: thisBill.site.smp,
+            nombreSitio: thisBill.site.name,
+            poId: thisBill.reference,
+            escenario: thisBill.scenery,
+            valorPo: thisBill.value,
+            //instalacion: thisBill.instalation ? thisBill.instalation.date:'pendiente',
+            porcentajeLiberado: poLiberado,
+            porcentajeFacturado: poFacturado,
+            porcentajePagado: poPagado,
+            estado: estado
           }
         }); 
         this.recentTransactionsDataSource.data = this.datosHoja;

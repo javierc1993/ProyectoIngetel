@@ -73,13 +73,9 @@ export class BillingStatusComponent implements OnInit {
   cargueCompleto(){
     console.log("cargando el componente billing status")
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Estado'];
-    //this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-
     this._httpClient.get(variablesGlobales.urlBackend + '/production/')
-      .subscribe((response:any) => {
-        console.log(response.result);
-        this.datosHoja = response.result.map(function(thisBill){
-          //console.log(thisBill);
+      .subscribe((response:any) => {        
+        this.datosHoja = response.result.map(function(thisBill : any){          
           return {
             fechaFactura: thisBill.site.smp,
             numeroFactura: thisBill.site.name,
@@ -88,13 +84,13 @@ export class BillingStatusComponent implements OnInit {
             rtf: thisBill.value,
             rtiva: thisBill.value,
             totalPagar:thisBill.value,
-            poID: thisBill.mosHw.date,
-            smpID: thisBill.reference,            
+            poID: thisBill.reference,
+            smpID: thisBill.site.smp,            
             sitio: thisBill.site.name,
             proyecto: thisBill.site.name,
             porcentajeFactura: thisBill.site.name,
-            fechaPago: thisBill.instalation.date,
-            estado: thisBill.instalation.date? 'pagado' :'pendiente'
+            fechaPago: thisBill.instalation ? thisBill.instalation.date:'pendiente',
+            estado: thisBill.instalation ? 'pagado':'pendiente'
           }
         });         
         this.recentTransactionsDataSource.data = this.datosHoja;
