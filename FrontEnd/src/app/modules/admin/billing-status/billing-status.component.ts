@@ -17,11 +17,12 @@ export interface transaction {
     rtiva: string;
     totalPagar:string;
     poID: string;
-    smpID: string;
-    fechaPago: string;
+    smpID: string;    
     sitio: string;
     proyecto: string;
     porcentajeFactura: string;
+    fechaPago: string;
+    estado: string;
 }
 
 @Component({
@@ -50,11 +51,11 @@ export class BillingStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
-            SMP:[''],
-            PO:[''],
-            valorPO:[''],
-            fechaDesdeInstalacion:[''],
-            fechaHastaInstalacion:[''],
+            smpID:[''],
+            poID:[''],
+            totalPagar:[''],
+            fechaDesdeFactura:[''],
+            fechaHastaFactura:[''],
         });
     this.range = new FormGroup({
             start: new FormControl<Date | null>(null),
@@ -71,39 +72,27 @@ export class BillingStatusComponent implements OnInit {
 
   cargueCompleto(){
     console.log("cargando el componente billing status")
-    // this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Fecha pago', 'Sitio', 'Proyecto', 'Porcentaje factura'];
-    this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Estado'];
     this._httpClient.get(variablesGlobales.urlBackend + '/production/')
-      .subscribe((response:any) => {
-        this.datosHoja = response.result.map(function(thisBill){
-          //console.log(thisBill);
+      .subscribe((response:any) => {        
+        this.datosHoja = response.result.map(function(thisBill : any){          
           return {
-            SMP: thisBill.site.smp,
-            SITE_Name: thisBill.site.name,
-            Escenario: thisBill.scenery,
-            Banda: thisBill.band,
-            Lider: 'Jesus Carrillo',
-            Fecha_de_integracion: thisBill.integration.date,
-            ON_AIR:thisBill.onAir.date,
-            mos_HW: thisBill.mosHw.date,
-            PO: thisBill.reference,
-            Valor_PO: thisBill.value,
-            instalacion: thisBill.instalation.date? thisBill.instalation.date :'pendiente'
-
-            // SMP: thisBill.site.smp,
-            // SITE_Name: thisBill.site.name,
-            // Escenario: thisBill.scenery,
-            // Banda: thisBill.band,
-            // Lider: 'Jesus Carrillo',
-            // Fecha_de_integracion: thisBill.integration.date,
-            // ON_AIR:thisBill.onAir.date,
-            // mos_HW: thisBill.mosHw.date,
-            // PO: thisBill.reference,
-            // Valor_PO: thisBill.value,
-            // instalacion: thisBill.instalation.date? thisBill.instalation.date :'pendiente'
+            fechaFactura: thisBill.site.smp,
+            numeroFactura: thisBill.site.name,
+            subtotal: thisBill.value,
+            totalFactura: thisBill.value,
+            rtf: thisBill.value,
+            rtiva: thisBill.value,
+            totalPagar:thisBill.value,
+            poID: thisBill.reference,
+            smpID: thisBill.site.smp,            
+            sitio: thisBill.site.name,
+            proyecto: thisBill.site.name,
+            porcentajeFactura: thisBill.site.name,
+            fechaPago: thisBill.instalation ? thisBill.instalation.date:'pendiente',
+            estado: thisBill.instalation ? 'pagado':'pendiente'
           }
-        }); 
+        });         
         this.recentTransactionsDataSource.data = this.datosHoja;
               //this.updateGrafica1();
       },
