@@ -20,7 +20,7 @@ function excelDateToJSDate (excelDate) {
     // var minutes = Math.floor(total_seconds / 60) % 60;
 
     // return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
-    var date = new Date(Math.round((excelDate - (25567 + 1)) * 86400 * 1000));
+    var date = new Date(Math.round((excelDate - (25567 + 2)) * 86400 * 1000));
     var converted_date = date.toISOString().split('T')[0];
     return converted_date;
 
