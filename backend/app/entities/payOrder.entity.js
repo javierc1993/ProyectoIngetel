@@ -1,4 +1,4 @@
-
+const { excelDateToJSDate } = require('../lib/utils')
 
 class PayOrderEntity {
   constructor (data) {
@@ -13,13 +13,13 @@ class PayOrderEntity {
       region: data['Regional'] || null
     };
     this.Instalations = {
-      date: data['instalacion'] ? new Date(data['instalacion'] + ' 00:00:00') : null
+      date: data['instalacion'] ? excelDateToJSDate(data['instalacion']) : null
     };
     this.Integrations = {
-      date: data['Fecha de Integracion'] ? new Date(data['Fecha de Integracion'] + ' 00:00:00') : null
+      date: data['Fecha de Integracion'] ? excelDateToJSDate(data['Fecha de Integracion']) : null
     };
     this.MosHws = {
-      date: data['mos_HW'] ? new Date(data['mos_HW'] + ' 00:00:00') : null
+      date: data['mos_HW'] ? excelDateToJSDate(data['mos_HW']) : null
     };
     this.OnAirs = {
       date: data['ON AIR'] || null

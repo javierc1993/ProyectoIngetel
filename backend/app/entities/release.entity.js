@@ -1,4 +1,4 @@
-
+const {excelDateToJSDate} =require('../lib/utils')
 
 class ReleaseEntity {
   constructor (data) {
@@ -9,8 +9,8 @@ class ReleaseEntity {
     this.grDate = data.grDate || null;
     this.sgrNumber = data.sgrNumber || null;
     this.percent = data.percent || null;
-    this.date = data.date || null;
-    this.ppa = data.ppa || null;
+    this.date = data.date ? excelDateToJSDate(data.date + ' 00:00:00') : null;
+    this.ppa = data.ppa ? excelDateToJSDate(data.ppa + ' 00:00:00') : null;
     this.payOrderId = data.payOrder || null;
     this.releaseTypeId = data.releaseType || null;
   }

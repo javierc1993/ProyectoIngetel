@@ -1,4 +1,4 @@
-
+const {excelDateToJSDate} =require('../lib/utils')
 
 class FilterProductionEntity {
   constructor (data) {
@@ -39,20 +39,20 @@ class FilterProductionEntity {
       operator: data.operadorOnAir || null,
     };
     this.instalation = {
-      init: data.fechaDesdeInstalacion ? new Date(data.fechaDesdeInstalacion + ' 00:00:00') : null,
-      until: data.fechaHastaInstalacion ? new Date(data.fechaHastaInstalacion + ' 00:00:00') : null,
+      init: data.fechaDesdeInstalacion ? excelDateToJSDate(data.fechaDesdeInstalacion + ' 00:00:00') : null,
+      until: data.fechaHastaInstalacion ? excelDateToJSDate(data.fechaHastaInstalacion + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date'
     };
     this.integration = {
-      init: data.fechaDesdeIntegracion? new Date(data.fechaDesdeIntegracion + ' 00:00:00') : null,
-      until: data.fechaHastaIntegracion? new Date(data.fechaHastaIntegracion + ' 00:00:00') : null,
+      init: data.fechaDesdeIntegracion? excelDateToJSDate(data.fechaDesdeIntegracion + ' 00:00:00') : null,
+      until: data.fechaHastaIntegracion? excelDateToJSDate(data.fechaHastaIntegracion + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date'
     };
     this.mosHw = {
-      init: data.fechaDesdeMosHw? new Date(data.fechaDesdeMosHw + ' 00:00:00') : null,
-      until: data.fechaHastaMosHw? new Date(data.fechaHastaMosHw + ' 00:00:00') : null,
+      init: data.fechaDesdeMosHw? excelDateToJSDate(data.fechaDesdeMosHw + ' 00:00:00') : null,
+      until: data.fechaHastaMosHw? excelDateToJSDate(data.fechaHastaMosHw + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date'
     };
@@ -71,5 +71,7 @@ class FilterProductionEntity {
 
   }
 }
+
+
 
 module.exports = { FilterProductionEntity };
