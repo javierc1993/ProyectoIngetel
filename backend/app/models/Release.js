@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     iaDate: DataTypes.DATE,
     grDate: DataTypes.DATE,
     sgrNumber: DataTypes.STRING,
-    date: DataTypes.STRING,
-    ppa: DataTypes.STRING,
+    date: DataTypes.DATE,
+    ppa: DataTypes.DATE,
     percent: DataTypes.INTEGER
   }, {
     tableName: 'releases'

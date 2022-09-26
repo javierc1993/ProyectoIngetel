@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   const Instalation = sequelize.define('Instalation', {
-    date: DataTypes.STRING
+    date: DataTypes.DATE
   }, {
     tableName: 'instalations'
   });

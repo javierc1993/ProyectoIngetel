@@ -11,7 +11,7 @@ class ProductionController {
   async upload (req, res) {
     try {
       const registerUploadFile = await FileService.registerUploadFile(req.file)
-      const file = await XLSX.readFile( req.file.path);
+      const file = await XLSX.readFile(req.file.path);
       const data = await XLSX.utils.sheet_to_json(file.Sheets[file.SheetNames[0]]);
       const resp = await PayOrderService.createPayOrders(data);
       return res.status(200).json({
@@ -27,9 +27,8 @@ class ProductionController {
 
   async getProduction (req, res) {
     try {
-
-      const resp = await PayOrderService.getPayOrders();
-
+      const body = req.body;
+      const resp = await PayOrderService.getPayOrders(body);
       return res.status(200).json({
         resultMsg: 'OK',
         result: resp

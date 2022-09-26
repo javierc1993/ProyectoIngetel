@@ -17,6 +17,6 @@ const upload = multer({ storage })
 
 
 ProductionRoute.post('/upload',upload.single('file'), ProductionController.upload);
-ProductionRoute.get('/', ProductionController.getProduction);
+ProductionRoute.post('/', ProductionController.getProduction);
 
 module.exports = ProductionRoute;
