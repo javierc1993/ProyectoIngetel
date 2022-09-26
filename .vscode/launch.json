@@ -15,7 +15,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "cwd": "${fileDirname}",
+      // "cwd": "${fileDirname}",
       "type": "pwa-node"
     }
   ]
