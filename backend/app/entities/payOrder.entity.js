@@ -2,30 +2,30 @@
 
 class PayOrderEntity {
   constructor (data) {
-    this.proyect = data['Proyecto'] || null;
+    this.proyect = data['Proyecto '] || null;
     this.reference = data['PO'] || null;
     this.scenery = data['Escenario '] || null;
     this.value = data[' VALOR PO '] || null;
     this.band = data['Banda'] || null;
     this.Sites = {
-      name: po['SITE NAME'] || null,
-      smp: po['SMP'] || null,
-      region: po['Regional'] || null,
+      name: data['SITE NAME'] || null,
+      smp: data['SMP'] || null,
+      region: data['Regional'] || null
     };
     this.Instalations = {
-      date: po['instalacion'] ? new Date(po['instalacion'] + ' 00:00:00') : null
+      date: data['instalacion'] ? new Date(data['instalacion'] + ' 00:00:00') : null
     };
     this.Integrations = {
-      date: po['Fecha de Integracion'] ? new Date(po['Fecha de Integracion'] + ' 00:00:00') : null
+      date: data['Fecha de Integracion'] ? new Date(data['Fecha de Integracion'] + ' 00:00:00') : null
     };
     this.MosHws = {
-      date: po['mos_HW'] ? new Date(po['mos_HW'] + ' 00:00:00') : null
+      date: data['mos_HW'] ? new Date(data['mos_HW'] + ' 00:00:00') : null
     };
     this.OnAirs = {
-      date: po['ON AIR'] || null
+      date: data['ON AIR'] || null
     };
     this.Leaders = {
-      name: po['Lider '] || null
+      name: data['Lider '] || null
     };
   }
 }
