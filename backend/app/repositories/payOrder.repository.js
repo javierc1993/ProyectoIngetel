@@ -2,45 +2,18 @@
 const { PayOrder, Instalation, Integration, MosHw, OnAir, Site, User, Release } = require('../models');
 const SiteRepository = require('./site.repository');
 const UserRepository = require('./user.repository');
-
+const { Op, Sequelize } = require('sequelize');
 
 class PayOrderRepository {
-  async getAll () {
+  async getAll (include, where=null) {
+    if(where){
+      return PayOrder.findAll({
+        where:where,
+        include: include
+      });
+    }
     return PayOrder.findAll({
-      include:[
-        {
-          model: Instalation,
-          as: 'instalation',
-          attributes:['date']
-        },
-        {
-          model: Integration,
-          as: 'integration',
-          attributes:['date']
-        },
-        {
-          model: MosHw,
-          as: 'mosHw',
-          attributes:['date']
-        },
-        {
-          model: OnAir,
-          as: 'onAir',
-          attributes:['date']
-        },
-        {
-          model: Site,
-          as: 'site'
-        },
-        {
-          model: User,
-          as: 'leader'
-        },
-        {
-          model: Release,
-          as: 'release'
-        }
-      ]
+      include: include
     });
   };
 
@@ -54,7 +27,7 @@ class PayOrderRepository {
   }
 
   async createPayOrder (po) {
-    
+
     try {
       let site;
       let leader;

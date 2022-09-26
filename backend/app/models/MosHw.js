@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   const MosHw = sequelize.define('MosHw', {
-    date: DataTypes.STRING
+    date: DataTypes.DATE
   }, {
     tableName: 'mosHws'
   });
