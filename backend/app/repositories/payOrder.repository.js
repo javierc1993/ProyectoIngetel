@@ -12,7 +12,7 @@ class PayOrderRepository {
         where: where,
         include: include
       });
-      
+
     }
     return PayOrder.findAll({
       include: include
@@ -54,6 +54,16 @@ class PayOrderRepository {
       console.log(err);
       return null;
     }
+  }
+
+  async updateValuePayOrder (reference, value) {
+    let po = await this.getPoByReference(reference);
+    if (po) {
+      po.value = value;
+      po.save();
+      return true
+    }
+    return false;
   }
 }
 
