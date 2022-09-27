@@ -12,6 +12,7 @@ const { PayOrderEntity } = require('../entities/payOrder.entity');
 
 class PayOrderService {
   async getPayOrders (filters = null) {
+    filters = new FilterProductionEntity(filters);
     const include = await createIncludeGetAll(filters);
     const where = await createWhereGetAll(filters);
     return PayOrderRepository.getAll(include, where);
@@ -50,9 +51,8 @@ class PayOrderService {
 const createIncludeGetAll = async (filters = null) => {
   let include = templateInclude();
   if (filters) {
-    const filterFormat = new FilterProductionEntity(filters);
     include = await include.map(item => {
-      return createQueryField(item, filterFormat[item.as])
+      return createQueryField(item, filters[item.as])
     })
   }
 
@@ -60,17 +60,22 @@ const createIncludeGetAll = async (filters = null) => {
 }
 const createWhereGetAll = async (filters = null) => {
   let where = {};
-  let fields = ['reference', 'valuedPayOrder', 'scenery', 'band'];
+  let fields = ['reference', 'valuePayOrder', 'scenery', 'band'];
   if (filters) {
-    const filterFormat = new FilterProductionEntity(filters);
-    fields.forEach(field => {
-      if (filterFormat[field]?.data) {
-        where[filterFormat[field].fieldName] = filterFormat[field].data
+    for (const field of fields) {
+      if (filters[field]?.data) {
+        where = { ...where, ...asingFilter(filters[field]).where };
       }
-    })
-    if(Object.keys(where).length) return where
+    }
+    if (Object.keys(where).length) return where
   }
   return null;
+}
+
+const asingFilter = (filter) => {
+
+  return filters[filter.type]({}, filter)
+
 }
 
 const createQueryField = (item, filter) => {
@@ -99,7 +104,7 @@ const filters = {
   number: (item, filter) => {
     const { data, operator, fieldName } = filter
     if (data) {
-      item.Where = {};
+      item.where = {};
       let search = data;
       if (operator == 'top') search = { [Op.gte]: data }
       if (operator == 'button') search = { [Op.lte]: data }

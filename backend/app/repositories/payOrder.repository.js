@@ -5,12 +5,14 @@ const UserRepository = require('./user.repository');
 const { Op, Sequelize } = require('sequelize');
 
 class PayOrderRepository {
-  async getAll (include, where=null) {
-    if(where){
+  async getAll (include, where = null) {
+
+    if (where) {
       return PayOrder.findAll({
-        where:where,
+        where: where,
         include: include
       });
+      
     }
     return PayOrder.findAll({
       include: include
