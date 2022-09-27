@@ -37,7 +37,7 @@ export class BillingStatusComponent implements OnInit {
   filterForm: UntypedFormGroup;
   formFieldHelpers: UntypedFormGroup;
   private _data: BehaviorSubject<any> = new BehaviorSubject(null);
-  recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
+  recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
   drawerOpened=false;
@@ -47,7 +47,7 @@ export class BillingStatusComponent implements OnInit {
     end: new FormControl<Date | null>(null),
     fechaDesdeInstalacion:new FormControl<Date | null>(null),
   });
-  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) { }
+  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) { this.cargueCompleto()}
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
@@ -62,18 +62,12 @@ export class BillingStatusComponent implements OnInit {
             end: new FormControl<Date | null>(null),
             fechaDesdeInstalacion:new FormControl<Date | null>(null),
           });
-    this.cargueCompleto()    
-  }
-
-  ngAfterViewInit() {
-        this.recentTransactionsDataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel="Cantidad";
   }
 
   cargueCompleto(){
     console.log("cargando el componente billing status")
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Estado'];
-    this._httpClient.get(variablesGlobales.urlBackend + '/production/')
+    this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
       .subscribe((response:any) => {        
         this.datosHoja = response.result.map(function(thisBill : any){          
           return {
@@ -93,7 +87,8 @@ export class BillingStatusComponent implements OnInit {
             estado: thisBill.instalation ? 'pagado':'pendiente'
           }
         });         
-        this.recentTransactionsDataSource.data = this.datosHoja;
+        this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
+        this.recentTransactionsDataSource.paginator = this.paginator;
               //this.updateGrafica1();
       },
       (error) => {console.log(error);}                
@@ -101,4 +96,12 @@ export class BillingStatusComponent implements OnInit {
   }
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
+  applyFilter(event: Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.recentTransactionsDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.recentTransactionsDataSource.paginator) {
+      this.recentTransactionsDataSource.paginator.firstPage();
+    }
+    //console.log($event);
+  }
 }
