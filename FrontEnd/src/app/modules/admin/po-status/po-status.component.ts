@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
 import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
 
@@ -22,44 +23,40 @@ export interface transaction {
 
 @Component({
   selector: 'app-po-status',
-  templateUrl: './po-status.component.html',  
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './po-status.component.html',    
 })
 export class PoStatusComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   filterForm: UntypedFormGroup;
   formFieldHelpers: UntypedFormGroup;
-  private _data: BehaviorSubject<any> = new BehaviorSubject(null);
-  recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
+  //private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+  //recentTransactionsDataSource: MatTableDataSource<transaction>;
+  recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
   drawerOpened=false;
   drawerMode='side';
 
-  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) { }
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) { this.cargueCompleto();}
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
             valorPo:[''],
             porcentajeLiberado:[''],
             porcentajePagado:['']
-        });    
-    this.cargueCompleto();
+        });        
   }
 
-  ngAfterViewInit() {
-        this.recentTransactionsDataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel="Cantidad";
-  }
 
   cargueCompleto(){
     // this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Fecha pago', 'Sitio', 'Proyecto', 'Porcentaje factura'];
     this.recentTransactionsTableColumns=['SMP','SITE Name','PO','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'Estado'];
 
-    this._httpClient.get(variablesGlobales.urlBackend + '/production/')
+    this._httpClient.post(variablesGlobales.urlBackend + '/production/', {})
       .subscribe((response:any) => {
-        //console.log(response.result);
+        console.log(response.result);
         this.datosHoja = response.result.map(function(thisBill : any){
           //console.log(thisBill);
           var poLiberado = 0;
@@ -100,7 +97,9 @@ export class PoStatusComponent implements OnInit {
             estado: estado
           }
         }); 
-        this.recentTransactionsDataSource.data = this.datosHoja;
+        this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
+        this.recentTransactionsDataSource.paginator = this.paginator;
+        this.recentTransactionsDataSource.sort = this.sort;
               //this.updateGrafica1();
       },
       (error) => {console.log(error);}                
@@ -108,4 +107,12 @@ export class PoStatusComponent implements OnInit {
   }
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
+  applyFilter(event: Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.recentTransactionsDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.recentTransactionsDataSource.paginator) {
+      this.recentTransactionsDataSource.paginator.firstPage();
+    }
+    //console.log($event);
+  }
 }
