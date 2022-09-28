@@ -84,7 +84,7 @@ export class BillingStatusComponent implements OnInit {
             proyecto: thisBill.site.name,
             porcentajeFactura: thisBill.site.name,
             fechaPago: thisBill.instalation ? thisBill.instalation.date:'pendiente',
-            estado: thisBill.instalation ? 'pagado':'pendiente'
+            estado: thisBill.instalation.date ? 'pagado':'pendiente'
           }
         });         
         this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);

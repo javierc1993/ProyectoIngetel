@@ -6,6 +6,7 @@ import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angula
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
+import { ExporterService } from 'services/exporter.service';
 
 export interface transaction {
     smpId: string;
@@ -37,7 +38,7 @@ export class PoStatusComponent implements OnInit {
   drawerOpened=false;
   drawerMode='side';
 
-  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) { this.cargueCompleto();}
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { this.cargueCompleto();}
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
@@ -113,5 +114,9 @@ export class PoStatusComponent implements OnInit {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
     //console.log($event);
+  }
+  exportAsXLSX():void{
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.data, 'my_export')
+    console.log("descargando")
   }
 }

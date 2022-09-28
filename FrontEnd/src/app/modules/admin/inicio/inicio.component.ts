@@ -140,7 +140,7 @@ export class InicioComponent implements OnInit {
   cargueCompleto (): void{
 
         // this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-        this._httpClient.get(variablesGlobales.urlBackend + '/production/')
+        this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
         .subscribe(
           (response:any) => {
             this.datosHoja = response.result.map(function(thisPO){

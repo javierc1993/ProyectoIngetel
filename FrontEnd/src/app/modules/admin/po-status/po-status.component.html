@@ -158,6 +158,13 @@
 
         </div>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Cantidad de elementos"> </mat-paginator>
+        <div>
+
+            <h3>Descargar datos</h3>
+
+            <button mat-button color="primary" (click)="exportAsXLSX()">Descargar total</button>
+            <button mat-button color="accent">Descarga Filtrado</button>
+        </div>
     </div>
 
     <!-- Right drawer must be positioned after the content-->

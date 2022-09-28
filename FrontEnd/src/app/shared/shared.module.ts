@@ -23,7 +23,7 @@ import { FuseDrawerModule } from '@fuse/components/drawer';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { MatChipsModule } from '@angular/material/chips';
-
+import { ExporterService } from 'services/exporter.service';
 @NgModule({
     imports: [CommonModule,
         FormsModule,
@@ -77,5 +77,6 @@ import { MatChipsModule } from '@angular/material/chips';
         MatMomentDateModule,
         MatChipsModule
     ],
+    providers:[ExporterService]
 })
 export class SharedModule {}
