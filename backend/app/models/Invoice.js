@@ -4,10 +4,22 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   const Invoice = sequelize.define('Invoice', {
-    reference: DataTypes.STRING,
-    date: DataTypes.STRING,
-    subTotal: DataTypes.INTEGER,
-    total: DataTypes.INTEGER,
+    client: DataTypes.STRING,
+    date: DataTypes.DATE,
+    invoice: DataTypes.STRING,
+    subTotal: DataTypes.DOUBLE,
+    iva: DataTypes.DOUBLE,
+    total: DataTypes.DOUBLE,
+    rtf: DataTypes.DOUBLE,
+    rtIva: DataTypes.DOUBLE,
+    toPaid: DataTypes.DOUBLE,
+    totalPaid: DataTypes.DOUBLE,
+    datePay: DataTypes.DATE,
+    release: DataTypes.STRING,
+    percentInvoice: DataTypes.INTEGER,
+    observation: DataTypes.STRING,
+    state: DataTypes.STRING,
+
   }, {
     tableName: 'Invoices'
   });
@@ -15,12 +27,9 @@ module.exports = (sequelize, DataTypes) => {
   Invoice.associate = function (models) {
     //associations 
 
-    Invoice.belongsTo(models.User, { as: 'client', foreignKey: 'idClient' });
+    Invoice.belongsTo(models.PayOrder, { as: 'payOrder' });
 
 
-    // Invoice.belongsTo(models.ReleasePercent,{as:'releasePercent', foreignKey:'releasePercentId'})
-
-    
 
   };
 
