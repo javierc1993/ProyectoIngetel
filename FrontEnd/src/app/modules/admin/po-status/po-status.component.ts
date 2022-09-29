@@ -116,7 +116,7 @@ export class PoStatusComponent implements OnInit {
     //console.log($event);
   }
   exportAsXLSX():void{
-    this.excelService.exportToExcel(this.recentTransactionsDataSource.data, 'my_export')
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
     console.log("descargando")
   }
 }

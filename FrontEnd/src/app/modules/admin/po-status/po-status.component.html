@@ -33,11 +33,12 @@
         <mat-icon>filter_list</mat-icon>
             Filtros
         </button>
+        <mat-form-field class="p-4" appearance="standard">
+            <mat-label class="text-2xl">Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+        </mat-form-field>
         <div class="overflow-x-auto mx-6">
-            <mat-form-field appearance="standard">
-                <mat-label class="text-2xl">Buscar</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="search" #input>
-            </mat-form-field>
+
 
             <table class="w-full bg-transparent" mat-table [dataSource]="recentTransactionsDataSource" matSort>
 
@@ -158,12 +159,10 @@
 
         </div>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Cantidad de elementos"> </mat-paginator>
-        <div>
-
-            <h3>Descargar datos</h3>
-
-            <button mat-button color="primary" (click)="exportAsXLSX()">Descargar total</button>
-            <button mat-button color="accent">Descarga Filtrado</button>
+        <div class="relative p-4">
+            <button mat-flat-button class="bg-lime-400" (click)="exportAsXLSX()">
+                <mat-icon svgIcon="mat_outline:sim_card_download"></mat-icon>
+                Exportar datos</button>
         </div>
     </div>
 
