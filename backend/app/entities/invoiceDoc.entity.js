@@ -4,7 +4,7 @@ class InvoiceDocEntity {
   constructor (data) {
     this.client = data['CLIENTE'] || null;
     this.date = data['FECHA'] || null;
-    this.invoiceNumber = data['No FACTURA'] || null;
+    this.invoice = data['No FACTURA'] || null;
     this.proyect = data['PROYECTO'] || null;
     this.month = data['MES'] || null;
     this.subTotal = data['SUBTOTAL'] || null;
