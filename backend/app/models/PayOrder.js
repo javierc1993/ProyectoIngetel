@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     reference: DataTypes.STRING,
     scenery: DataTypes.STRING,
     band: DataTypes.STRING,
-    value: DataTypes.INTEGER
+    value: DataTypes.DOUBLE
   }, {
     tableName: 'payOrders'
   });
@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   PayOrder.associate = function (models) {
     //associations 
     PayOrder.hasMany(models.Release, { as: 'release', foreignKey: 'payOrderId' })
+    PayOrder.hasMany(models.Invoice, { as: 'invoice', foreignKey: 'payOrderId' })
     PayOrder.belongsTo(models.Site, { as: 'site' });
 
     PayOrder.hasOne(models.Instalation, {as:'instalation', foreignKey:'payOrderId'});
