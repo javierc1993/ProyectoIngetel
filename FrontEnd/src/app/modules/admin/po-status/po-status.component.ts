@@ -4,9 +4,9 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
 import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
+import { ExporterService } from 'services/exporter.service';
 
 export interface transaction {
     smpId: string;
@@ -27,8 +27,7 @@ export interface transaction {
 })
 export class PoStatusComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;  
   filterForm: UntypedFormGroup;
   formFieldHelpers: UntypedFormGroup;
   //private _data: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -39,7 +38,7 @@ export class PoStatusComponent implements OnInit {
   drawerOpened=false;
   drawerMode='side';
 
-  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) { this.cargueCompleto();}
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { this.cargueCompleto();}
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
@@ -63,22 +62,24 @@ export class PoStatusComponent implements OnInit {
           var poFacturado = 0;
           var poPagado = 0;
           var estado = '';
+          if(thisBill.release){
+            var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
+            poLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+          }
+          
           if(thisBill.value >= 2000000){
-              poLiberado = 70;
               poFacturado = 50;
               poPagado = 20;
               estado = 'Liberado';
           }
 
           if(thisBill.value < 2000000 && thisBill.value >= 1000000){
-              poLiberado = 100;
               poFacturado = 100;
               poPagado = 50;
               estado = 'Por pagar';
           }
 
           if(thisBill.value < 1000000){
-              poLiberado = 100;
               poFacturado = 100;
               poPagado = 100;
               estado = 'Finalizado';
@@ -98,8 +99,7 @@ export class PoStatusComponent implements OnInit {
           }
         }); 
         this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
-        this.recentTransactionsDataSource.paginator = this.paginator;
-        this.recentTransactionsDataSource.sort = this.sort;
+        this.recentTransactionsDataSource.paginator = this.paginator;        
               //this.updateGrafica1();
       },
       (error) => {console.log(error);}                
@@ -114,5 +114,9 @@ export class PoStatusComponent implements OnInit {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
     //console.log($event);
+  }
+  exportAsXLSX():void{
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
+    console.log("descargando")
   }
 }

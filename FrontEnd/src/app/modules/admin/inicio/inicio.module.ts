@@ -5,8 +5,6 @@ import { Route, RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 
 
-
-
 @NgModule({
   declarations: [InicioComponent],
   imports: [
