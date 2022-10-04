@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Inject, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
@@ -7,6 +7,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
 import { ExporterService } from 'services/exporter.service';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 export interface transaction {
     smpId: string;
@@ -33,12 +34,16 @@ export class PoStatusComponent implements OnInit {
   //private _data: BehaviorSubject<any> = new BehaviorSubject(null);
   //recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsDataSource: MatTableDataSource<transaction>;
-  recentTransactionsTableColumns: string[] = [];
+  recentTransactionsTableColumns: string[] = [];  
   datosHoja: transaction[] =[];
+  listPO: any;
+  thisPO: any;
   drawerOpened=false;
   drawerMode='side';
 
-  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { this.cargueCompleto();}
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public dialog: MatDialog) { 
+    
+    this.cargueCompleto();}
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
@@ -51,11 +56,15 @@ export class PoStatusComponent implements OnInit {
 
   cargueCompleto(){
     // this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Fecha pago', 'Sitio', 'Proyecto', 'Porcentaje factura'];
-    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'Estado'];
+    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO' ,'Estado'];
 
     this._httpClient.post(variablesGlobales.urlBackend + '/production/', {})
       .subscribe((response:any) => {
-        console.log(response.result);
+        //console.log(response.result);
+        this.listPO = response.result.reduce((acc, el)=>({
+          ...acc, 
+          [el.reference]:el,
+        }),{}); 
         this.datosHoja = response.result.map(function(thisBill : any){
           //console.log(thisBill);
           var poLiberado = 0;
@@ -118,5 +127,54 @@ export class PoStatusComponent implements OnInit {
   exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
     console.log("descargando")
+  }
+  
+  verPO(poId):void {
+    // console.log("this PO: "+ poId);
+    //console.log(this.listPO[poId]);
+    this.thisPO = this.listPO[poId];
+    //console.log("this PO: "+ JSON.stringify(this.thisPO));
+    const dialogRef = this.dialog.open(PoStatusDialog,{
+      data: this.thisPO
+    });    
+  }
+
+
+  
+}
+
+@Component({
+  selector: 'po-status-dialog',
+  templateUrl: 'po-status-dialog.html',
+})
+
+//export class DialogAnimationsExampleDialog {
+export class PoStatusDialog {
+  updatePOForm: UntypedFormGroup;
+  constructor(@Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {}
+
+  ngOnInit(): void {
+        /*construccion controles de formulario*/
+
+        console.log(this.thisPO)
+        this.updatePOForm = this._formBuilder.group({
+          smp:this.thisPO.site.smp,  
+          siteName: this.thisPO.site.name,
+          po:this.thisPO.reference,
+          valorPo:this.thisPO.value,
+          escenario: this.thisPO.scenery,
+          band:this.thisPO.band,
+          lider: this.thisPO.leader ? this.thisPO.leader.name:"",
+          onAir: {},
+          nosHw: {},
+          instalation:{},
+          integration:{}
+        });
+      /*llamada a la función para cargar la info de prod desde el backend*/        
+  }
+
+
+  updatePO(){
+    console.log("actuaizar  PO")
   }
 }
