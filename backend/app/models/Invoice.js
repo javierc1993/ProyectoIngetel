@@ -21,14 +21,14 @@ module.exports = (sequelize, DataTypes) => {
     state: DataTypes.STRING,
 
   }, {
-    tableName: 'Invoices'
+    tableName: 'invoices'
   });
 
   Invoice.associate = function (models) {
     //associations 
 
     Invoice.belongsTo(models.PayOrder, { as: 'payOrder' });
-
+    Invoice.hasOne(models.Pay, {as:'pay', foreignKey:'payId'});
 
 
   };
