@@ -25,6 +25,17 @@ class InvoiceRepository {
       return false;
     }
   }
+  async getAllInvoice (include, where = null) {
+    try {
+      const resp = await Invoice.findAll({
+        where: where,
+        include: include
+      });
+      return resp
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 module.exports = new InvoiceRepository();

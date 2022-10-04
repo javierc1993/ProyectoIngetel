@@ -22,6 +22,16 @@ class InvoiceController {
       return res.status(400)
     }
   }
+  async getAllInvoice (req, res) {
+    try {
+      const response = await InvoiceService.getAllInvoice(req.body);
+      return res.status(200).json(
+        response
+      )
+    } catch (error) {
+      return res.status(400)
+    }
+  }
 
 
 
