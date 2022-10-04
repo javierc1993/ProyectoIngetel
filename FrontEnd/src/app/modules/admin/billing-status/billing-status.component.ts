@@ -70,10 +70,12 @@ export class BillingStatusComponent implements OnInit {
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Estado'];
     this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
       .subscribe((response:any) => {        
-        this.datosHoja = response.result.map(function(thisBill : any){          
+        this.datosHoja = response.result.map(function(thisBill : any){ 
+          var thisDate = new Date();  
+          console.log("thisdate: "+thisDate) ;      
           return {
-            fechaFactura: thisBill.site.smp,
-            numeroFactura: thisBill.site.name,
+            fechaFactura: thisBill.instalation ? thisBill.instalation.date:thisDate,
+            numeroFactura: thisBill.reference,
             subtotal: thisBill.value,
             totalFactura: thisBill.value,
             rtf: thisBill.value,

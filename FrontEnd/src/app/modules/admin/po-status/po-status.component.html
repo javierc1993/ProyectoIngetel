@@ -136,6 +136,16 @@
                     </td>
                 </ng-container>
 
+                <!-- Ver la PO completa -->
+                <ng-container matColumnDef="ver PO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ver PO</th>
+                    <td mat-cell *matCellDef="let transaction">
+                        <button mat-mini-fab color="primary" (click)="verPO(transaction.poId);">
+                            <mat-icon svgIcon="mat_outline:remove_red_eye"></mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
                 <!-- estado -->
                 <ng-container matColumnDef="Estado">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
@@ -221,6 +231,5 @@
             </mat-expansion-panel>
         </mat-accordion>-->
     </fuse-drawer>
-
 
 </div>
