@@ -36,6 +36,20 @@ class InvoiceRepository {
       return false;
     }
   }
+
+  async getInvoiceByNumber (numberInvoice) {
+    try {
+      const invoice = await Invoice.findOne({
+        where: {
+          invoice: numberInvoice
+        }
+      });
+      return invoice;
+    } catch (error) {
+      console.log(error)
+      return null;
+    }
+  }
 }
 
 module.exports = new InvoiceRepository();
