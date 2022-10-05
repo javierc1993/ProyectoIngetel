@@ -4,7 +4,7 @@ const { FilterInvoiceEntity } = require('../entities/filterInvoice.entity');
 const InvoiceRepository = require('../repositories/invoice.repository');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 // const { hashText } = require('../lib/crypto');
-const { PayOrder } = require('../models');
+const { PayOrder, Pay } = require('../models');
 const { filters } = require('../lib/utils');
 
 
@@ -36,7 +36,7 @@ const createIncludeGetAll = async (filters = null) => {
   let include = templateInclude();
   if (filters) {
     include = await include.map(item => {
-      if (filters[item.as].data) return createQueryField(item, filters[item.as])
+      if (filters[item.as]?.data) return createQueryField(item, filters[item.as])
       return item;
     })
   }
@@ -75,6 +75,10 @@ const templateInclude = () => {
     {
       model: PayOrder,
       as: 'payOrder'
+    },
+    {
+      model: Pay,
+      as: 'pay'
     }
   ];
 }
