@@ -1,4 +1,4 @@
-
+const { excelDateToJSDate } = require('../lib/utils')
 
 class InvoiceDocEntity {
   constructor (data) {
