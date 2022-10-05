@@ -10,7 +10,8 @@ class InvoiceRepository {
       if (payOrder) {
         await this.setPoToInvoice(payOrder.id, resp);
       }
-      return resp;
+      resp.set(invoice);
+      return resp.save();
     } catch (err) {
       console.log(err);
       return null;

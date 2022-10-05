@@ -49,7 +49,9 @@ class PayOrderRepository {
         MosHw.create({ date: po.MosHws.date, payOrderId: resp.id });
         OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id });
       }
-      return resp;
+
+      resp.set(po);
+      return resp.save();
     } catch (err) {
       console.log(err);
       return null;
