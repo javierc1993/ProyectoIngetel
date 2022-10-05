@@ -6,7 +6,11 @@ class InvoiceRepository {
 
   async createInvoice (invoice, payOrder = null) {
     try {
-      const resp = await Invoice.create(invoice);
+      let resp = await this.getInvoiceByNumber(invoice.invoice);
+      if (!resp) {
+        if (payOrder) invoice.payOrderId = payOrder.id;
+        return Invoice.create(invoice);
+      }
       if (payOrder) {
         await this.setPoToInvoice(payOrder.id, resp);
       }
