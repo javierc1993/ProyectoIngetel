@@ -16,7 +16,7 @@ export interface transaction {
     totalFactura: string;
     rtf: string;
     rtiva: string;
-    totalPagar:string;
+    //totalPagar:string;
     poID: string;
     smpID: string;    
     sitio: string;
@@ -41,6 +41,8 @@ export class BillingStatusComponent implements OnInit {
   recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
+  listInvoice: any;
+  thisInvoice: any;
   drawerOpened=false;
   drawerMode='side';
   range = new FormGroup({
@@ -67,27 +69,35 @@ export class BillingStatusComponent implements OnInit {
 
   cargueCompleto(){
     console.log("cargando el componente billing status")
-    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA','Total pagar', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Estado'];
-    this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
-      .subscribe((response:any) => {        
-        this.datosHoja = response.result.map(function(thisBill : any){ 
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Estado'];
+    this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',{})
+      .subscribe((response:any) => { 
+        console.log("response: ") 
+        console.log(response)  
+        this.listInvoice = response.reduce((acc, el)=>({
+          ...acc, 
+          [el.reference]:el,
+        }),{});
+
+        
+        this.datosHoja = response.map(function(thisBill : any){ 
           var thisDate = new Date();  
           console.log("thisdate: "+thisDate) ;      
           return {
-            fechaFactura: thisBill.instalation ? thisBill.instalation.date:thisDate,
-            numeroFactura: thisBill.reference,
-            subtotal: thisBill.value,
-            totalFactura: thisBill.value,
-            rtf: thisBill.value,
-            rtiva: thisBill.value,
-            totalPagar:thisBill.value,
-            poID: thisBill.reference,
-            smpID: thisBill.site.smp,            
-            sitio: thisBill.site.name,
-            proyecto: thisBill.site.name,
-            porcentajeFactura: thisBill.site.name,
-            fechaPago: thisBill.instalation ? thisBill.instalation.date:'pendiente',
-            estado: thisBill.instalation.date ? 'pagado':'pendiente'
+            fechaFactura: thisBill.date,
+            numeroFactura: thisBill.invoice,
+            subtotal: thisBill.subTotal,
+            totalFactura: thisBill.total,
+            rtf: thisBill.rtf,
+            rtiva: thisBill.rtIva,
+            //totalPagar:thisBill.value,
+            poID: thisBill.payOrder.reference,
+            smpID: thisBill.payOrder.reference,            
+            sitio: thisBill.payOrder.siteId,
+            proyecto: thisBill.payOrder.scenery,
+            porcentajeFactura: thisBill.percentInvoice,
+            fechaPago: thisBill.datePay ? thisBill.datePay:'pendiente',
+            estado: thisBill.datePay ? 'pagado':'pendiente'
           }
         });         
         this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
