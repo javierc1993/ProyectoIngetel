@@ -4,7 +4,7 @@ const { FilterInvoiceEntity } = require('../entities/filterInvoice.entity');
 const InvoiceRepository = require('../repositories/invoice.repository');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 // const { hashText } = require('../lib/crypto');
-const { PayOrder, Pay } = require('../models');
+const { PayOrder, Pay, Site } = require('../models');
 const { filters } = require('../lib/utils');
 
 
@@ -74,7 +74,14 @@ const templateInclude = () => {
   return [
     {
       model: PayOrder,
-      as: 'payOrder'
+      as: 'payOrder',
+      include: 
+        {
+          model: Site,
+          as: 'site'
+        }
+
+      
     },
     {
       model: Pay,
