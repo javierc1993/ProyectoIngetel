@@ -51,6 +51,10 @@ class PayOrderRepository {
       }
 
       resp.set(po);
+      Instalation.update({ date: po.Instalations.date }, { where: { payOrderId: resp.id } });
+      Integration.update({ date: po.Integrations.date }, { where: { payOrderId: resp.id } });
+      MosHw.update({ date: po.MosHws.date }, { where: { payOrderId: resp.id } });
+      OnAir.update({ date: po.OnAirs.date }, { where: { payOrderId: resp.id } });
       return resp.save();
     } catch (err) {
       console.log(err);
