@@ -1,48 +1,88 @@
 <!-- dialog  -->
+
 <h2 mat-dialog-title>Informació PO #: {{thisPO.reference}}</h2>
 <mat-dialog-content class="mat-typography">
-    <form class="flex bg-card rounded-2xl shadow overflow-hidden" [formGroup]="updatePOForm">
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>SMP</mat-label>
-                <input matInput [formControlName]="'smp'">
-            </mat-form-field>
-        </div>
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>Nombre sitio</mat-label>
-                <input matInput [formControlName]="'siteName'">
-            </mat-form-field>
-        </div>
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>PO</mat-label>
-                <input matInput [formControlName]="'po'">
-            </mat-form-field>
-        </div>
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>Valor</mat-label>
-                <input matInput [formControlName]="'valorPo'">
-            </mat-form-field>
-        </div>
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>Escenario</mat-label>
-                <input matInput [formControlName]="'escenario'">
-            </mat-form-field>
-        </div>
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>Banda</mat-label>
-                <input matInput [formControlName]="'band'">
-            </mat-form-field>
-        </div>
-        <div class="flex">
-            <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                <mat-label>Líder</mat-label>
-                <input matInput [formControlName]="'lider'">
-            </mat-form-field>
+
+    <form class="flex bg-card shadow overflow-hidden" [formGroup]="updatePOForm">
+        <div class="grid-cols-1">
+            <h4>Info general</h4>
+            <div class="grid grid-cols-8 gap-4">
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>SMP</mat-label>
+                        <input matInput [formControlName]="'smp'">
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>Nombre sitio</mat-label>
+                        <input matInput [formControlName]="'siteName'">
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>PO</mat-label>
+                        <input matInput [formControlName]="'po'">
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>Valor</mat-label>
+                        <input matInput [formControlName]="'valorPo'" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>Escenario</mat-label>
+                        <input matInput [formControlName]="'escenario'">
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>Banda</mat-label>
+                        <input matInput [formControlName]="'band'">
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>Líder</mat-label>
+                        <input matInput [formControlName]="'lider'">
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
+                        <mat-label>onAir</mat-label>
+                        <input matInput [formControlName]="'onAir'">
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex">
+                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto" appearance="fill">
+
+
+
+                        <mat-label>Selecciona una fecha</mat-label>
+                        <input matInput [formControlName]="'nosHw'">
+                        <mat-hint>YYYY/MM/DD</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+
+
+                    </mat-form-field>
+                </div> -->
+            </div>
+
+            <div *ngIf="isRelease">
+                <h4>Liberaciones</h4>
+                <div></div>
+                <h4>Facturación y pagos</h4>
+                <div></div>
+            </div>
+            <div *ngIf="!isRelease" class="flex flex-col flex-auto w-full items-center">
+                <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="false" [name]="'dontRelease'" [type]="'warning'">
+                    Esta PO no tiene liberaciones
+                </fuse-alert>
+            </div>
+
         </div>
     </form>
 
@@ -54,7 +94,6 @@
     <button mat-button mat-dialog-close>Cancelar</button>
     <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
 </mat-dialog-actions>
-
 
 
 <!-- dialog  -->

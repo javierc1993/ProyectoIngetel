@@ -73,22 +73,28 @@ export class PoStatusComponent implements OnInit {
           var estado = '';
           if(thisBill.release){
             var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
-            poLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
-          }
+            poLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0)/2;
+          }          
           
-          if(thisBill.value >= 2000000){
+          if(poLiberado == 0){
+              poFacturado = 0;
+              poPagado = 0;
+              estado = 'Pendiente';
+          }
+
+          if(poLiberado > 0 && thisBill.value >= 2000000){
               poFacturado = 50;
               poPagado = 20;
               estado = 'Liberado';
           }
 
-          if(thisBill.value < 2000000 && thisBill.value >= 1000000){
+          if(poLiberado > 0 && thisBill.value < 2000000 && thisBill.value >= 1000000){
               poFacturado = 100;
               poPagado = 50;
               estado = 'Por pagar';
           }
 
-          if(thisBill.value < 1000000){
+          if(poLiberado > 0 && thisBill.value < 1000000){
               poFacturado = 100;
               poPagado = 100;
               estado = 'Finalizado';
@@ -151,12 +157,16 @@ export class PoStatusComponent implements OnInit {
 //export class DialogAnimationsExampleDialog {
 export class PoStatusDialog {
   updatePOForm: UntypedFormGroup;
-  constructor(@Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {}
+  isRelease: any;
+  constructor(@Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {
+    
+  }
 
   ngOnInit(): void {
         /*construccion controles de formulario*/
-
-        console.log(this.thisPO)
+        //var theLeader = this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "";
+        this.isRelease = this.thisPO.release.length > 1 ? true:false;
+        console.log(this.thisPO);        
         this.updatePOForm = this._formBuilder.group({
           smp:this.thisPO.site.smp,  
           siteName: this.thisPO.site.name,
@@ -164,11 +174,11 @@ export class PoStatusDialog {
           valorPo:this.thisPO.value,
           escenario: this.thisPO.scenery,
           band:this.thisPO.band,
-          lider: this.thisPO.leader ? this.thisPO.leader.name:"",
-          onAir: {},
-          nosHw: {},
-          instalation:{},
-          integration:{}
+          lider: this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "",
+          onAir: this.thisPO.onAir ? this.thisPO.onAir.date : null,
+          //nosHw: this.thisPO.mosHw ? this.thisPO.mosHw.date:null,
+          // instalation:{},
+          // integration:{}
         });
       /*llamada a la función para cargar la info de prod desde el backend*/        
   }
