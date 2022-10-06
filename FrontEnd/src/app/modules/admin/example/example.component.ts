@@ -27,6 +27,10 @@ export interface transaction {
     instalacion: string;
 
 }
+interface Operator {
+    value: string;
+    viewValue: string;
+  }
 
 @Component({
     selector: 'example',
@@ -52,7 +56,19 @@ export class ExampleComponent implements OnInit{
         end: new FormControl<Date | null>(null),
         fechaDesdeInstalacion:new FormControl<Date | null>(null),
       });
+
+    /*Inicializador de interfaz para filtros*/
+    operators: Operator[] = [
+        {value: 'igual', viewValue: 'igual'},
+        {value: 'top', viewValue: 'mayor'},
+        {value: 'button', viewValue: 'menor'},
+        {value: 'content', viewValue: 'contiene'},
+        {value: 'noContent', viewValue: 'no contiene'},
+      ];
+
+    /*constructor*/
      constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) { }
+
 
     ngOnInit(): void {
         /*construccion controles de formulario*/
@@ -62,28 +78,30 @@ export class ExampleComponent implements OnInit{
             valorPO:[''],
             fechaDesdeInstalacion:[''],
             fechaHastaInstalacion:[''],
+            operatorValorPO:['']
         });
       /*llamada a la función para cargar la info de prod desde el backend*/  
       this.cargueCompleto();
     }
+
     /*modificador de eventos despues de la carga de las vistas (paginador)*/
     ngAfterViewInit() {
         this.recentTransactionsDataSource.paginator = this.paginator;
         this.paginator._intl.itemsPerPageLabel="Cantidad";
       }
+      
     /*funcion para traer la información*/
     cargueCompleto(){
-
         this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
         this._httpClient
-            .get(
-                variablesGlobales.urlBackend + '/production/'
+            .post(
+                variablesGlobales.urlBackend + '/production/',{}
             )
             .subscribe(
                 (response:any) => {
                     for (let index = 0; index < response.result.length; index++) {
                         const element = response.result[index];
-                        console.log(Object.keys(element));
+                        console.log(element);
                         this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:'Jesus Carrillo', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
                         );
                     }
@@ -94,17 +112,24 @@ export class ExampleComponent implements OnInit{
                 }
             );
     }
+
+    /**
+     * funcion para seleccionar los
+     * perfiles de visualizacion
+     * @param strategy 
+     */
    perfilesVisualizacion(strategy){
     this.recentTransactionsTableColumns=['SMP','SITE Name', 'PO', 'Valor PO', 'Escenario'];
     var data=this.datosHoja;
     console.log(strategy);
+    /*construccion de la nueva interfaz
+     *para visualizar nvos datos */
     interface transaction {
         SMP: string;
         SITE_Name:string;
         Escenario: string;
         PO: string;
         Valor_PO: string;
-    
     }
     var newData: transaction[] =[];
     
@@ -117,29 +142,52 @@ export class ExampleComponent implements OnInit{
    }
 
    filtroSuma(){
-   var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
+  // var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
    var formFiltros = {
     'SMP':this.filterForm.value.SMP,
     'PO':this.filterForm.value.PO,
     'valorPO':this.filterForm.value.valorPO,
     'fechaDesdeInstalacion':this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY'),
-    'fechaHastaInstalacion': this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY')
-
+    'fechaHastaInstalacion': this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY'),
+    'operatorValorPO':this.filterForm.value.operatorValorPO
    };
-    console.log(formFiltros);
+   this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
+   this._httpClient
+       .post(
+           variablesGlobales.urlBackend + '/production/',{
+            
+             "valorPO":formFiltros.valorPO,
+              "operadorPO":formFiltros.operatorValorPO    
+         }
+       )
+       .subscribe(
+           (response:any) => {
+               for (let index = 0; index < response.result.length; index++) {
+                   const element = response.result[index];
+                   console.log(element);
+                   this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:'Jesus Carrillo', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
+                   );
+               }
+               this.recentTransactionsDataSource.data = this.datosHoja;
+           },
+           (error) => {
+               console.log(error);
+           }
+       );
    }
-   toggleDrawerOpen(): void
-{
+
+    toggleDrawerOpen(): void
+    {
     this.drawerOpened = !this.drawerOpened;
-}
+    }
 /**
  * Drawer opened changed
  *
  * @param opened
  */
- drawerOpenedChanged(opened: boolean): void
- {
+    drawerOpenedChanged(opened: boolean): void
+    {
      this.drawerOpened = opened;
- }
+    }
 
 }
