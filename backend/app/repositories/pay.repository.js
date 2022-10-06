@@ -6,11 +6,10 @@ class PayRepository {
 
   async createPay (pay, invoice = null) {
     try {
-      let resp = await this.getPayByNumber(pay.invoice);
+      let resp = await this.getPayByNumber(pay.documentNumber);
       if (!resp) resp = await Pay.create(pay);
-      if (invoice) {
-        await this.setPoToInvoice(invoice.id, resp);
-      }
+      if (invoice) await this.setPoToInvoice(invoice.id, resp);
+
       return resp;
     } catch (err) {
       console.log(err);
