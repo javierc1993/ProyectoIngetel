@@ -183,6 +183,13 @@
         <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por PO</mat-label>
+                    <input matInput [formControlName]="'thisPo'" [placeholder]="'la PO'">
+                    <mat-hint>PO</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por valor de la PO</mat-label>
                     <input class="text-right" matInput [formControlName]="'valorPo'">
                     <span matPrefix>$</span>
@@ -190,16 +197,16 @@
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por porcentaje liberado</mat-label>
-                    <input matInput [formControlName]="'porcentajeLiberado'" [placeholder]="'Ingresa los % de liberación'">
-                    <mat-hint>porcentajeLiberado</mat-hint>
+                    <mat-label>Búsqueda por SMP</mat-label>
+                    <input class="text-right" matInput [formControlName]="'smpID'">
+                    <mat-hint>smp</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por porcentaje pagado</mat-label>
-                    <input matInput [formControlName]="'porcentajePagado'" [placeholder]="'Ingresa los % pagados'">
-                    <mat-hint>porcentajePagado</mat-hint>
+                    <mat-label>Búsqueda por sitio</mat-label>
+                    <input matInput [formControlName]="'sitio'" [placeholder]="'Ingresa el sitio'">
+                    <mat-hint>sitio</mat-hint>
                 </mat-form-field>
             </div>
 

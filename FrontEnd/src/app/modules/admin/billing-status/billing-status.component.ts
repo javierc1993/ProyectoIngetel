@@ -53,10 +53,10 @@ export class BillingStatusComponent implements OnInit {
   constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { this.cargueCompleto()}
 
   ngOnInit(): void {
-    this.filterForm = this._formBuilder.group({
-            smpID:[''],
+    this.filterForm = this._formBuilder.group({            
             poID:[''],
             totalPagar:[''],
+            smpID:[''],
             fechaDesdeFactura:[''],
             fechaHastaFactura:[''],
         });

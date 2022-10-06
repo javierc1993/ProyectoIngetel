@@ -48,8 +48,9 @@ export class PoStatusComponent implements OnInit {
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({
             valorPo:[''],
-            porcentajeLiberado:[''],
-            porcentajePagado:['']
+            thisPo:[''],
+            smpID:[''],
+            sitio:['']
         });        
   }
 
