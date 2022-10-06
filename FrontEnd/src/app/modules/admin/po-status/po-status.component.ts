@@ -60,7 +60,7 @@ export class PoStatusComponent implements OnInit {
 
     this._httpClient.post(variablesGlobales.urlBackend + '/production/', {})
       .subscribe((response:any) => {
-        //console.log(response.result);
+        console.log(response.result);
         this.listPO = response.result.reduce((acc, el)=>({
           ...acc, 
           [el.reference]:el,
