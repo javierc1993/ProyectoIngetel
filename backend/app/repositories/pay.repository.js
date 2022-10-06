@@ -6,10 +6,11 @@ class PayRepository {
 
   async createPay (pay, invoice = null) {
     try {
-      const resp = await Pay.create(pay);
-      if (invoice) {
-        await this.setPoToPay(invoice.id, resp);
-      }
+      let resp = await this.getPayByNumber(pay.invoice);
+      if(!resp) resp = await Pay.create(pay);
+      // if (invoice) {
+      //   await this.setPoToPay(invoice.id, resp);
+      // }
       return resp;
     } catch (err) {
       console.log(err);
@@ -37,19 +38,19 @@ class PayRepository {
   //   }
   // }
 
-  // async getPayByNumber (numberPay) {
-  //   try {
-  //     const pay = await Pay.findOne({
-  //       where: {
-  //         pay: numberPay
-  //       }
-  //     });
-  //     return pay;
-  //   } catch (error) {
-  //     console.log(error)
-  //     return null;
-  //   }
-  // }
+  async getPayByNumber (numberPay) {
+    try {
+      const pay = await Pay.findOne({
+        where: {
+          documentNumber: numberPay
+        }
+      });
+      return pay;
+    } catch (error) {
+      console.log(error)
+      return null;
+    }
+  }
 }
 
 module.exports = new PayRepository();
