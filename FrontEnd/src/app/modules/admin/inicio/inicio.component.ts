@@ -173,7 +173,6 @@ export class InicioComponent implements OnInit {
           if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
           else{quantityPending.push(thisPO.instalacion)}
       })
-
       console.log(this.datosHoja);
       dataSeries.push(quantityPending.length)
       dataSeries.push(quantityInstalling.length)
