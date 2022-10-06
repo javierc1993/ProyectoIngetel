@@ -10,7 +10,7 @@ class FilterProductionEntity {
     };
     this.valuePayOrder = {
       data: data.valorPO || null,
-      type: 'string',
+      type: 'number',
       operator: data.operadorValorPO || null,
       fieldName: 'value',
     };
