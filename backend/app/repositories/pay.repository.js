@@ -7,9 +7,9 @@ class PayRepository {
   async createPay (pay, invoice = null) {
     try {
       let resp = await this.getPayByNumber(pay.invoice);
-      if(!resp) resp = await Pay.create(pay);
+      if (!resp) resp = await Pay.create(pay);
       if (invoice) {
-        await this.setPoToPay(invoice.id, resp);
+        await this.setPoToInvoice(invoice.id, resp);
       }
       return resp;
     } catch (err) {
@@ -18,14 +18,14 @@ class PayRepository {
     }
   }
 
-  // async setPoToPay (idPo, pay) {
-  //   try {
-  //     await pay.setPayOrder(idPo);
-  //     return true
-  //   } catch (error) {
-  //     return false;
-  //   }
-  // }
+  async setPoToInvoice (idInvoice, pay) {
+    try {
+      await pay.setInvoice(idInvoice);
+      return true
+    } catch (error) {
+      return false;
+    }
+  }
   // async getAllPay (include, where = null) {
   //   try {
   //     const resp = await Pay.findAll({
