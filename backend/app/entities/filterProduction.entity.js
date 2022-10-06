@@ -1,4 +1,4 @@
-const {excelDateToJSDate} =require('../lib/utils')
+const { excelDateToJSDate } = require('../lib/utils')
 
 class FilterProductionEntity {
   constructor (data) {
@@ -45,14 +45,14 @@ class FilterProductionEntity {
       type: 'date'
     };
     this.integration = {
-      init: data.fechaDesdeIntegracion? excelDateToJSDate(data.fechaDesdeIntegracion + ' 00:00:00') : null,
-      until: data.fechaHastaIntegracion? excelDateToJSDate(data.fechaHastaIntegracion + ' 00:00:00') : null,
+      init: data.fechaDesdeIntegracion ? excelDateToJSDate(data.fechaDesdeIntegracion + ' 00:00:00') : null,
+      until: data.fechaHastaIntegracion ? excelDateToJSDate(data.fechaHastaIntegracion + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date'
     };
     this.mosHw = {
-      init: data.fechaDesdeMosHw? excelDateToJSDate(data.fechaDesdeMosHw + ' 00:00:00') : null,
-      until: data.fechaHastaMosHw? excelDateToJSDate(data.fechaHastaMosHw + ' 00:00:00') : null,
+      init: data.fechaDesdeMosHw ? excelDateToJSDate(data.fechaDesdeMosHw + ' 00:00:00') : null,
+      until: data.fechaHastaMosHw ? excelDateToJSDate(data.fechaHastaMosHw + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date'
     };
@@ -65,8 +65,14 @@ class FilterProductionEntity {
     this.release = {
       data: data.porcentajeLiberacion || null,
       operator: data.operadorLiberacion || null,
-      fieldName: 'name',
-      type: 'number'
+      fieldName: 'sgrNumber',
+      type: 'string'
+    };
+    this.invoice = {
+      data: data.factura || null,
+      operator: data.operadorFactura || null,
+      fieldName: 'invoice',
+      type: 'string'
     }
 
   }
