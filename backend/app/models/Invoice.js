@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     //associations 
 
     Invoice.belongsTo(models.PayOrder, { as: 'payOrder' });
-    Invoice.hasOne(models.Pay, {as:'pay', foreignKey:'payId'});
+    Invoice.hasOne(models.Pay, {as:'pay', foreignKey:'invoiceId'});
 
 
   };

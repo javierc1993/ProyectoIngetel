@@ -8,9 +8,9 @@ class PayRepository {
     try {
       let resp = await this.getPayByNumber(pay.invoice);
       if(!resp) resp = await Pay.create(pay);
-      // if (invoice) {
-      //   await this.setPoToPay(invoice.id, resp);
-      // }
+      if (invoice) {
+        await this.setPoToPay(invoice.id, resp);
+      }
       return resp;
     } catch (err) {
       console.log(err);

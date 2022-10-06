@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Pay.associate = function (models) {
     //associations 
-    Pay.belongsTo(models.Invoice, { as: 'invoice', foreignKey: 'payId' });
+    Pay.belongsTo(models.Invoice, { as: 'invoice', foreignKey: 'invoiceId' });
   };
 
   return Pay;
