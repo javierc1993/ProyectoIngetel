@@ -61,10 +61,11 @@ export class ExampleComponent implements OnInit{
     operators: Operator[] = [
         {value: 'igual', viewValue: 'igual'},
         {value: 'top', viewValue: 'mayor'},
-        {value: 'button', viewValue: 'menor'},
-        {value: 'content', viewValue: 'contiene'},
-        {value: 'noContent', viewValue: 'no contiene'},
+        {value: 'button', viewValue: 'menor'}
       ];
+    operatorsString: Operator[] = [
+        {value: 'content', viewValue: 'contiene'},
+        {value: 'noContent', viewValue: 'no contiene'}];
 
     /*constructor*/
      constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) { }
@@ -78,7 +79,9 @@ export class ExampleComponent implements OnInit{
             valorPO:[''],
             fechaDesdeInstalacion:[''],
             fechaHastaInstalacion:[''],
-            operadorValorPO:['']
+            operadorValorPO:[''],
+            operadorPO:[''],
+            operadorSMP:['']
         });
       /*llamada a la función para cargar la info de prod desde el backend*/  
       this.cargueCompleto();
