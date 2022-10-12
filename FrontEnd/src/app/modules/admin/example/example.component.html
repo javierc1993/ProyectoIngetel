@@ -227,7 +227,7 @@
                     <mat-label>Búsqueda por valor de la PO</mat-label>
                     <input class="text-right" matInput [formControlName]="'valorPO'">
                     <span matPrefix>$</span>
-                    <mat-select [formControlName]="'operatorValorPO'">
+                    <mat-select [formControlName]="'operadorValorPO'">
                       <mat-option *ngFor="let operator of operators" [value]="operator.value">
                         {{operator.viewValue}}
                       </mat-option>

@@ -78,7 +78,7 @@ export class ExampleComponent implements OnInit{
             valorPO:[''],
             fechaDesdeInstalacion:[''],
             fechaHastaInstalacion:[''],
-            operatorValorPO:['']
+            operadorValorPO:['']
         });
       /*llamada a la función para cargar la info de prod desde el backend*/  
       this.cargueCompleto();
@@ -143,25 +143,25 @@ export class ExampleComponent implements OnInit{
 
    filtroSuma(){
   // var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
-   var formFiltros = {
-    'SMP':this.filterForm.value.SMP,
-    'PO':this.filterForm.value.PO,
-    'valorPO':this.filterForm.value.valorPO,
-    'fechaDesdeInstalacion':this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY'),
-    'fechaHastaInstalacion': this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY'),
-    'operatorValorPO':this.filterForm.value.operatorValorPO
-   };
+   var formFiltros = {};
+   console.log(this.filterForm.value);
+   
+   var newDatosHoja: transaction[] =[];
+    if(this.filterForm.value.SMP){formFiltros={'SMP':this.filterForm.value.SMP}};
+    if(this.filterForm.value.PO){formFiltros={'PO':this.filterForm.value.PO}};
+    if(this.filterForm.value.valorPO){formFiltros={'valorPO':this.filterForm.value.valorPO}};
+    if(this.filterForm.value.fechaDesdeInstalacion){formFiltros={'fechaDesdeInstalacion':this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY')}};
+    if(this.filterForm.value.fechaHastaInstalacion){formFiltros={'fechaHastainstalacion':this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY')}};
+    if(this.filterForm.value.operadorValorPO){formFiltros={'operadorValorPO':this.filterForm.value.operatorValorPO}};
    this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
    this._httpClient
        .post(
-           variablesGlobales.urlBackend + '/production/',{
-            
-             "valorPO":formFiltros.valorPO,
-              "operadorPO":formFiltros.operatorValorPO    
-         }
+           variablesGlobales.urlBackend + '/production/',
+            this.filterForm.value
        )
        .subscribe(
            (response:any) => {
+                this.datosHoja=[];
                for (let index = 0; index < response.result.length; index++) {
                    const element = response.result[index];
                    console.log(element);
