@@ -74,32 +74,23 @@ export class PoStatusComponent implements OnInit {
           var estado = '';
           if(thisBill.release){
             var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
-            poLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0)/2;
-          }          
+            poLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+          } 
+          if(thisBill.invoice){
+            var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
+            var porcentajePagado = thisBill.invoice.map(function(thisInvoice:any){
+                if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.percentInvoice;}
+                else{return 0;}
+            });
+            poFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
+            poPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
+          }         
           
-          if(poLiberado == 0){
-              poFacturado = 0;
-              poPagado = 0;
-              estado = 'Pendiente';
-          }
-
-          if(poLiberado > 0 && thisBill.value >= 2000000){
-              poFacturado = 50;
-              poPagado = 20;
-              estado = 'Liberado';
-          }
-
-          if(poLiberado > 0 && thisBill.value < 2000000 && thisBill.value >= 1000000){
-              poFacturado = 100;
-              poPagado = 50;
-              estado = 'Por pagar';
-          }
-
-          if(poLiberado > 0 && thisBill.value < 1000000){
-              poFacturado = 100;
-              poPagado = 100;
-              estado = 'Finalizado';
-          }
+          if(poLiberado == 0){estado = 'Pendiente';}
+          else if(poLiberado > poFacturado){estado = 'Liberado';}
+          else if(poLiberado == poFacturado && poFacturado > poPagado){estado = 'Por pagar';}
+          else if(poLiberado == poPagado && poLiberado == 100){estado = 'Finalizado';}
+          else if(poLiberado == poPagado && poLiberado < 100){estado = 'Pendiente';}
 
           return {
             smpId: thisBill.site.smp,
