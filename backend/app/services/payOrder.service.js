@@ -8,7 +8,7 @@ const UserRepository = require('../repositories/user.repository');
 
 const { deleteDuplicateByLabel } = require('../lib/formatData');
 const { FilterProductionEntity } = require('../entities/filterProduction.entity');
-const { PayOrderEntity } = require('../entities/payOrder.entity');
+const { PayOrderDocEntity } = require('../entities/payOrderDoc.entity');
 
 class PayOrderService {
   async getPayOrders (filters = null) {
@@ -39,12 +39,37 @@ class PayOrderService {
     );
 
     const response = Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO').map(async po => {
-      const payOrder = new PayOrderEntity(po);
+      const payOrder = new PayOrderDocEntity(po);
       return PayOrderRepository.createPayOrder(payOrder);
     })
     );
 
     return response;
+  }
+
+  // payOrderRequest content
+  // po
+  //   reference
+  //   scenery
+  //   band
+  //   value
+  // Instalation 
+  //   date
+  // integration
+  //   date
+  // moshw
+  //   date
+  // OnAir
+  //   date
+  // leader
+  //   name
+
+
+  async updatePayOrder (payOrderRequest) {
+    const payOrder = this.getPayOrders({ PO: payOrderRequest.reference });
+    if (!payOrder) throw new Error();
+
+    
   }
 }
 

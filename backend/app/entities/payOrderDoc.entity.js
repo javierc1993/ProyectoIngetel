@@ -1,6 +1,6 @@
 const { excelDateToJSDate } = require('../lib/utils')
 
-class PayOrderEntity {
+class PayOrderDocEntity {
   constructor (data) {
     this.proyect = data['Proyecto '] || null;
     this.reference = data['PO'] || null;
@@ -29,4 +29,4 @@ class PayOrderEntity {
     };
   }
 }
-module.exports = { PayOrderEntity };
+module.exports = { PayOrderDocEntity };
