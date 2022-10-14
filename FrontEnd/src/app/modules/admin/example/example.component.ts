@@ -156,7 +156,8 @@ export class ExampleComponent implements OnInit{
     if(this.filterForm.value.fechaDesdeInstalacion){formFiltros={'fechaDesdeInstalacion':this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY')}};
     if(this.filterForm.value.fechaHastaInstalacion){formFiltros={'fechaHastainstalacion':this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY')}};
     if(this.filterForm.value.operadorValorPO){formFiltros={'operadorValorPO':this.filterForm.value.operatorValorPO}};
-   this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
+    if(this.filterForm.value.operadorPO){formFiltros={'operadorPO':this.filterForm.value.operatorPO}};
+    this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
    this._httpClient
        .post(
            variablesGlobales.urlBackend + '/production/',
