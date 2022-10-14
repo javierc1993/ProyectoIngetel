@@ -21,7 +21,7 @@ class ReleaseDocEntity {
     this.executeCw = data['Execute CW+Reg Fotografico Date'] || null;
     this.executeCwPpa = data['Execute CW+Reg Fotografico PPA Date'] || null;
     this.executeCwPercent = data['Execute CW+Reg Fotografico %'] || null;
-    this.finalDocument = data['Documento Final Ok Date'] || null;
+    this.finalDocument = data['Doc Final Ok Date'] || null;
     this.finalDocumentPpa = data['Doc Final ok PPA Date'] || null;
     this.finalDocumentPercent = data['Doc Final ok Partner %'] || null;
     this.instalation = data['Installation Doc. Ok Date'] || null;
