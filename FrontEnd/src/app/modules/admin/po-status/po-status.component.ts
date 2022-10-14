@@ -157,8 +157,12 @@ export class PoStatusDialog {
   ngOnInit(): void {
         /*construccion controles de formulario*/
         //var theLeader = this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "";
-        this.isRelease = this.thisPO.release.length > 1 ? true:false;
-        console.log(this.thisPO);        
+        this.isRelease = this.thisPO.release.length >= 1 ? true:false;
+        console.log(this.thisPO);  
+        var dateRelease = this.thisPO.release.length >= 1 ? this.thisPO.release[0].grDate : null;
+        var dateRelease1 = this.thisPO.release.length >= 1 ? new Date(this.thisPO.release[0].grDate) :null;
+        console.log(dateRelease);
+        console.log(dateRelease1);    
         this.updatePOForm = this._formBuilder.group({
           smp:this.thisPO.site.smp,  
           siteName: this.thisPO.site.name,

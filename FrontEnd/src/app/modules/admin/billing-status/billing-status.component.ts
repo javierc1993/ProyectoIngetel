@@ -81,10 +81,13 @@ export class BillingStatusComponent implements OnInit {
 
         
         this.datosHoja = response.map(function(thisBill : any){ 
-          var thisDate = new Date();  
-          console.log("thisdate: "+thisDate) ;      
+          var fechaFactura = new Date(thisBill.date);  
+          fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
+          var fechaPago = thisBill.pay ? new Date (thisBill.pay.createdAt):null;
+          fechaPago = fechaPago ? new Date (fechaPago.getTime() + (3600000 * 5) ):null;
+          //console.log("thisdate: "+thisDate) ;      
           return {
-            fechaFactura: thisBill.date,
+            fechaFactura: fechaFactura,
             numeroFactura: thisBill.invoice,
             subtotal: thisBill.subTotal,
             totalFactura: thisBill.total,
@@ -96,7 +99,7 @@ export class BillingStatusComponent implements OnInit {
             sitio: thisBill.payOrder.site.name,
             proyecto: thisBill.payOrder.scenery,
             porcentajeFactura: thisBill.percentInvoice,
-            fechaPago: thisBill.pay ? thisBill.pay.createdAt:null,
+            fechaPago: fechaPago,
             valorPagado: thisBill.pay ? thisBill.pay.totalPaid:null,
             estado: thisBill.pay ? 'pagado':'pendiente'
           }
