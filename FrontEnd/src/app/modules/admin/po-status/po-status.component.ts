@@ -5,7 +5,7 @@ import { variablesGlobales } from 'GLOBAL';
 import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
+import {FormGroup, FormArray, FormControl, ReactiveFormsModule} from '@angular/forms';
 import { ExporterService } from 'services/exporter.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
@@ -147,40 +147,66 @@ export class PoStatusComponent implements OnInit {
 })
 
 //export class DialogAnimationsExampleDialog {
-export class PoStatusDialog {
-  updatePOForm: UntypedFormGroup;
-  isRelease: any;
+export class PoStatusDialog implements OnInit {
+  public updatePOForm: FormGroup = new FormGroup({});
+  public isRelease: boolean;
+  public percentLiberado: Int16Array;
+  public percentFacturado: Int16Array;
+  public percentPagado: Int16Array;
+  // invoices: any;
+  // payments: any;
   constructor(@Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {
     
   }
 
   ngOnInit(): void {
+    this.initUpdatePOForm();
         /*construccion controles de formulario*/
         //var theLeader = this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "";
-        this.isRelease = this.thisPO.release.length >= 1 ? true:false;
-        console.log(this.thisPO);  
-        var dateRelease = this.thisPO.release.length >= 1 ? this.thisPO.release[0].grDate : null;
-        var dateRelease1 = this.thisPO.release.length >= 1 ? new Date(this.thisPO.release[0].grDate) :null;
-        console.log(dateRelease);
-        console.log(dateRelease1);    
-        this.updatePOForm = this._formBuilder.group({
-          smp:this.thisPO.site.smp,  
+              
+  }
+
+  initUpdatePOForm():void{
+    this.isRelease = this.thisPO.release.length >= 1 ? true:false;
+    console.log(this.thisPO); 
+ 
+    this.updatePOForm = new FormGroup({
+          smp:  this.thisPO.site.smp,  
           siteName: this.thisPO.site.name,
-          po:this.thisPO.reference,
+          po:  this.thisPO.reference,
           valorPo:this.thisPO.value,
-          escenario: this.thisPO.scenery,
+          scenery: this.thisPO.scenery,
           band:this.thisPO.band,
-          lider: this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "",
+          //lider: this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "",
           onAir: this.thisPO.onAir ? this.thisPO.onAir.date : null,
+          releases: new FormArray([]),
+          //invoice: new FormArray(this.thisPO.invoice)
           //nosHw: this.thisPO.mosHw ? this.thisPO.mosHw.date:null,
           // instalation:{},
           // integration:{}
         });
-      /*llamada a la función para cargar la info de prod desde el backend*/        
+    
+      /*llamada a la función para cargar la info de prod desde el backend*/  
   }
 
+  addRelease():void{
+    this.thisPO.release.forEach(element => {
+      const refRelease = this.updatePOForm.get('releases') as FormArray;
+      //refRelease.push(this.initFormRelease(element))
+      
+    });
+  }
 
+  // initFormRelease(thisRelease:any):FormGroup{
+  //   return new FormGroup()
+  //   {
+
+
+  //   }
+
+  // }
   updatePO(){
-    console.log("actuaizar  PO")
+    console.log("actuaizar  PO");
+    console.log(this.updatePOForm);
   }
 }
