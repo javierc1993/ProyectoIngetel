@@ -5,7 +5,7 @@
 
     <form class="flex bg-card shadow overflow-hidden" [formGroup]="updatePOForm">
         <div class="grid-cols-1">
-            <h4>Info general</h4>
+            <h4><b>Info general</b></h4>
             <div class="grid grid-cols-8 gap-4">
                 <div class="flex">
                     <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
@@ -28,7 +28,7 @@
                 <div class="flex">
                     <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
                         <mat-label>Valor</mat-label>
-                        <input matInput [formControlName]="'valorPo'" readonly>
+                        <input matInput [formControlName]="'valorPo'">
                     </mat-form-field>
                 </div>
                 <div class="flex">
@@ -43,12 +43,12 @@
                         <input matInput [formControlName]="'band'">
                     </mat-form-field>
                 </div>
-                <div class="flex">
+                <!-- <div class="flex">
                     <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
                         <mat-label>Líder</mat-label>
                         <input matInput [formControlName]="'lider'">
                     </mat-form-field>
-                </div>
+                </div> -->
                 <div class="flex">
                     <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
                         <mat-label>onAir</mat-label>
@@ -72,18 +72,89 @@
             </div>
 
             <div *ngIf="isRelease">
-                <h4>Liberaciones</h4>
+                <h4><b>Liberaciones</b></h4>
+                <div class="form-grid" formArrayName="releases">
+                    <div class="form-field" *ngFor="let thisRelease of getCtrl('releases',updatePOForm).controls;index as id" class="flex">
+                        <div class="grid grid-cols-4 gap-4" [formGroupName]="id">
+                            <mat-form-field>
+                                <mat-label>Fecha</mat-label>
+                                <input matInput formControlName='grDate'>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Fecha PPA</mat-label>
+                                <input matInput formControlName='iaDate'>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>% Liberado</mat-label>
+                                <input matInput formControlName='percent'>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label># SGR</mat-label>
+                                <input matInput formControlName='sgrNumber'>
+                            </mat-form-field>
+                        </div>
 
-                <!-- <div formArrayName="release">
-                    <div *ngFor="let thisRelease of updatePOForm.value.release;let indice=index" class="flex">
-                        <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
-                            <mat-label>Porcentaje liberado</mat-label>
-                            <input matInput [formControlName]="'thisRelease.percent'">
-                        </mat-form-field>
                     </div>
-                </div> -->
-                <h4>Facturación y pagos</h4>
-                <div></div>
+                </div>
+
+                <div *ngIf="isInvoice">
+                    <h4><b>Facturación y pagos</b></h4>
+
+                    <div class="form-grid" formArrayName="invoices">
+                        <div class="form-field" *ngFor="let thisInvoice of getCtrl('invoices',updatePOForm).controls;index as id" class="flex">
+                            <div class="grid grid-cols-10 gap-4" [formGroupName]="id">
+                                <mat-form-field>
+                                    <mat-label>Fecha</mat-label>
+                                    <input matInput formControlName='date'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Factura</mat-label>
+                                    <input matInput formControlName='invoice'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>% Facturado</mat-label>
+                                    <input matInput formControlName='percentInvoice'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Subtotal</mat-label>
+                                    <input matInput formControlName='subTotal'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>IVA</mat-label>
+                                    <input matInput formControlName='iva'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>rtIva</mat-label>
+                                    <input matInput formControlName='rtIva'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>RTF</mat-label>
+                                    <input matInput formControlName='rtf'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Valor utilizado</mat-label>
+                                    <input matInput formControlName='valorUtilizado'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Valor pagado</mat-label>
+
+                                    <input matInput formControlName='totalPaid'>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Fecha pago</mat-label>
+                                    <input matInput formControlName='datePay'>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!isInvoice" class="flex flex-col flex-auto w-full items-center">
+                    <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="false" [name]="'dontRelease'" [type]="'warning'">
+                        Esta PO no tiene facturación
+                    </fuse-alert>
+                </div>
+
             </div>
             <div *ngIf="!isRelease" class="flex flex-col flex-auto w-full items-center">
                 <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="false" [name]="'dontRelease'" [type]="'warning'">

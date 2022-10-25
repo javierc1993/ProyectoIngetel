@@ -2,10 +2,9 @@ import { Component, OnInit, ViewChild, Input, Inject, ViewEncapsulation, AfterVi
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
-import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators, FormGroup, FormArray, FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {FormGroup, FormArray, FormControl, ReactiveFormsModule} from '@angular/forms';
 import { ExporterService } from 'services/exporter.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
@@ -68,29 +67,41 @@ export class PoStatusComponent implements OnInit {
         }),{}); 
         this.datosHoja = response.result.map(function(thisBill : any){
           //console.log(thisBill);
-          var poLiberado = 0;
-          var poFacturado = 0;
-          var poPagado = 0;
+          var percentLiberado = 0;
+          var percentFacturado = 0;
+          var percentPagado = 0;
+          var valorPoTotal = thisBill.value;
+          var valorPoFacturado;
+          var valorPoPagado;
           var estado = '';
           if(thisBill.release){
             var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
-            poLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+            percentLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
           } 
           if(thisBill.invoice){
             var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
+            var valorFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.subTotal);
             var porcentajePagado = thisBill.invoice.map(function(thisInvoice:any){
                 if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.percentInvoice;}
                 else{return 0;}
             });
-            poFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
-            poPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
+            var valorPagado = thisBill.invoice.map(function(thisInvoice:any){
+                if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.totalPaid;}
+                else{return 0;}
+            });
+            percentFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
+            valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
+            percentPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
+            valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0);
           }         
           
-          if(poLiberado == 0){estado = 'Pendiente';}
-          else if(poLiberado > poFacturado){estado = 'Liberado';}
-          else if(poLiberado == poFacturado && poFacturado > poPagado){estado = 'Por pagar';}
-          else if(poLiberado == poPagado && poLiberado == 100){estado = 'Finalizado';}
-          else if(poLiberado == poPagado && poLiberado < 100){estado = 'Pendiente';}
+          if(percentFacturado > 100){estado = 'Error facturacion';}
+          else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
+          else if(percentLiberado == 0){estado = 'Pendiente';}
+          else if(percentLiberado > percentFacturado){estado = 'Liberado';}
+          else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}
+          else if(percentLiberado == percentPagado && percentLiberado == 100){estado = 'Finalizado';}
+          else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
 
           return {
             smpId: thisBill.site.smp,
@@ -99,9 +110,9 @@ export class PoStatusComponent implements OnInit {
             escenario: thisBill.scenery,
             valorPo: thisBill.value,
             //instalacion: thisBill.instalation ? thisBill.instalation.date:'pendiente',
-            porcentajeLiberado: poLiberado,
-            porcentajeFacturado: poFacturado,
-            porcentajePagado: poPagado,
+            porcentajeLiberado: percentLiberado,
+            porcentajeFacturado: percentFacturado,
+            porcentajePagado: percentPagado,
             estado: estado
           }
         }); 
@@ -150,6 +161,7 @@ export class PoStatusComponent implements OnInit {
 export class PoStatusDialog implements OnInit {
   public updatePOForm: FormGroup = new FormGroup({});
   public isRelease: boolean;
+  public isInvoice: boolean;
   public percentLiberado: Int16Array;
   public percentFacturado: Int16Array;
   public percentPagado: Int16Array;
@@ -168,43 +180,77 @@ export class PoStatusDialog implements OnInit {
 
   initUpdatePOForm():void{
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
+    this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;
     console.log(this.thisPO); 
- 
-    this.updatePOForm = new FormGroup({
-          smp:  this.thisPO.site.smp,  
+    this.updatePOForm = this._formBuilder.group({
+   // this.updatePOForm = new FormGroup({
+          smp: new FormControl(this.thisPO.site.smp, [Validators.required]),  
           siteName: this.thisPO.site.name,
-          po:  this.thisPO.reference,
+          po:  new FormControl(this.thisPO.reference,[Validators.required]), 
           valorPo:this.thisPO.value,
           scenery: this.thisPO.scenery,
           band:this.thisPO.band,
           //lider: this.thisPO.leader ? this.thisPO.leader.name+" "+this.thisPO.leader.lastname : "",
           onAir: this.thisPO.onAir ? this.thisPO.onAir.date : null,
           releases: new FormArray([]),
-          //invoice: new FormArray(this.thisPO.invoice)
+          invoices: new FormArray([])
           //nosHw: this.thisPO.mosHw ? this.thisPO.mosHw.date:null,
           // instalation:{},
           // integration:{}
         });
+    if(this.isRelease){
+      this.initFormReleases();      
+    }
+    if(this.isInvoice){
+      this.initFormInvoices(); 
+    }
     
       /*llamada a la función para cargar la info de prod desde el backend*/  
   }
 
-  addRelease():void{
+  initFormReleases():void{
     this.thisPO.release.forEach(element => {
-      const refRelease = this.updatePOForm.get('releases') as FormArray;
-      //refRelease.push(this.initFormRelease(element))
+      const refRelease = this.updatePOForm.get('releases') as FormArray;      
+      var thisRelease = new FormGroup(
+      {
+        grDate: new FormControl(element.grDate),
+        iaDate: new FormControl(element.iaDate),
+        percent: new FormControl(element.percent),
+        sgrNumber: new FormControl(element.sgrNumber),
+      })
+      refRelease.push(thisRelease);
       
     });
   }
 
-  // initFormRelease(thisRelease:any):FormGroup{
-  //   return new FormGroup()
-  //   {
+  initFormInvoices():void{
+    this.thisPO.invoice.forEach(element => {
+      var statusPay = (!element.pay) ? false:true;
+      const refInvoices = this.updatePOForm.get('invoices') as FormArray;      
+      var thisInvoice = new FormGroup(
+      {
+        date: new FormControl(element.date),
+        invoice: new FormControl(element.invoice),
+        subTotal: new FormControl(element.subTotal),
+        iva: new FormControl(element.iva),
+        rtIva: new FormControl(element.rtIva),
+        rtf: new FormControl(element.rtf),
+        percentInvoice: new FormControl(element.percentInvoice),
+        valorUtilizado: new FormControl(statusPay ? element.pay.amountUtilized : null),
+        totalPaid: new FormControl(statusPay ? element.pay.totalPaid : "pendiente"),
+        datePay: new FormControl(statusPay ? element.pay.createdAt : null),
 
+      })
+      refInvoices.push(thisInvoice);
+      
+    });
+  }
 
-  //   }
+  getCtrl(key:string, form:FormGroup):any{
+    return form.get(key)
+  }
 
-  // }
+  
   updatePO(){
     console.log("actuaizar  PO");
     console.log(this.updatePOForm);
