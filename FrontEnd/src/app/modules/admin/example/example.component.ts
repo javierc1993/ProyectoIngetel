@@ -81,7 +81,7 @@ export class ExampleComponent implements OnInit{
             fechaHastaInstalacion:[''],
             operadorValorPO:[''],
             operadorPO:[''],
-            operadorSMP:['']
+            operadorSitio:['']
         });
       /*llamada a la función para cargar la info de prod desde el backend*/  
       this.cargueCompleto();
