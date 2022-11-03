@@ -69,7 +69,7 @@ export class BillingStatusComponent implements OnInit {
 
   cargueCompleto(){
     console.log("cargando el componente billing status")
-    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Valor pagado', 'Estado'];
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];
     this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',{})
       .subscribe((response:any) => { 
         console.log("response: ") 
@@ -100,6 +100,7 @@ export class BillingStatusComponent implements OnInit {
             proyecto: thisBill.payOrder.scenery,
             porcentajeFactura: thisBill.percentInvoice,
             fechaPago: fechaPago,
+            documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
             valorPagado: thisBill.pay ? thisBill.pay.totalPaid:null,
             estado: thisBill.pay ? 'pagado':'pendiente'
           }
