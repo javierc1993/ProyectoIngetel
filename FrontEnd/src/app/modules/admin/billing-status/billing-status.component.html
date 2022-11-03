@@ -193,6 +193,17 @@
                           </span>
                     </td>
                 </ng-container>
+                <!-- documentNumber -->
+                <ng-container matColumnDef="# Documento">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        # Documento
+                    </th>
+                    <td mat-cell *matCellDef="let transaction">
+                        <span class="pr-6 font-medium whitespace-nowrap">
+                              {{transaction.documentNumber}}
+                          </span>
+                    </td>
+                </ng-container>
                 <!-- valorPagado -->
                 <ng-container matColumnDef="Valor pagado">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
