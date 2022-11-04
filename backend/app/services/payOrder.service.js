@@ -1,7 +1,7 @@
 'use strict';
 const { Op, Sequelize } = require('sequelize');
 
-const { Instalation, Integration, MosHw, OnAir, Site, User, Release, Pay, Invoice } = require('../models');
+const { Instalation, Integration, MosHw, OnAir, Site, User, Release, Pay, Invoice, Production } = require('../models');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 const SiteRepository = require('../repositories/site.repository');
 const UserRepository = require('../repositories/user.repository');

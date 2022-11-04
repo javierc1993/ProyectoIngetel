@@ -56,6 +56,12 @@ class FilterProductionEntity {
       fieldName: 'date',
       type: 'date'
     };
+    this.production = {
+      init: data.fechaDesdeProduction ? excelDateToJSDate(data.fechaDesdeProduction + ' 00:00:00') : null,
+      until: data.fechaHastaProduction ? excelDateToJSDate(data.fechaHastaProduction + ' 00:00:00') : null,
+      fieldName: 'date',
+      type: 'date'
+    };
     this.leader = {
       data: data.lider || null,
       type: 'string',
