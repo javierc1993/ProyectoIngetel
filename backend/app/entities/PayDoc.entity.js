@@ -4,8 +4,8 @@ class PayDocEntity {
   constructor (data) {
 
     this.documentNumber = data['Document Number'];
-    this.amountUtilized = data['Amount Utilized'];
-    this.financialCost = data['Financial Cost'];
+    this.amountUtilized = data[' Amount Utilized '];
+    this.financialCost = data[' Financial Cost '];
     this.invoice = data['Invoice Number'];
     this.totalPaid = data['Total Pagado'];
     this.maturityDate = data['Maturity Date'];
