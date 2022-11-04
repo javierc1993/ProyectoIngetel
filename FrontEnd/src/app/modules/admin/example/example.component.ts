@@ -3,7 +3,7 @@ import { Component, OnInit, ViewEncapsulation,ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { variablesGlobales } from 'GLOBAL';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, elementAt, Observable, tap } from 'rxjs';
 import {MatDividerModule} from '@angular/material/divider';
 import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
@@ -43,6 +43,8 @@ export class ExampleComponent implements OnInit{
      */
     // @ViewChild(MatAccordion) accordion: MatAccordion;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+     sumPO=false;
+     sumPOvalue =0;
      filterForm: UntypedFormGroup;
      formFieldHelpers: UntypedFormGroup;
      private _data: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -169,15 +171,21 @@ export class ExampleComponent implements OnInit{
                for (let index = 0; index < response.result.length; index++) {
                    const element = response.result[index];
                    console.log(element);
+                   this.sumPO=true;
+                    this.sumPOvalue = this.sumPOvalue +  element.value;
+                    console.log(this.sumPOvalue);
                    this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:element.leader?element.leader.name+' '+element.leader.lastname:'', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
                    );
                }
                this.recentTransactionsDataSource.data = this.datosHoja;
+               
            },
            (error) => {
                console.log(error);
            }
        );
+
+       
    }
 
     toggleDrawerOpen(): void

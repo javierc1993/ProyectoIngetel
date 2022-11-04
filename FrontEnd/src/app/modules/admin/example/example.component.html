@@ -21,6 +21,7 @@
         display: flex;
         align-content: center;
         align-items: center;
+        align-self: center;
         height: 60px;
     }
     
@@ -49,6 +50,12 @@
         <mat-icon>filter_list</mat-icon>
             Filtros
         </button>
+        <div class= "example-section" *ngIf="sumPO">
+            <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">
+               valor total de las PO encontradas: {{sumPOvalue|currency:"USD":"symbol"}}
+            </span>
+           
+        </div>
         <div class="overflow-x-auto mx-6">
 
             <table class="w-full bg-transparent" mat-table matSort [dataSource]="recentTransactionsDataSource" #recentTransactionsTable>
