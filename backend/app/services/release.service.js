@@ -18,7 +18,8 @@ class ReleaseService {
           date: releaseDoc[percent.dataValues.percentField.dataValues.fieldDateName],
           ppa: releaseDoc[percent.dataValues.percentField.dataValues.fieldPpaName],
           payOrder: payOrder?.id,
-          releaseType: releaseType?.id
+          releaseType: releaseType?.id,
+          totalPercent: +releaseDoc.serviceExecutedPercent + releaseDoc.totalTss + releaseDoc.totalCw + releaseDoc.totalImp
         });
         return ReleaseRepository.createRelease(releaseToCreate);
       });

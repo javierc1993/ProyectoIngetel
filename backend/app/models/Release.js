@@ -12,12 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     sgrNumber: DataTypes.STRING,
     date: DataTypes.DATE,
     ppa: DataTypes.DATE,
-    percent: DataTypes.INTEGER
+    percent: DataTypes.INTEGER,
+    totalPercent: DataTypes.INTEGER
   }, {
     tableName: 'releases'
   });
 
-  Release.associate = function (models) {
+    Release.associate = function (models) {
     //associations 
     Release.belongsTo(models.PayOrder, { as: 'payOrder' });
     Release.belongsTo(models.ReleaseType, { as: 'releaseType', foreignKey: 'releaseTypeId' });
