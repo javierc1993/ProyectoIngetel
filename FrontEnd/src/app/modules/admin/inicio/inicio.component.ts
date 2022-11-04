@@ -5,18 +5,16 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
-export interface transaction {
-    SMP: string;
-    SITE_Name:string;
-    Escenario: string;
-    Banda: string;
-    Lider: string;
-    Fecha_de_integracion: string;
-    ON_AIR:string;
-    mos_HW: string;
-    PO: string;
-    Valor_PO: string;
+export interface transaction {  
+    valorPO: string;
     instalacion: string;
+    porcentajeTotalLiberado: number;
+    porcentajeTotalFacturado : number;
+    valorPoFacturado : number;
+    valorPoIva: number;
+    porcentajeTotalPagado: number;
+    valorPoPagado: number;
+    estadoPO: string;
 }
 
 export type ChartOptions = {
@@ -26,7 +24,7 @@ export type ChartOptions = {
   title: ApexTitleSubtitle;
 };
 
-export type Grafica1Options = {
+export type instalationPO = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
@@ -34,7 +32,7 @@ export type Grafica1Options = {
   title: ApexTitleSubtitle;
 };
 
-export type Grafica2Options = {
+export type statusPO = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
@@ -55,13 +53,11 @@ export class InicioComponent implements OnInit {
   
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
-  public Grafica1Options: Partial<Grafica1Options>;
-  public Grafica2Options: Partial<Grafica1Options>;
+  public instalationPO: Partial<instalationPO>;
+  public statusPO: Partial<statusPO>;
   datosHoja : transaction[] = [];
 
-  constructor(private _httpClient: HttpClient) { 
-
-    
+  constructor(private _httpClient: HttpClient) {     
     this.chartOptions = {
       series: [
         {
@@ -80,14 +76,13 @@ export class InicioComponent implements OnInit {
         categories: ["Jan", "Feb",  "Mar",  "Apr",  "May",  "Jun",  "Jul",  "Aug", "Sep"]
       }
     };
-
-    this.Grafica1Options = {
-      series: [44, 55, 13, 43, 22],
+    this.instalationPO = {
+      series: [0, 0, 0],
       chart: {    
         height: 350,    
         type: "pie"
       },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+      labels: ["Team A", "Team B", "Team C"],
       responsive: [
         {
           breakpoint: 480,
@@ -103,8 +98,7 @@ export class InicioComponent implements OnInit {
       }
       
     };
-
-    this.Grafica2Options = {
+    this.statusPO = {
       series: [43, 22, 25],
       chart: {    
         height: 350,    
@@ -122,66 +116,148 @@ export class InicioComponent implements OnInit {
         }
       ],
       title: {
-        text: "PO pagadas"
+        text: "PO estados"
       }
     };
-    // this.updateGrafica1();
   }
 
   ngOnInit(): void {
-    //console.log();
-    this.cargueCompleto();
+   this.cargueCompleto();
   }
 
-  ngAfterViewInit(): void {
-    
+  ngAfterViewInit(): void {    
   }
 
   cargueCompleto (): void{
+    this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
+    .subscribe(
+      (response:any) => {         
+        this.clearData(response.result);
+        this.updateInstalationPO();
+        this.updateStatusPO();
+      },
+      (error) => {console.log(error);}                
+    );            
+  }
+  clearData(dataPO){
+    this.datosHoja = dataPO.map(function(thisPO){  
+      var porcentajeTotalLiberado;
+      var porcentajeTotalFacturado;
+      var porcentajeTotalPagado;
+      var valorTotalPo = thisPO.value;
+      var valorPoFacturado;
+      var valorPoIva;
+      var valorPoPagado;
+      var estadoPO;
+      if(thisPO.release){
+        var porcentajes = thisPO.release.map(thisRelease => thisRelease.percent);
+        porcentajeTotalLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+      } 
+      if(thisPO.invoice){
+        var porcentajeFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.percentInvoice);
+        var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
+        var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva);
+        var porcentajePagado = thisPO.invoice.map(function(thisInvoice:any){
+            if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.totalPaid > 0){return thisInvoice.percentInvoice;}
+            else{return 0;}
+        });          
+        var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
+            //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
+            if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.totalPaid;}
+            else{return 0;}
+        });
+        porcentajeTotalFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
+        valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
+        valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
+        porcentajeTotalPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
+        valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0); 
+      }
 
-        // this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-        this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
-        .subscribe(
-          (response:any) => {
-            this.datosHoja = response.result.map(function(thisPO){
-              //console.log(thisPO);
-              return {
-                SMP: thisPO.site.smp,
-                SITE_Name: thisPO.site.name,
-                Escenario: thisPO.scenery,
-                Banda: thisPO.band,
-                Lider: 'Jesus Carrillo',
-                Fecha_de_integracion: thisPO.integration.date,
-                ON_AIR:thisPO.onAir.date,
-                mos_HW: thisPO.mosHw.date,
-                PO: thisPO.reference,
-                Valor_PO: thisPO.value,
-                instalacion: thisPO.instalation.date? thisPO.instalation.date :'pendiente'}
-            }); 
-            this.updateGrafica1();
-          },
-          (error) => {console.log(error);}                
-        );            
-    }
-    updateGrafica1(){
-      var dataSeries = new Array();
-      var dataLabels = ['pendiente', 'instalado'];
-      var quantityPending = new Array;
-      var quantityInstalling = new Array;
+      if(porcentajeTotalFacturado > 100){estadoPO = 'Error facturacion';}
+      else if(valorPoFacturado != (valorTotalPo*porcentajeTotalFacturado/100)){estadoPO = 'Error facturacion';}
+      else if(porcentajeTotalLiberado == 0){estadoPO = 'Pendiente';}
+      else if(porcentajeTotalLiberado > porcentajeTotalFacturado){estadoPO = 'Liberado';}
+      else if(porcentajeTotalLiberado == porcentajeTotalFacturado && porcentajeTotalFacturado > porcentajeTotalPagado){estadoPO = 'Por pagar';}          
+      else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estadoPO = 'Finalizado';}
+      else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado < 100){estadoPO = 'Pendiente';}
+      else if(porcentajeTotalFacturado == porcentajeTotalPagado && Math.trunc(valorPoFacturado + valorPoIva) != Math.trunc(valorPoPagado)){estadoPO = 'Error pago';}
+      else if(porcentajeTotalFacturado > porcentajeTotalLiberado){estadoPO = 'Por liberar';}
+
+      return {
+        valorPO: thisPO.value,
+        instalacion: thisPO.instalation.date? thisPO.instalation.date :'pendiente',
+        porcentajeTotalLiberado,
+        porcentajeTotalFacturado,
+        valorPoFacturado,
+        valorPoIva,
+        porcentajeTotalPagado,
+        valorPoPagado,
+        estadoPO,
+      }
+    });
+  }
+  updateInstalationPO(){
+    var dataSeries = new Array();
+    var dataLabels = ['pendiente', 'instalado'];
+    var quantityPending = new Array;
+    var quantityInstalling = new Array;
       
-      this.datosHoja.map (function(thisPO){
-          if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
-          else{quantityPending.push(thisPO.instalacion)}
-      })
-      console.log(this.datosHoja);
-      dataSeries.push(quantityPending.length)
-      dataSeries.push(quantityInstalling.length)
-      this.Grafica1Options.series = dataSeries;
-      this.Grafica1Options.labels = dataLabels;
-        
-    }
-    // updateGrafica2(){
-
-    // }
-
+    this.datosHoja.map (function(thisPO){
+        if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
+        else{quantityPending.push(thisPO.instalacion)}
+    })
+    console.log(this.datosHoja);
+    dataSeries.push(quantityPending.length)
+    dataSeries.push(quantityInstalling.length)
+    this.instalationPO.series = dataSeries;
+    this.instalationPO.labels = dataLabels;        
+  } 
+  updateStatusPO(){
+    var dataSeries = new Array();
+    var dataLabels = ['Error facturacion', 'Pendiente', 'Liberado', 'Por pagar', 'Finalizado', 'Error pago', 'Por liberar'];
+    var quantityErrorFacturacion = new Array;
+    var quantityPendiente = new Array;
+    var quantityLiberado = new Array;
+    var quantityPorPagar = new Array;
+    var quantityFinalizado = new Array;
+    var quantityErrorPago = new Array;
+    var quantityPorLiberar = new Array;
+      
+    this.datosHoja.map (function(thisPO){
+      switch(thisPO.estadoPO){
+        case 'Error facturacion':
+          quantityErrorFacturacion.push(thisPO.estadoPO);
+        break;
+        case 'Pendiente':
+          quantityPendiente.push(thisPO.estadoPO);
+        break;
+        case 'Liberado':
+          quantityLiberado.push(thisPO.estadoPO);
+        break;
+        case 'Por pagar':
+          quantityPorPagar.push(thisPO.estadoPO);
+        break;
+        case 'Finalizado':
+          quantityFinalizado.push(thisPO.estadoPO);
+        break;
+        case 'Error pago':
+          quantityErrorPago.push(thisPO.estadoPO);
+        break;
+        case 'Por liberar':
+          quantityPorLiberar.push(thisPO.estadoPO);
+        break;
+        default:
+      }       
+    })
+    //console.log(this.datosHoja);
+    dataSeries.push(quantityErrorFacturacion.length);
+    dataSeries.push(quantityPendiente.length);
+    dataSeries.push(quantityLiberado.length);
+    dataSeries.push(quantityPorPagar.length);
+    dataSeries.push(quantityFinalizado.length);
+    dataSeries.push(quantityErrorPago.length);
+    dataSeries.push(quantityPorLiberar.length);
+    this.statusPO.series = dataSeries;
+    this.statusPO.labels = dataLabels; 
+  } 
 }

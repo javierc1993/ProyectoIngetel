@@ -24,6 +24,9 @@ class PayOrderEntity {
     this.OnAirs = {
       date: data['ON AIR'] || null
     };
+    this.Productions = {
+      date: data['Producción'] ? excelDateToJSDate(data['Producción']) : null
+    };
     this.Leaders = {
       name: data['Lider '] || null
     };
