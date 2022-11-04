@@ -164,6 +164,11 @@ const templateInclude = () => {
       attributes: ['date']
     },
     {
+      model: Production,
+      as: 'production',
+      attributes: ['date']
+    },
+    {
       model: Site,
       as: 'site'
     },
