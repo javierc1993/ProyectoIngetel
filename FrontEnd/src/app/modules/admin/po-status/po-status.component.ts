@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input, Inject, ViewEncapsulation, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive} from "ng-apexcharts";
+import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexDataLabels, ApexLegend, ApexGrid} from "ng-apexcharts";
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
 import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators, FormGroup, FormArray, FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -168,8 +168,12 @@ export class PoStatusComponent implements OnInit {
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
+  dataLabels:ApexDataLabels;
+  plotOptions: ApexPlotOptions;
   xaxis: ApexXAxis;
-  title: ApexTitleSubtitle;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle; 
 };
 
 @Component({
@@ -191,22 +195,39 @@ export class PoStatusDialog implements OnInit {
   // payments: any;
   constructor(public dialogRef: MatDialogRef<PoStatusDialog>, @Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {
     this.chartBarValues = {
-      series: [
-        {
-          name: "My-series",
-          data: [0, 0, 0, 0]
-        }
-      ],
+      
       chart: {
         height: 350,
         type: "bar"
       },
+      plotOptions: {
+        bar: {
+          columnWidth: "15",
+          distributed: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      legend: {
+        show: false
+      },
+      grid: {
+        show: false
+      },      
       title: {
         text: "Valores PO"
       },
       xaxis: {
         categories: ["Valor PO", "Valor facturado",  "Faturado + iva",  "Valor pagado"]
-      }
+      },
+      series: [
+        {
+          name: "Valor",
+          data: [0, 0, 0, 0]
+        }
+      ]
+      
     };
   }
 
@@ -218,6 +239,7 @@ export class PoStatusDialog implements OnInit {
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
     this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;    
     this.chartBarValues.series[0].data[0] = this.thisPO.value;
+    //this.chartBarValues.plotOptions.bar.columnWidth = "15";
     var porcentajeTotalLiberado;
     if(this.isRelease){
       var porcentajesLiberados = this.thisPO.release.map(thisInvoice => thisInvoice.percent); 
@@ -237,7 +259,7 @@ export class PoStatusDialog implements OnInit {
       releases: porcentajeTotalLiberado,
       invoices: new FormArray([])        
     });
-    
+    this.chartBarValues.plotOptions.bar.columnWidth = "0.15";
     if(this.isInvoice){
       this.initFormInvoices(); 
     }
