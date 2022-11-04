@@ -38,10 +38,10 @@ class ReleaseDocEntity {
     this.onAirCompletedPercent = data['OnAir %'] || null;
     this.serviceExecuted = data['Servicio Ejecutado'] || null;
     this.serviceExecutedPpa = data['Servicio Ejecutado PPA Date'] || null;
-    this.serviceExecutedPercent = data['Servicio Ejecutado %'] || null;
-    this.totalTss = data['Total TSS'] || null;
-    this.totalCw = data['Total CW'] || null;
-    this.totalImp = data['Total IMP'] || null;
+    this.serviceExecutedPercent = data['Servicio Ejecutado %'] || 0;
+    this.totalTss = data['Total TSS'] || 0;
+    this.totalCw = data['Total CW'] || 0;
+    this.totalImp = data['Total IMP'] || 0;
   }
 }
 
