@@ -83,21 +83,22 @@ export class PoStatusComponent implements OnInit {
           var valorPoIva;
           var valorPoPagado;
           var estado;
-          if(thisBill.release){
-            var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
-            percentLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+          if(thisBill.release[0]){
+            // var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
+            // percentLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+            percentLiberado = thisBill.release[0].totalPercent;
           } 
           if(thisBill.invoice){
             var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
             var valorFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.subTotal);
             var valorIva = thisBill.invoice.map(thisInvoice => thisInvoice.iva);
             var porcentajePagado = thisBill.invoice.map(function(thisInvoice:any){
-                if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.totalPaid > 0){return thisInvoice.percentInvoice;}
+                if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.amountUtilized > 0){return thisInvoice.percentInvoice;}
                 else{return 0;}
             });
             var valorPagado = thisBill.invoice.map(function(thisInvoice:any){
                 //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
-                if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.totalPaid;}
+                if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
                 else{return 0;}
             });
             percentFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
@@ -242,8 +243,9 @@ export class PoStatusDialog implements OnInit {
     //this.chartBarValues.plotOptions.bar.columnWidth = "15";
     var porcentajeTotalLiberado;
     if(this.isRelease){
-      var porcentajesLiberados = this.thisPO.release.map(thisInvoice => thisInvoice.percent); 
-      porcentajeTotalLiberado = porcentajesLiberados.reduce((acc,valor)=>acc+valor,0);
+      // var porcentajesLiberados = this.thisPO.release.map(thisInvoice => thisInvoice.percent); 
+      // porcentajeTotalLiberado = porcentajesLiberados.reduce((acc,valor)=>acc+valor,0);
+      porcentajeTotalLiberado = this.thisPO.release[0].totalPercent;
     }
     console.log(this.thisPO); 
     this.updatePOForm = this._formBuilder.group({
@@ -288,13 +290,13 @@ export class PoStatusDialog implements OnInit {
       this.chartBarValues.series[0].data[2] += element.subTotal;
       this.chartBarValues.series[0].data[2] += element.iva;
       if(statusPay){
-        this.chartBarValues.series[0].data[3] += element.pay.totalPaid;
+        this.chartBarValues.series[0].data[3] += element.pay.amountUtilized;
       }
 
       if(element.percentInvoice > 100){statusInvoice = "Error facturacion"}
       else if(element.subTotal != (this.thisPO.value*(element.percentInvoice/100))){statusInvoice = "Error facturacion"}
-      else if(!statusPay || element.pay.totalPaid == 0){statusInvoice = "Por pagar"}
-      else if(statusPay && Math.trunc(element.pay.totalPaid) != Math.trunc(element.subTotal + element.iva)){statusInvoice = "Error pago"}
+      else if(!statusPay || element.pay.amountUtilized == 0){statusInvoice = "Por pagar"}
+      else if(statusPay && Math.trunc(element.pay.amountUtilized) != Math.trunc(element.subTotal + element.iva)){statusInvoice = "Error pago"}
       else{statusInvoice = "Pagado"}
 // if(percentFacturado > 100){estado = 'Error facturacion';}
 //           else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
@@ -369,7 +371,7 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.createdAt = element.datePay ? element.datePay: thisDate.toISOString();
       })
     }
-    console.log(this.thisPO);
+    //console.log(this.thisPO);
     // this.poID.emit(this.updatePOForm.value.po);
     this.dialogRef.close();    
     

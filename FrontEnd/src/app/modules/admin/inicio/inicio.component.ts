@@ -176,21 +176,22 @@ export class InicioComponent implements OnInit {
       var valorPoIva;
       var valorPoPagado;
       var estadoPO;
-      if(thisPO.release){
-        var porcentajes = thisPO.release.map(thisRelease => thisRelease.percent);
-        porcentajeTotalLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+      if(thisPO.release[0]){
+        // var porcentajes = thisPO.release.map(thisRelease => thisRelease.percent);
+        // porcentajeTotalLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+        porcentajeTotalLiberado = thisPO.release[0].totalPercent;
       } 
       if(thisPO.invoice){
         var porcentajeFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.percentInvoice);
         var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
         var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva);
         var porcentajePagado = thisPO.invoice.map(function(thisInvoice:any){
-            if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.totalPaid > 0){return thisInvoice.percentInvoice;}
+            if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.amountUtilized > 0){return thisInvoice.percentInvoice;}
             else{return 0;}
         });          
         var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
             //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
-            if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.totalPaid;}
+            if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
             else{return 0;}
         });
         porcentajeTotalFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);

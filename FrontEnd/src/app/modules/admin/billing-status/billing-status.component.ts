@@ -101,7 +101,7 @@ export class BillingStatusComponent implements OnInit {
             porcentajeFactura: thisBill.percentInvoice,
             fechaPago: fechaPago,
             documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
-            valorPagado: thisBill.pay ? thisBill.pay.totalPaid:null,
+            valorPagado: thisBill.pay ? thisBill.pay.amountUtilized:null,
             estado: thisBill.pay ? 'pagado':'pendiente'
           }
         });         
