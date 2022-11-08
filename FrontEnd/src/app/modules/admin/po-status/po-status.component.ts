@@ -65,7 +65,7 @@ export class PoStatusComponent implements OnInit {
         }),{}); 
         // var testData = JSON.parse(JSON.stringify(this.listPO))
         // console.log(Object.values(testData));
-        //console.log(this.listPO);
+        console.log(this.listPO);
         this.loadDataTable();
       },
       (error) => {console.log(error);}                
