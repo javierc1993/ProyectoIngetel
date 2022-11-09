@@ -87,6 +87,8 @@ export class PoStatusComponent implements OnInit {
             // var porcentajes = thisBill.release.map(thisRelease => thisRelease.percent);
             // percentLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
             percentLiberado = thisBill.release[0].totalPercent;
+          }else{
+            percentLiberado = 0;
           } 
           if(thisBill.invoice){
             var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
