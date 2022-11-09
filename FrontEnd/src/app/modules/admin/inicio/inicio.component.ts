@@ -180,7 +180,7 @@ export class InicioComponent implements OnInit {
         // var porcentajes = thisPO.release.map(thisRelease => thisRelease.percent);
         // porcentajeTotalLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
         porcentajeTotalLiberado = thisPO.release[0].totalPercent;
-      } 
+      }else{porcentajeTotalLiberado=0;} 
       if(thisPO.invoice){
         var porcentajeFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.percentInvoice);
         var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
