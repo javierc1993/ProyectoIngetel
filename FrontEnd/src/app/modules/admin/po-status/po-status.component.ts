@@ -46,11 +46,12 @@ export class PoStatusComponent implements OnInit {
     this.getData();}
 
   ngOnInit(): void {
-    this.filterForm = this._formBuilder.group({
-            valorPo:[''],
-            thisPo:[''],
+    this.filterForm = this._formBuilder.group({            
+            poID:[''],
             smpID:[''],
-            sitio:['']
+            sitio:[''],
+            fechaDesdePO:[''],
+            fechaHastaPO:[''],
         });        
   }
 
@@ -150,6 +151,43 @@ export class PoStatusComponent implements OnInit {
   exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
     console.log("descargando")
+  }
+
+  getDataFilter(){
+    var formFiltros = new Object();
+    
+    if(this.filterForm.value.poID){
+      Object.defineProperty(formFiltros, 'poID', {
+        value:this.filterForm.value.poID,
+        writable: false
+      });
+    };
+    if(this.filterForm.value.smpID){
+      Object.defineProperty(formFiltros, 'smpID', {
+        value:this.filterForm.value.smpID,
+        writable: false
+      });
+    };
+    if(this.filterForm.value.sitio){
+      Object.defineProperty(formFiltros, 'sitio', {
+        value:this.filterForm.value.sitio,
+        writable: false
+      });
+    };
+    if(this.filterForm.value.fechaDesdePO){
+      Object.defineProperty(formFiltros, 'fechaDesdePO', {
+        value:this.filterForm.value.fechaDesdePO.format('MM/DD/YYYY'),
+        writable: false
+      });
+    };
+    if(this.filterForm.value.fechaHastaPO){
+      Object.defineProperty(formFiltros, 'fechaHastaPO', {
+        value:this.filterForm.value.fechaHastaPO.format('MM/DD/YYYY'),
+        writable: false
+      });
+    };
+    console.log(formFiltros);
+
   }
   
   verPO(poId, statusPO):void {

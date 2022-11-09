@@ -187,14 +187,14 @@
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'thisPo'" [placeholder]="'la PO'">
+                    <input matInput [formControlName]="'poID'" [placeholder]="'PO'">
                     <mat-hint>PO</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
-                    <input class="text-right" matInput [formControlName]="'smpID'">
+                    <input matInput [formControlName]="'smpID'">
                     <mat-hint>SMP</mat-hint>
                 </mat-form-field>
             </div>
@@ -219,9 +219,9 @@
                 </mat-form-field>
             </div>
 
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'">
-                    <span> Buscar </span>
-                </button>
+            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+                <span> Buscar </span>
+            </button>
         </form>
 
     </fuse-drawer>
