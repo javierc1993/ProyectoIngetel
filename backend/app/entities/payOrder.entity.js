@@ -7,6 +7,7 @@ class PayOrderEntity {
     this.scenery = data['Escenario '] || null;
     this.value = data[' VALOR PO '] || null;
     this.band = data['Banda'] || null;
+    this.poDate = data['Producción'] ? excelDateToJSDate(data['Producción']) : null
     this.Sites = {
       name: data['SITE NAME'] || null,
       smp: data['SMP'] || null,
@@ -23,9 +24,6 @@ class PayOrderEntity {
     };
     this.OnAirs = {
       date: data['ON AIR'] || null
-    };
-    this.Productions = {
-      date: data['Producción'] ? excelDateToJSDate(data['Producción']) : null
     };
     this.Leaders = {
       name: data['Lider '] || null

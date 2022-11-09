@@ -60,7 +60,7 @@ const createIncludeGetAll = async (filters = null) => {
 }
 const createWhereGetAll = async (filters = null) => {
   let where = {};
-  let fields = ['reference', 'valuePayOrder', 'scenery', 'band'];
+  let fields = ['reference', 'valuePayOrder', 'scenery', 'band', 'poDate'];
   if (filters) {
     for (const field of fields) {
       if (filters[field]?.data) {
@@ -161,11 +161,6 @@ const templateInclude = () => {
     {
       model: OnAir,
       as: 'onAir',
-      attributes: ['date']
-    },
-    {
-      model: Production,
-      as: 'production',
       attributes: ['date']
     },
     {
