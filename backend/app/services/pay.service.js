@@ -1,5 +1,6 @@
 'use strict';
-const { PayDocEntity } = require('../entities/PayDoc.entity');
+const { PayDocEntity } = require('../entities/payDoc.entity');
+const { PayEntity } = require('../entities/pay.entity');
 const { FilterPayEntity } = require('../entities/filterPay.entity');
 const PayRepository = require('../repositories/pay.repository');
 const PayOrderRepository = require('../repositories/payOrder.repository');
@@ -14,7 +15,7 @@ class PayService {
     return Promise.all(pays.filter(paid => paid['Invoice Number'] && paid['Total Pagado']).map(async pay => {
       const payDoc = new PayDocEntity(pay);
       const invoice = await invoiceRepository.getInvoiceByNumber(payDoc.invoice);
-      const newPay = await PayRepository.createPay(payDoc, invoice);
+      const newPay = await PayRepository.createPay(new PayEntity(payDoc), invoice);
       if (newPay) {
         return { ...newPay, statePay: 'new' };
       }
