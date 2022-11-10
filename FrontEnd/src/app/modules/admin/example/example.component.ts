@@ -149,31 +149,69 @@ export class ExampleComponent implements OnInit{
    filtroSuma(){
   // var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
    var formFiltros = {};
-   console.log(this.filterForm.value);
    
    var newDatosHoja: transaction[] =[];
-    if(this.filterForm.value.SMP){formFiltros={'SMP':this.filterForm.value.SMP}};
-    if(this.filterForm.value.PO){formFiltros={'PO':this.filterForm.value.PO}};
-    if(this.filterForm.value.valorPO){formFiltros={'valorPO':this.filterForm.value.valorPO}};
-    if(this.filterForm.value.fechaDesdeInstalacion){formFiltros={'fechaDesdeInstalacion':this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY')}};
-    if(this.filterForm.value.fechaHastaInstalacion){formFiltros={'fechaHastainstalacion':this.filterForm.value.fechaHastaInstalacion.format('MM/DD/YYYY')}};
-    if(this.filterForm.value.operadorValorPO){formFiltros={'operadorValorPO':this.filterForm.value.operatorValorPO}};
-    if(this.filterForm.value.operadorPO){formFiltros={'operadorPO':this.filterForm.value.operatorPO}};
+    if(this.filterForm.value.SMP){
+        Object.defineProperty(formFiltros, 'SMP', {
+            value:this.filterForm.value.SMP,
+            writable: false
+          });
+    };
+    if(this.filterForm.value.PO){
+        formFiltros={'PO':this.filterForm.value.PO}
+        Object.defineProperty(formFiltros, 'PO', {
+            value:this.filterForm.value.PO,
+            writable: false
+          });
+    };
+    if(this.filterForm.value.valorPO){
+        formFiltros={'valorPO':this.filterForm.value.valorPO}
+        Object.defineProperty(formFiltros, 'valorPO', {
+            value:this.filterForm.value.valorPO,
+            writable: false
+          });
+    };
+    if(this.filterForm.value.fechaDesdeInstalacion){
+        Object.defineProperty(formFiltros, 'fechaDesdeInstalacion', {
+            value:this.filterForm.value.fechaDesdeInstalacion.format('DD/MM/YYYY'),
+            writable: false
+          });
+    };
+    if(this.filterForm.value.fechaHastaInstalacion){
+        Object.defineProperty(formFiltros, 'fechaDesdeInstalacion', {
+            value:this.filterForm.value.fechaHastaInstalacion.format('DD/MM/YYYY'),
+            writable: false
+          });
+    };
+    if(this.filterForm.value.operadorValorPO){
+       Object.defineProperty(formFiltros, 'operadorValorPO', {
+            value:this.filterForm.value.operatorValorPO,
+            writable: false
+          });
+    };
+    if(this.filterForm.value.operadorPO){
+        Object.defineProperty(formFiltros, 'operadorPO', {
+            value:this.filterForm.value.operatorPO,
+            writable: false
+          });
+    };
     this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-   this._httpClient
+    console.log(formFiltros);
+    
+    this._httpClient
        .post(
            variablesGlobales.urlBackend + '/production/',
-            this.filterForm.value
+            formFiltros
        )
        .subscribe(
            (response:any) => {
                 this.datosHoja=[];
                for (let index = 0; index < response.result.length; index++) {
                    const element = response.result[index];
-                   console.log(element);
+                   //console.log(element);
                    this.sumPO=true;
                     this.sumPOvalue = this.sumPOvalue +  element.value;
-                    console.log(this.sumPOvalue);
+                    //console.log(this.sumPOvalue);
                    this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:element.leader?element.leader.name+' '+element.leader.lastname:'', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
                    );
                }
