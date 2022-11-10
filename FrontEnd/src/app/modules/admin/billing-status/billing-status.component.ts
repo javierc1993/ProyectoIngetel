@@ -53,13 +53,12 @@ export class BillingStatusComponent implements OnInit {
   constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { 
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];
     var thisDate = new Date();
-    console.log("la fecha es"+thisDate)
-    console.log("la fecha con formato: "+this.formatoFecha(thisDate, 'dd/mm/yyyy'));
+    this.formatoFecha(thisDate, 'dd/mm/yyyy');
     this.cargueCompleto()
   }
   formatoFecha(fecha, formato) {
 	//
-  console.log("ajustando fecha: "+fecha )
+  
     formato.replace('dd', fecha.getDate());
     formato.replace('mm', fecha.getMonth() + 1);
     formato.replace('yyyy', fecha.getFullYear());
