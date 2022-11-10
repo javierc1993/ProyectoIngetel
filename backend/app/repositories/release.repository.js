@@ -40,9 +40,7 @@ class PayOrderRepository {
     return release.setPayOrder(payOrderId);
   }
 
-  async setReleaseType (release, releaseTypeId) {
-    return release.setReleaseType(releaseTypeId);
-  }
+
 }
 
 
