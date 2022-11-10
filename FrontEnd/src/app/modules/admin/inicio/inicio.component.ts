@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
-import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive} from "ng-apexcharts";
+import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive, ApexDataLabels, ApexPlotOptions, ApexGrid, ApexLegend} from "ng-apexcharts";
 import { variablesGlobales } from 'GLOBAL';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
 export interface transaction {  
-    valorPO: string;
+    valorPO: number;
     instalacion: string;
     porcentajeTotalLiberado: number;
     porcentajeTotalFacturado : number;
@@ -17,11 +17,15 @@ export interface transaction {
     estadoPO: string;
 }
 
-export type ChartOptions = {
+export type optionsValuesPO = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
+  dataLabels:ApexDataLabels;
+  plotOptions: ApexPlotOptions;
   xaxis: ApexXAxis;
-  title: ApexTitleSubtitle;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;   
 };
 
 export type instalationPO = {
@@ -52,30 +56,52 @@ export class InicioComponent implements OnInit {
   //recentTransactionsTableColumns: string[] = [];
   
   @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+  public optionsValuesPO: Partial<optionsValuesPO>;
   public instalationPO: Partial<instalationPO>;
   public statusPO: Partial<statusPO>;
   datosHoja : transaction[] = [];
+  valorTotalPO: number = 0;
+  valorTotalFacturado: number = 0;
+  valorTotalIva: number = 0;
+  valorTotalPagado: number = 0;
 
   constructor(private _httpClient: HttpClient) {     
-    this.chartOptions = {
-      series: [
-        {
-          name: "My-series",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-        }
-      ],
+    this.optionsValuesPO = {
+      
       chart: {
         height: 350,
         type: "bar"
       },
+      plotOptions: {
+        bar: {
+          columnWidth: "15",
+          distributed: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      legend: {
+        show: false
+      },
+      grid: {
+        show: false
+      },      
       title: {
-        text: "Pendiente Definicion"
+        text: "Valores PO"
       },
       xaxis: {
-        categories: ["Jan", "Feb",  "Mar",  "Apr",  "May",  "Jun",  "Jul",  "Aug", "Sep"]
-      }
+        categories: ["Valor PO", "Valor facturado", "IVA",  "Faturado + IVA",  "Valor pagado"]
+      },
+      series: [
+        {
+          name: "Valor",
+          data: [0, 0, 0, 0, 0]
+        }
+      ]
+      
     };
+
     this.instalationPO = {
       series: [0, 0, 0],
       chart: {    
@@ -132,12 +158,13 @@ export class InicioComponent implements OnInit {
     this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
     .subscribe(
       (response:any) => {         
-        this.clearData(response.result);
+        this.clearData(response.result); 
+        this.updateTotalValues();
         this.updateInstalationPO();
-        this.updateStatusPO();
+        this.updateStatusPO();       
       },
       (error) => {console.log(error);}                
-    );            
+    );                
   }
   clearData(dataPO){
     this.datosHoja = dataPO.map(function(thisPO){  
@@ -149,21 +176,22 @@ export class InicioComponent implements OnInit {
       var valorPoIva;
       var valorPoPagado;
       var estadoPO;
-      if(thisPO.release){
-        var porcentajes = thisPO.release.map(thisRelease => thisRelease.percent);
-        porcentajeTotalLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
-      } 
+      if(thisPO.release[0]){
+        // var porcentajes = thisPO.release.map(thisRelease => thisRelease.percent);
+        // porcentajeTotalLiberado = porcentajes.reduce((acc,valor)=>acc+valor,0);
+        porcentajeTotalLiberado = thisPO.release[0].totalPercent;
+      }else{porcentajeTotalLiberado=0;} 
       if(thisPO.invoice){
         var porcentajeFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.percentInvoice);
         var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
         var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva);
         var porcentajePagado = thisPO.invoice.map(function(thisInvoice:any){
-            if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.totalPaid > 0){return thisInvoice.percentInvoice;}
+            if(thisInvoice.pay && thisInvoice.pay.createdAt && thisInvoice.pay.amountUtilized > 0){return thisInvoice.percentInvoice;}
             else{return 0;}
         });          
         var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
             //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
-            if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.totalPaid;}
+            if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
             else{return 0;}
         });
         porcentajeTotalFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
@@ -260,4 +288,20 @@ export class InicioComponent implements OnInit {
     this.statusPO.series = dataSeries;
     this.statusPO.labels = dataLabels; 
   } 
+
+  updateTotalValues(){
+    this.datosHoja.forEach(element => {
+      this.valorTotalPO += element.valorPO;
+      this.valorTotalFacturado += element.valorPoFacturado;
+      this.valorTotalIva += element.valorPoIva;
+      this.valorTotalPagado += element.valorPoPagado;
+    });
+    this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
+    this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+    this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+    this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
+    this.optionsValuesPO.series = [{
+      data: [this.valorTotalPO, this.valorTotalFacturado, this.valorTotalIva, this.valorTotalFacturado + this.valorTotalIva, this.valorTotalPagado]
+    }];  
+  }
 }

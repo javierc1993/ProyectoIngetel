@@ -46,7 +46,6 @@ class PayOrderRepository {
         resp = await PayOrder.create(po);
         Instalation.create({ date: po.Instalations.date, payOrderId: resp.id });
         Integration.create({ date: po.Integrations.date, payOrderId: resp.id });
-        Production.create({ date: po.Productions.date, payOrderId: resp.id });
         MosHw.create({ date: po.MosHws.date, payOrderId: resp.id });
         OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id });
       }
@@ -54,7 +53,6 @@ class PayOrderRepository {
       resp.set(po);
       Instalation.update({ date: po.Instalations.date }, { where: { payOrderId: resp.id } });
       Integration.update({ date: po.Integrations.date }, { where: { payOrderId: resp.id } });
-      Production.update({ date: po.Productions.date }, { where: { payOrderId: resp.id } });
       MosHw.update({ date: po.MosHws.date }, { where: { payOrderId: resp.id } });
       OnAir.update({ date: po.OnAirs.date }, { where: { payOrderId: resp.id } });
       return resp.save();

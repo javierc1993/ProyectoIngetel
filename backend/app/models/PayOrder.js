@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     reference: DataTypes.STRING,
     scenery: DataTypes.STRING,
     band: DataTypes.STRING,
-    value: DataTypes.DOUBLE
+    value: DataTypes.DOUBLE,
+    poDate: DataTypes.DATE
   }, {
     tableName: 'payOrders'
   });
@@ -22,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
     PayOrder.hasOne(models.Integration, {as:'integration', foreignKey:'payOrderId'});
     PayOrder.hasOne(models.MosHw, {as:'mosHw', foreignKey:'payOrderId'});
     PayOrder.hasOne(models.OnAir, {as:'onAir', foreignKey:'payOrderId'});
-    PayOrder.hasOne(models.Production, {as:'production', foreignKey:'payOrderId'});
     PayOrder.belongsTo(models.User, {as:'leader', foreignKey:'leaderId'});
 
   };

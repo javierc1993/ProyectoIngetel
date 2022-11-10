@@ -187,60 +187,43 @@
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'thisPo'" [placeholder]="'la PO'">
+                    <input matInput [formControlName]="'poID'" [placeholder]="'PO'">
                     <mat-hint>PO</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por valor de la PO</mat-label>
-                    <input class="text-right" matInput [formControlName]="'valorPo'">
-                    <span matPrefix>$</span>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
-                    <input class="text-right" matInput [formControlName]="'smpID'">
-                    <mat-hint>smp</mat-hint>
+                    <input matInput [formControlName]="'smpID'">
+                    <mat-hint>SMP</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por sitio</mat-label>
                     <input matInput [formControlName]="'sitio'" [placeholder]="'Ingresa el sitio'">
-                    <mat-hint>sitio</mat-hint>
+                    <mat-hint>Sitio</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por fecha de PO</mat-label>
+
+                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
+                        <input matStartDate [formControlName]="'fechaDesdePO'" placeholder="Start date">
+                        <input matEndDate formControlName="fechaHastaPO" placeholder="End date">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                    <mat-hint>Fecha PO</mat-hint>
                 </mat-form-field>
             </div>
 
-
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'">
-                    <span> Buscar </span>
-                </button>
+            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+                <span> Buscar </span>
+            </button>
         </form>
-        <!-- <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Perfiles de visualizaciòn.
-                    </mat-panel-title>
-                    <mat-panel-description>
 
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                 <section class="example-section">
-                    <label class="example-margin">Perfíl:</label>
-                    <mat-radio-group>
-                        <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('value')">
-
-                            Producción</mat-radio-button>
-                        <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Completo</mat-radio-button>
-                    </mat-radio-group>
-                </section> 
-
-            </mat-expansion-panel>
-        </mat-accordion>-->
     </fuse-drawer>
 
 </div>

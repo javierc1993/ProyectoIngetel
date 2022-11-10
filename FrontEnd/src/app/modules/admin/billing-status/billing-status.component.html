@@ -252,16 +252,21 @@
         <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'poID'" [placeholder]="'Ingresa una PO a buscar'">
-                    <mat-hint>PO</mat-hint>
+                    <mat-label>Búsqueda por fecha de facturación</mat-label>
+                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerFactura">
+                        <input matStartDate [formControlName]="'fechaDesdeFactura'" placeholder="Start date">
+                        <input matEndDate formControlName="fechaHastaFactura" placeholder="End date">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="pickerFactura"></mat-datepicker-toggle>
+                    <mat-date-range-picker #pickerFactura></mat-date-range-picker>
+                    <mat-hint>Fecha Factura</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por valor de la PO</mat-label>
-                    <input class="text-right" matInput [formControlName]="'totalPagar'">
-                    <span matPrefix>$</span>
+                    <mat-label>Búsqueda por PO</mat-label>
+                    <input matInput [formControlName]="'poID'" [placeholder]="'Ingresa una PO a buscar'">
+                    <mat-hint>PO</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
@@ -271,45 +276,25 @@
                     <mat-hint>SMP</mat-hint>
                 </mat-form-field>
             </div>
-            <div class="flex">
+            <!-- <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de pago</mat-label>
-
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
-                        <input matStartDate [formControlName]="'fechaDesdeFactura'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaFactura" placeholder="End date">
+                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerPago">
+                        <input matStartDate [formControlName]="'fechaDesdePago'" placeholder="Start date">
+                        <input matEndDate formControlName="fechaHastaPago" placeholder="End date">
                     </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerPago"></mat-datepicker-toggle>
+                    <mat-date-range-picker #pickerPago></mat-date-range-picker>
+                    <mat-hint>Fecha Pago</mat-hint>
                 </mat-form-field>
-            </div>
+            </div> -->
             <!--  <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
                     <span> Buscar </span>
                 </button>-->
+            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+                <span> Buscar </span>
+            </button>
         </form>
-        <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Perfiles de visualizaciòn.
-                    </mat-panel-title>
-                    <mat-panel-description>
-
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                <!-- <section class="example-section">
-                    <label class="example-margin">Perfíl:</label>
-                    <mat-radio-group>
-                        <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('value')">
-
-                            Producción</mat-radio-button>
-                        <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Completo</mat-radio-button>
-                    </mat-radio-group>
-                </section>-->
-
-            </mat-expansion-panel>
-        </mat-accordion>
     </fuse-drawer>
 
 

@@ -26,6 +26,12 @@ class FilterProductionEntity {
       operator: data.operadorBanda || null,
       fieldName: 'band',
     };
+    this.poDate = {
+      init: data.poDateInit ? excelDateToJSDate(data.poDateInit + ' 00:00:00') : null,
+      until: data.poDateUntil ? excelDateToJSDate(data.poDateUntil + ' 00:00:00') : null,
+      fieldName: 'date',
+      type: 'date'
+    };
     //fields related
     this.site = {
       data: data.SMP || null,
@@ -53,12 +59,6 @@ class FilterProductionEntity {
     this.mosHw = {
       init: data.fechaDesdeMosHw ? excelDateToJSDate(data.fechaDesdeMosHw + ' 00:00:00') : null,
       until: data.fechaHastaMosHw ? excelDateToJSDate(data.fechaHastaMosHw + ' 00:00:00') : null,
-      fieldName: 'date',
-      type: 'date'
-    };
-    this.production = {
-      init: data.fechaDesdeProduction ? excelDateToJSDate(data.fechaDesdeProduction + ' 00:00:00') : null,
-      until: data.fechaHastaProduction ? excelDateToJSDate(data.fechaHastaProduction + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date'
     };
