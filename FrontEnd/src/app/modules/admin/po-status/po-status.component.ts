@@ -42,7 +42,7 @@ export class PoStatusComponent implements OnInit {
   drawerMode='side';
 
   constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public dialog: MatDialog) { 
-    
+    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO' ,'Estado'];
     this.getData();}
 
   ngOnInit(): void {
@@ -56,7 +56,6 @@ export class PoStatusComponent implements OnInit {
   }
 
   getData(){
-    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO' ,'Estado'];
     this._httpClient.post(variablesGlobales.urlBackend + '/production/', {})
       .subscribe((response:any) => {
         // console.log(response.result);
@@ -176,13 +175,13 @@ export class PoStatusComponent implements OnInit {
     };
     if(this.filterForm.value.fechaDesdePO){
       Object.defineProperty(formFiltros, 'fechaDesdePO', {
-        value:this.filterForm.value.fechaDesdePO.format('MM/DD/YYYY'),
+        value:this.filterForm.value.fechaDesdePO.format('DD/MM/YYYY'),
         writable: false
       });
     };
     if(this.filterForm.value.fechaHastaPO){
       Object.defineProperty(formFiltros, 'fechaHastaPO', {
-        value:this.filterForm.value.fechaHastaPO.format('MM/DD/YYYY'),
+        value:this.filterForm.value.fechaHastaPO.format('DD/MM/YYYY'),
         writable: false
       });
     };
@@ -290,7 +289,7 @@ export class PoStatusDialog implements OnInit {
     console.log(this.thisPO); 
     this.updatePOForm = this._formBuilder.group({
       po:  new FormControl(this.thisPO.reference), 
-      datePO : new FormControl(this.thisPO.createdAt.slice(0,10)),    
+      datePO : new FormControl(this.thisPO.poDate.slice(0,10)),    
       smp: new FormControl(this.thisPO.site.smp, [Validators.required]),  
       siteName: this.thisPO.site.name,
       regionName: this.thisPO.site.region,      
@@ -380,7 +379,7 @@ export class PoStatusDialog implements OnInit {
     console.log(this.updatePOForm)
     var date = Date.now()
     var thisDate = new Date(date);
-    this.thisPO.createdAt = this.updatePOForm.value.datePO;
+    this.thisPO.poDate = this.updatePOForm.value.poDate;
     this.thisPO.site.smp = this.updatePOForm.value.smp;
     this.thisPO.site.name = this.updatePOForm.value.regionName;
     this.thisPO.site.region = this.updatePOForm.value.regionName;

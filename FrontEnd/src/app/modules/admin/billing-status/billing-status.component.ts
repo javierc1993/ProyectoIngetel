@@ -50,7 +50,24 @@ export class BillingStatusComponent implements OnInit {
     end: new FormControl<Date | null>(null),
     fechaDesdeInstalacion:new FormControl<Date | null>(null),
   });
-  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { this.cargueCompleto()}
+  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { 
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];
+    var thisDate = new Date();
+    console.log("la fecha es"+thisDate)
+    console.log("la fecha con formato: "+this.formatoFecha(thisDate, 'dd/mm/yyyy'));
+    this.cargueCompleto()
+  }
+  formatoFecha(fecha, formato) {
+	//
+  console.log("ajustando fecha: "+fecha )
+    formato.replace('dd', fecha.getDate());
+    formato.replace('mm', fecha.getMonth() + 1);
+    formato.replace('yyyy', fecha.getFullYear());
+    console.log(fecha.getMonth());
+    console.log(formato);
+    return formato;
+  }
+
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({            
@@ -69,8 +86,9 @@ export class BillingStatusComponent implements OnInit {
   }
 
   cargueCompleto(){
+
     console.log("cargando el componente billing status")
-    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];
+    
     this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',{})
       .subscribe((response:any) => { 
         console.log("response: ") 
@@ -144,25 +162,25 @@ export class BillingStatusComponent implements OnInit {
     };
     if(this.filterForm.value.fechaDesdeFactura){
       Object.defineProperty(formFiltros, 'fechaDesdeFactura', {
-        value:this.filterForm.value.fechaDesdeFactura.format('MM/DD/YYYY'),
+        value:this.filterForm.value.fechaDesdeFactura.format('DD/MM/YYYY'),
         writable: false
       });
     };
     if(this.filterForm.value.fechaHastaFactura){
       Object.defineProperty(formFiltros, 'fechaHastaFactura', {
-        value:this.filterForm.value.fechaHastaFactura.format('MM/DD/YYYY'),
+        value:this.filterForm.value.fechaHastaFactura.format('DD/MM/YYYY'),
         writable: false
       });
     };
     // if(this.filterForm.value.fechaDesdePago){      
     //   Object.defineProperty(formFiltros, 'fechaDesdePago', {
-    //     value:this.filterForm.value.fechaDesdePago.format('MM/DD/YYYY'),
+    //     value:this.filterForm.value.fechaDesdePago.format('DD/MM/YYYY'),
     //     writable: false
     //   });
     // };
     // if(this.filterForm.value.fechaHastaPago){      
     //   Object.defineProperty(formFiltros, 'fechaHastaPago', {
-    //     value:this.filterForm.value.fechaHastaPago.format('MM/DD/YYYY'),
+    //     value:this.filterForm.value.fechaHastaPago.format('DD/MM/YYYY'),
     //     writable: false
     //   });
     // };
