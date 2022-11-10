@@ -10,9 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     iaDate: DataTypes.DATE,
     grDate: DataTypes.DATE,
     sgrNumber: DataTypes.STRING,
-    date: DataTypes.DATE,
-    ppa: DataTypes.DATE,
-    percent: DataTypes.INTEGER,
     totalPercent: DataTypes.INTEGER
   }, {
     tableName: 'releases'
@@ -21,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     Release.associate = function (models) {
     //associations 
     Release.belongsTo(models.PayOrder, { as: 'payOrder' });
-    Release.belongsTo(models.ReleaseType, { as: 'releaseType', foreignKey: 'releaseTypeId' });
+    
   };
 
   return Release;

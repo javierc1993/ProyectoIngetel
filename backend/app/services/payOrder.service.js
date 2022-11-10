@@ -15,9 +15,9 @@ class PayOrderService {
     filters = new FilterProductionEntity(filters);
     const include = await createIncludeGetAll(filters);
     const where = await createWhereGetAll(filters);
-    return PayOrderRepository.getAll(include, where);
+    const payOrders= await PayOrderRepository.getAll(include, where);
+    return payOrders;
   }
-
 
   async createPayOrders (request) {
     const sitesOnly = await deleteDuplicateByLabel(request, 'SMP')
@@ -63,7 +63,7 @@ const createWhereGetAll = async (filters = null) => {
   let fields = ['reference', 'valuePayOrder', 'scenery', 'band', 'poDate'];
   if (filters) {
     for (const field of fields) {
-      if (filters[field]?.data) {
+      if (filters[field]?.data || filters[field]?.init || filters[field]?.until ) {
         where = { ...where, ...asingFilter(filters[field]).where };
       }
     }
