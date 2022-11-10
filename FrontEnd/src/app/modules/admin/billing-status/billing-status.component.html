@@ -253,13 +253,12 @@
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de facturación</mat-label>
-
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
+                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerFactura">
                         <input matStartDate [formControlName]="'fechaDesdeFactura'" placeholder="Start date">
                         <input matEndDate formControlName="fechaHastaFactura" placeholder="End date">
                     </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerFactura"></mat-datepicker-toggle>
+                    <mat-date-range-picker #pickerFactura></mat-date-range-picker>
                     <mat-hint>Fecha Factura</mat-hint>
                 </mat-form-field>
             </div>
@@ -277,23 +276,22 @@
                     <mat-hint>SMP</mat-hint>
                 </mat-form-field>
             </div>
-            <div class="flex">
+            <!-- <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de pago</mat-label>
-
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
+                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerPago">
                         <input matStartDate [formControlName]="'fechaDesdePago'" placeholder="Start date">
                         <input matEndDate formControlName="fechaHastaPago" placeholder="End date">
                     </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerPago"></mat-datepicker-toggle>
+                    <mat-date-range-picker #pickerPago></mat-date-range-picker>
                     <mat-hint>Fecha Pago</mat-hint>
                 </mat-form-field>
-            </div>
+            </div> -->
             <!--  <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
                     <span> Buscar </span>
                 </button>-->
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'">
+            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
                 <span> Buscar </span>
             </button>
         </form>

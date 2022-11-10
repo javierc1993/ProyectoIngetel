@@ -55,10 +55,11 @@ export class BillingStatusComponent implements OnInit {
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({            
             poID:[''],
-            totalPagar:[''],
             smpID:[''],
             fechaDesdeFactura:[''],
             fechaHastaFactura:[''],
+            fechaDesdePago:[''],
+            fechaHastaPago:[''],
         });
     this.range = new FormGroup({
             start: new FormControl<Date | null>(null),
@@ -125,5 +126,48 @@ export class BillingStatusComponent implements OnInit {
   exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
     console.log("descargando")
+  }
+  getDataFilter(){
+    var formFiltros = new Object();
+    
+    if(this.filterForm.value.poID){
+      Object.defineProperty(formFiltros, 'PO', {
+        value:this.filterForm.value.poID,
+        writable: false
+      });
+    };
+    if(this.filterForm.value.smpID){
+      Object.defineProperty(formFiltros, 'SMP', {
+        value:this.filterForm.value.smpID,
+        writable: false
+      });
+    };
+    if(this.filterForm.value.fechaDesdeFactura){
+      Object.defineProperty(formFiltros, 'fechaDesdeFactura', {
+        value:this.filterForm.value.fechaDesdeFactura.format('MM/DD/YYYY'),
+        writable: false
+      });
+    };
+    if(this.filterForm.value.fechaHastaFactura){
+      Object.defineProperty(formFiltros, 'fechaHastaFactura', {
+        value:this.filterForm.value.fechaHastaFactura.format('MM/DD/YYYY'),
+        writable: false
+      });
+    };
+    // if(this.filterForm.value.fechaDesdePago){      
+    //   Object.defineProperty(formFiltros, 'fechaDesdePago', {
+    //     value:this.filterForm.value.fechaDesdePago.format('MM/DD/YYYY'),
+    //     writable: false
+    //   });
+    // };
+    // if(this.filterForm.value.fechaHastaPago){      
+    //   Object.defineProperty(formFiltros, 'fechaHastaPago', {
+    //     value:this.filterForm.value.fechaHastaPago.format('MM/DD/YYYY'),
+    //     writable: false
+    //   });
+    // };
+
+    console.log(formFiltros);
+
   }
 }
