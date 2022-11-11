@@ -53,18 +53,19 @@ export class BillingStatusComponent implements OnInit {
   constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { 
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];
     var thisDate = new Date();
-    this.formatoFecha(thisDate, 'dd/mm/yyyy');
-    this.cargueCompleto()
+    var thisDateFormat = this.formatoFecha(thisDate);
+    var dateLastYear = new Date();
+    dateLastYear.setMonth(dateLastYear.getMonth()-12);    
+    var thisDateLastYearFormat = this.formatoFecha(dateLastYear); 
+    const initDateBilling = {'fechaDesdeFactura':thisDateLastYearFormat,'fechaHastaFactura':thisDateFormat};
+    //console.log(JSON.stringify(initDateBilling))
+    this.cargueCompleto(initDateBilling);
   }
-  formatoFecha(fecha, formato) {
-	//
-  
-    formato.replace('dd', fecha.getDate());
-    formato.replace('mm', fecha.getMonth() + 1);
-    formato.replace('yyyy', fecha.getFullYear());
-    console.log(fecha.getMonth());
-    console.log(formato);
-    return formato;
+  formatoFecha(fecha) {    
+    var thisDate = fecha.getDate()+'/';     
+    thisDate += (fecha.getMonth() + 1)+'/';
+    thisDate += fecha.getFullYear();
+    return thisDate;
   }
 
 
@@ -84,11 +85,11 @@ export class BillingStatusComponent implements OnInit {
           });
   }
 
-  cargueCompleto(){
+  cargueCompleto(objectToFilter){
 
-    console.log("cargando el componente billing status")
+   // console.log("cargando el componente billing status: "+JSON.stringify(objectToFilter));
     
-    this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',{})
+    this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',objectToFilter)
       .subscribe((response:any) => { 
         console.log("response: ") 
         console.log(response)  
