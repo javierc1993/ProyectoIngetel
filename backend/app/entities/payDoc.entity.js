@@ -10,7 +10,7 @@ class PayDocEntity {
     this.totalPaid = data['Total Pagado'];
     this.maturityDate = data['Maturity Date'];
     this.publishDate = data['Publish Date'];
-    this.datePay =  data['Upload Date'];
+    this.datePay = data['Upload Date'];
     this.state = data['Status'];
     this.discountTime = data['Discount Time'];
   }
