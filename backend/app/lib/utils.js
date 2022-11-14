@@ -1,5 +1,5 @@
 'use strict';
-
+const { Op, Sequelize } = require('sequelize');
 
 function excelDateToJSDate (excelDate) {
   try {
