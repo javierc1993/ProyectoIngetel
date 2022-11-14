@@ -49,7 +49,7 @@ const createWhereGetAll = async (filters = null) => {
   let fields = ['client', 'date', 'invoice', 'subTotal', 'iva', 'total', 'rtf', 'rtIva', 'toPaid', 'totalPaid', 'datePay', 'release', 'percentInvoice', 'observation', 'state'];
   if (filters) {
     for (const field of fields) {
-      if (filters[field]?.data) {
+      if (filters[field]?.data || filters[field]?.init || filters[field]?.until) {
         where = { ...where, ...asingFilter(filters[field]).where };
       }
     }
