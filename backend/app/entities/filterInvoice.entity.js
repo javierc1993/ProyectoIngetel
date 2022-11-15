@@ -1,4 +1,4 @@
-const { excelDateToJSDate } = require('../lib/utils')
+const { ddmmaaaaTommddaaaa } = require('../lib/date')
 
 class FilterInvoiceEntity {
   constructor (data) {
@@ -9,14 +9,14 @@ class FilterInvoiceEntity {
       fieldName: 'client',
     };
     this.payOrder = {
-      data: data.valorPO || null,
+      data: data.PO || null,
       type: 'string',
-      operator: data.operadorValorPO || null,
-      fieldName: 'value',
+      operator: data.operadorPO || null,
+      fieldName: 'reference',
     };
     this.date = {
-      init: data.fechaDesdeFecha ? excelDateToJSDate(data.fechaDesdeFecha + ' 00:00:00') : null,
-      until: data.fechaHastaFecha ? excelDateToJSDate(data.fechaHastaFecha + ' 00:00:00') : null,
+      init: data.fechaDesdeFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeFactura) + ' 00:00:00') : null,
+      until: data.fechaHastaFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaFactura) + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date',
     };
@@ -68,9 +68,9 @@ class FilterInvoiceEntity {
       type: 'string',
       fieldName: 'totalPaid',
     };
-    this.datePay = {
-      init: data.fechaPagoDesde ? excelDateToJSDate(data.fechaPagoDesde + ' 00:00:00') : null,
-      until: data.fechaPagoDesde ? excelDateToJSDate(data.fechaPagoDesde + ' 00:00:00') : null,
+    this.pay = {
+      init: data.fechaDesdePago ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdePago) + ' 00:00:00') : null,
+      until: data.fechaHastaPago ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaPago) + ' 00:00:00') : null,
       fieldName: 'datePay',
       type: 'date'
     };

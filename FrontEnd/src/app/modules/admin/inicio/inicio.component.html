@@ -1,4 +1,21 @@
-<div class="flex flex-wrap w-full mx-auto p-6 md:p-8">
+<div class="flex flex-wrap w-full mx-auto p-6 md:p-8 justify-center">
+    <form class="flex flex-row m-4 p-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
+        <div class="flex w-80">
+            <mat-form-field [ngClass]="filterForm" class="flex-auto text-lg">
+                <mat-label>Búsqueda por fecha de PO</mat-label>
+                <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
+                    <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
+                    <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+        <button class="fuse-mat-button-large w-32 m-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+            <span> Buscar </span>
+        </button>
+    </form>
+
     <div class="grid grid-cols-1 gap-4 w-full m-4">
 
         <!-- Recent transactions table -->

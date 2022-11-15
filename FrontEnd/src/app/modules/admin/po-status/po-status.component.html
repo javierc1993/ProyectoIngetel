@@ -46,7 +46,7 @@
                 <ng-container matColumnDef="SMP">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>SMP</th>
                     <td mat-cell *matCellDef="let transaction">
-                        <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">{{transaction.smpId}}</span>
+                        <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">{{transaction.smp}}</span>
                     </td>
                 </ng-container>
 
@@ -79,7 +79,18 @@
                 <ng-container matColumnDef="PO">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
                     <td mat-cell *matCellDef="let transaction">
-                        <span class="pr-6 font-medium whitespace-nowrap">{{transaction.poId}}</span>
+                        <span class="pr-6 font-medium whitespace-nowrap">{{transaction.po}}</span>
+                    </td>
+                </ng-container>
+                <!-- Fecha PO -->
+                <ng-container matColumnDef="poDate">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        Fecha PO
+                    </th>
+                    <td mat-cell *matCellDef="let transaction">
+                        <span class="pr-6 font-medium whitespace-nowrap">
+                                {{transaction.poDate | date:'dd/MM/YYYY'}}
+                            </span>
                     </td>
                 </ng-container>
 
@@ -140,7 +151,7 @@
                 <ng-container matColumnDef="ver PO">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>ver PO</th>
                     <td mat-cell *matCellDef="let transaction">
-                        <button mat-mini-fab color="primary" (click)="verPO(transaction.poId, transaction.estado);">
+                        <button mat-mini-fab color="primary" (click)="verPO(transaction.po, transaction.estado);">
                             <mat-icon svgIcon="mat_outline:remove_red_eye"></mat-icon>
                         </button>
                     </td>
@@ -187,35 +198,31 @@
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'poID'" [placeholder]="'PO'">
-                    <mat-hint>PO</mat-hint>
+                    <input matInput [formControlName]="'PO'" [placeholder]="'PO'">
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
-                    <input matInput [formControlName]="'smpID'">
-                    <mat-hint>SMP</mat-hint>
+                    <input matInput [formControlName]="'SMP'">
                 </mat-form-field>
             </div>
-            <div class="flex">
+            <!-- <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por sitio</mat-label>
                     <input matInput [formControlName]="'sitio'" [placeholder]="'Ingresa el sitio'">
-                    <mat-hint>Sitio</mat-hint>
                 </mat-form-field>
-            </div>
+            </div> -->
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de PO</mat-label>
 
                     <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
-                        <input matStartDate [formControlName]="'fechaDesdePO'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaPO" placeholder="End date">
+                        <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
+                        <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
                     </mat-date-range-input>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-date-range-picker #picker></mat-date-range-picker>
-                    <mat-hint>Fecha PO</mat-hint>
                 </mat-form-field>
             </div>
 
