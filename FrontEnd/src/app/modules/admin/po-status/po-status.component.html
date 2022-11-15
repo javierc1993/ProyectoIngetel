@@ -199,23 +199,20 @@
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
                     <input matInput [formControlName]="'PO'" [placeholder]="'PO'">
-                    <mat-hint>PO</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
                     <input matInput [formControlName]="'SMP'">
-                    <mat-hint>SMP</mat-hint>
                 </mat-form-field>
             </div>
-            <div class="flex">
+            <!-- <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por sitio</mat-label>
                     <input matInput [formControlName]="'sitio'" [placeholder]="'Ingresa el sitio'">
-                    <mat-hint>Sitio</mat-hint>
                 </mat-form-field>
-            </div>
+            </div> -->
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de PO</mat-label>
@@ -226,7 +223,6 @@
                     </mat-date-range-input>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-date-range-picker #picker></mat-date-range-picker>
-                    <mat-hint>Fecha PO</mat-hint>
                 </mat-form-field>
             </div>
 

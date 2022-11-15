@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive, ApexDataLabels, ApexPlotOptions, ApexGrid, ApexLegend} from "ng-apexcharts";
+import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl, ReactiveFormsModule} from '@angular/forms';
 import { variablesGlobales } from 'GLOBAL';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -56,6 +57,8 @@ export class InicioComponent implements OnInit {
   //recentTransactionsTableColumns: string[] = [];
   
   @ViewChild("chart") chart: ChartComponent;
+  filterForm: UntypedFormGroup;
+  formFieldHelpers: UntypedFormGroup;
   public optionsValuesPO: Partial<optionsValuesPO>;
   public instalationPO: Partial<instalationPO>;
   public statusPO: Partial<statusPO>;
@@ -64,8 +67,9 @@ export class InicioComponent implements OnInit {
   valorTotalFacturado: number = 0;
   valorTotalIva: number = 0;
   valorTotalPagado: number = 0;
+  initDateBilling;
 
-  constructor(private _httpClient: HttpClient) {     
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) {     
     this.optionsValuesPO = {
       
       chart: {
@@ -125,7 +129,7 @@ export class InicioComponent implements OnInit {
       
     };
     this.statusPO = {
-      series: [43, 22, 25],
+      series: [0, 0, 0],
       chart: {    
         height: 350,    
         type: "donut"
@@ -145,17 +149,42 @@ export class InicioComponent implements OnInit {
         text: "PO estados"
       }
     };
+    this.initDateBilling = this.getFilterLastYear();
+    this.getData(this.initDateBilling);
+  }
+
+  getFilterLastYear(){
+    var thisDate = new Date();
+    var thisDateFormat = this.formatoFecha(thisDate);
+    var dateLastYear = new Date();
+    dateLastYear.setMonth(dateLastYear.getMonth()-12);    
+    var thisDateLastYearFormat = this.formatoFecha(dateLastYear); 
+    return {'fechaDesdePoDate':thisDateLastYearFormat,'fechaHastaPoDate':thisDateFormat};
+  }
+
+  formatoFecha(fecha) { 
+    console.log(this.initDateBilling)   
+    var thisDate = fecha.getDate()+'/';     
+    thisDate += (fecha.getMonth() + 1)+'/';
+    thisDate += fecha.getFullYear();
+    return thisDate;
   }
 
   ngOnInit(): void {
-   this.cargueCompleto();
+    console.log(this.initDateBilling);
+    
+    this.filterForm = this._formBuilder.group({ 
+      fechaDesdePoDate:[''],
+      fechaHastaPoDate:[''],
+    }); 
+   
   }
 
   ngAfterViewInit(): void {    
   }
 
-  cargueCompleto (): void{
-    this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
+  getData(objectToFilter){
+    this._httpClient.post(variablesGlobales.urlBackend + '/production/',objectToFilter)
     .subscribe(
       (response:any) => {         
         this.clearData(response.result); 
@@ -190,7 +219,6 @@ export class InicioComponent implements OnInit {
             else{return 0;}
         });          
         var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
-            //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
             if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
             else{return 0;}
         });
@@ -229,7 +257,6 @@ export class InicioComponent implements OnInit {
     var dataLabels = ['pendiente', 'instalado'];
     var quantityPending = new Array;
     var quantityInstalling = new Array;
-      
     this.datosHoja.map (function(thisPO){
         if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
         else{quantityPending.push(thisPO.instalacion)}
@@ -290,6 +317,10 @@ export class InicioComponent implements OnInit {
   } 
 
   updateTotalValues(){
+    this.valorTotalPO = 0;
+    this.valorTotalFacturado = 0;
+    this.valorTotalIva = 0;
+    this.valorTotalPagado = 0;   
     this.datosHoja.forEach(element => {
       this.valorTotalPO += element.valorPO;
       this.valorTotalFacturado += element.valorPoFacturado;
@@ -303,5 +334,15 @@ export class InicioComponent implements OnInit {
     this.optionsValuesPO.series = [{
       data: [this.valorTotalPO, this.valorTotalFacturado, this.valorTotalIva, this.valorTotalFacturado + this.valorTotalIva, this.valorTotalPagado]
     }];  
+  }
+
+  getDataFilter(){    
+    if(this.filterForm.value.fechaDesdePoDate){
+      this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
+    };
+    if(this.filterForm.value.fechaHastaPoDate){
+      this.filterForm.value.fechaHastaPoDate = this.filterForm.value.fechaHastaPoDate.format('DD/MM/YYYY');
+    };
+    this.getData(this.filterForm.value);
   }
 }

@@ -3,10 +3,9 @@ import { Component, OnInit, ViewChild, ViewEncapsulation, AfterViewInit } from '
 
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { variablesGlobales } from 'GLOBAL';
-import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators,} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
 import { ExporterService } from 'services/exporter.service';
 
 export interface transaction {
@@ -77,6 +76,7 @@ export class BillingStatusComponent implements OnInit {
     this.filterForm = this._formBuilder.group({            
             PO:[''],
             SMP:[''],
+            invoiceNumber:[''],
             fechaDesdeFactura:[''],
             fechaHastaFactura:[''],
             fechaDesdePago:[''],
