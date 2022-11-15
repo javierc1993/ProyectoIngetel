@@ -15,8 +15,8 @@ class FilterInvoiceEntity {
       fieldName: 'reference',
     };
     this.date = {
-      init: data.fechaDesdeFecha ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeFecha) + ' 00:00:00') : null,
-      until: data.fechaHastaFecha ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaFecha) + ' 00:00:00') : null,
+      init: data.fechaDesdeFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeFecha) + ' 00:00:00') : null,
+      until: data.fechaHastaFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaFecha) + ' 00:00:00') : null,
       fieldName: 'date',
       type: 'date',
     };
@@ -69,8 +69,8 @@ class FilterInvoiceEntity {
       fieldName: 'totalPaid',
     };
     this.datePay = {
-      init: data.fechaPagoDesde ? new Date(ddmmaaaaTommddaaaa(data.fechaPagoDesde) + ' 00:00:00') : null,
-      until: data.fechaPagoDesde ? new Date(ddmmaaaaTommddaaaa(data.fechaPagoDesde) + ' 00:00:00') : null,
+      init: data.fechaDesdePago ? new Date(ddmmaaaaTommddaaaa(data.fechaPagoDesde) + ' 00:00:00') : null,
+      until: data.fechaHastaPago ? new Date(ddmmaaaaTommddaaaa(data.fechaPagoDesde) + ' 00:00:00') : null,
       fieldName: 'datePay',
       type: 'date'
     };
