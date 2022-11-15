@@ -67,6 +67,7 @@ export class InicioComponent implements OnInit {
   valorTotalFacturado: number = 0;
   valorTotalIva: number = 0;
   valorTotalPagado: number = 0;
+  initDateBilling;
 
   constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) {     
     this.optionsValuesPO = {
@@ -128,7 +129,7 @@ export class InicioComponent implements OnInit {
       
     };
     this.statusPO = {
-      series: [43, 22, 25],
+      series: [0, 0, 0],
       chart: {    
         height: 350,    
         type: "donut"
@@ -148,8 +149,8 @@ export class InicioComponent implements OnInit {
         text: "PO estados"
       }
     };
-    const initDateBilling = this.getFilterLastYear();
-    this.getData(initDateBilling);
+    this.initDateBilling = this.getFilterLastYear();
+    this.getData(this.initDateBilling);
   }
 
   getFilterLastYear(){
@@ -161,7 +162,8 @@ export class InicioComponent implements OnInit {
     return {'fechaDesdePoDate':thisDateLastYearFormat,'fechaHastaPoDate':thisDateFormat};
   }
 
-  formatoFecha(fecha) {    
+  formatoFecha(fecha) { 
+    console.log(this.initDateBilling)   
     var thisDate = fecha.getDate()+'/';     
     thisDate += (fecha.getMonth() + 1)+'/';
     thisDate += fecha.getFullYear();
@@ -169,6 +171,8 @@ export class InicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.initDateBilling);
+    
     this.filterForm = this._formBuilder.group({ 
       fechaDesdePoDate:[''],
       fechaHastaPoDate:[''],
@@ -215,7 +219,6 @@ export class InicioComponent implements OnInit {
             else{return 0;}
         });          
         var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
-            //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
             if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
             else{return 0;}
         });
@@ -254,7 +257,6 @@ export class InicioComponent implements OnInit {
     var dataLabels = ['pendiente', 'instalado'];
     var quantityPending = new Array;
     var quantityInstalling = new Array;
-      
     this.datosHoja.map (function(thisPO){
         if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
         else{quantityPending.push(thisPO.instalacion)}
@@ -318,8 +320,7 @@ export class InicioComponent implements OnInit {
     this.valorTotalPO = 0;
     this.valorTotalFacturado = 0;
     this.valorTotalIva = 0;
-    this.valorTotalPagado = 0;    
-
+    this.valorTotalPagado = 0;   
     this.datosHoja.forEach(element => {
       this.valorTotalPO += element.valorPO;
       this.valorTotalFacturado += element.valorPoFacturado;
@@ -335,8 +336,7 @@ export class InicioComponent implements OnInit {
     }];  
   }
 
-  getDataFilter(){
-    //console.log("value to filter:"+JSON.stringify(this.filterForm.value));
+  getDataFilter(){    
     if(this.filterForm.value.fechaDesdePoDate){
       this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
     };

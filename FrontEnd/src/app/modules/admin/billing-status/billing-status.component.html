@@ -239,24 +239,27 @@
                     </mat-date-range-input>
                     <mat-datepicker-toggle matSuffix [for]="pickerFactura"></mat-datepicker-toggle>
                     <mat-date-range-picker #pickerFactura></mat-date-range-picker>
-                    <mat-hint>Fecha Factura</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
                     <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
-                    <mat-hint>PO</mat-hint>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
-                    <input id="SMPControl" matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
-                    <mat-hint>SMP</mat-hint>
+                    <input matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
                 </mat-form-field>
             </div>
-            <!-- <div class="flex">
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por número factura</mat-label>
+                    <input matInput [formControlName]="'invoiceNumber'" [placeholder]="'Ingresa un número de factura'">
+                </mat-form-field>
+            </div>
+            <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de pago</mat-label>
                     <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerPago">
@@ -265,9 +268,8 @@
                     </mat-date-range-input>
                     <mat-datepicker-toggle matSuffix [for]="pickerPago"></mat-datepicker-toggle>
                     <mat-date-range-picker #pickerPago></mat-date-range-picker>
-                    <mat-hint>Fecha Pago</mat-hint>
                 </mat-form-field>
-            </div> -->
+            </div>
             <!--  <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
                     <span> Buscar </span>
                 </button>-->

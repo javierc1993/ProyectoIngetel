@@ -67,7 +67,7 @@ export class PoStatusComponent implements OnInit {
     this.filterForm = this._formBuilder.group({            
             PO:[''],
             SMP:[''],
-            sitio:[''],
+            // sitio:[''],
             fechaDesdePoDate:[''],
             fechaHastaPoDate:[''],
         });        
