@@ -75,8 +75,7 @@ export class BillingStatusComponent implements OnInit {
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({            
             PO:[''],
-            SMP:[''],
-            invoiceNumber:[''],
+            factura:[''],
             fechaDesdeFactura:[''],
             fechaHastaFactura:[''],
             fechaDesdePago:[''],
@@ -160,15 +159,15 @@ export class BillingStatusComponent implements OnInit {
     if(this.filterForm.value.fechaHastaFactura){
       this.filterForm.value.fechaHastaFactura = this.filterForm.value.fechaHastaFactura.format('DD/MM/YYYY');      
     };
-    // if(this.filterForm.value.fechaDesdePago){ 
-    //  this.filterForm.value.fechaDesdePago = this.filterForm.value.fechaDesdePago.format('DD/MM/YYYY');
-    // };
-    // if(this.filterForm.value.fechaHastaPago){   
-    //  this.filterForm.value.fechaHastaPago = this.filterForm.value.fechaHastaPago.format('DD/MM/YYYY');   
-    // };
-    console.log(this.filterForm.value);
+    if(this.filterForm.value.fechaDesdePago){ 
+     this.filterForm.value.fechaDesdePago = this.filterForm.value.fechaDesdePago.format('DD/MM/YYYY');
+    };
+    if(this.filterForm.value.fechaHastaPago){   
+     this.filterForm.value.fechaHastaPago = this.filterForm.value.fechaHastaPago.format('DD/MM/YYYY');   
+    };
+    //console.log(this.filterForm.value);
 
-    //this.getData(this.filterForm.value);
+    this.getData(this.filterForm.value);
     
 
   }
