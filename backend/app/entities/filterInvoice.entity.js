@@ -9,10 +9,10 @@ class FilterInvoiceEntity {
       fieldName: 'client',
     };
     this.payOrder = {
-      data: data.valorPO || null,
+      data: data.PO || null,
       type: 'string',
-      operator: data.operadorValorPO || null,
-      fieldName: 'value',
+      operator: data.operadorPO || null,
+      fieldName: 'reference',
     };
     this.date = {
       init: data.fechaDesdeFecha ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeFecha) + ' 00:00:00') : null,

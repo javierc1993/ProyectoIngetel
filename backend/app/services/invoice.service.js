@@ -80,8 +80,6 @@ const templateInclude = () => {
           model: Site,
           as: 'site'
         }
-
-      
     },
     {
       model: Pay,
