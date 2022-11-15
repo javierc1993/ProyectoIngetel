@@ -36,7 +36,7 @@ const createIncludeGetAll = async (filters = null) => {
   let include = templateInclude();
   if (filters) {
     include = await include.map(item => {
-      if (filters[item.as]?.data) return createQueryField(item, filters[item.as])
+      if (filters[item.as]?.data || filters[item.as]?.init || filters[item.as]?.until) return createQueryField(item, filters[item.as])
       return item;
     })
   }
@@ -46,7 +46,7 @@ const createIncludeGetAll = async (filters = null) => {
 
 const createWhereGetAll = async (filters = null) => {
   let where = {};
-  let fields = ['client', 'date', 'invoice', 'subTotal', 'iva', 'total', 'rtf', 'rtIva', 'toPaid', 'totalPaid', 'datePay', 'release', 'percentInvoice', 'observation', 'state'];
+  let fields = ['client', 'date', 'invoice', 'subTotal', 'iva', 'total', 'rtf', 'rtIva', 'toPaid', 'totalPaid', 'release', 'percentInvoice', 'observation', 'state'];
   if (filters) {
     for (const field of fields) {
       if (filters[field]?.data || filters[field]?.init || filters[field]?.until) {

@@ -68,7 +68,7 @@ class FilterInvoiceEntity {
       type: 'string',
       fieldName: 'totalPaid',
     };
-    this.datePay = {
+    this.pay = {
       init: data.fechaDesdePago ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdePago) + ' 00:00:00') : null,
       until: data.fechaHastaPago ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaPago) + ' 00:00:00') : null,
       fieldName: 'datePay',
