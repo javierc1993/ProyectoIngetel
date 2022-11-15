@@ -76,6 +76,7 @@ export class BillingStatusComponent implements OnInit {
     this.filterForm = this._formBuilder.group({            
             PO:[''],
             SMP:[''],
+            invoiceNumber:[''],
             fechaDesdeFactura:[''],
             fechaHastaFactura:[''],
             fechaDesdePago:[''],
