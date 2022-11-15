@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive, ApexDataLabels, ApexPlotOptions, ApexGrid, ApexLegend} from "ng-apexcharts";
+import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl, ReactiveFormsModule} from '@angular/forms';
 import { variablesGlobales } from 'GLOBAL';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -56,6 +57,8 @@ export class InicioComponent implements OnInit {
   //recentTransactionsTableColumns: string[] = [];
   
   @ViewChild("chart") chart: ChartComponent;
+  filterForm: UntypedFormGroup;
+  formFieldHelpers: UntypedFormGroup;
   public optionsValuesPO: Partial<optionsValuesPO>;
   public instalationPO: Partial<instalationPO>;
   public statusPO: Partial<statusPO>;
@@ -65,7 +68,7 @@ export class InicioComponent implements OnInit {
   valorTotalIva: number = 0;
   valorTotalPagado: number = 0;
 
-  constructor(private _httpClient: HttpClient) {     
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) {     
     this.optionsValuesPO = {
       
       chart: {
@@ -145,17 +148,39 @@ export class InicioComponent implements OnInit {
         text: "PO estados"
       }
     };
+    const initDateBilling = this.getFilterLastYear();
+    this.getData(initDateBilling);
+  }
+
+  getFilterLastYear(){
+    var thisDate = new Date();
+    var thisDateFormat = this.formatoFecha(thisDate);
+    var dateLastYear = new Date();
+    dateLastYear.setMonth(dateLastYear.getMonth()-12);    
+    var thisDateLastYearFormat = this.formatoFecha(dateLastYear); 
+    return {'fechaDesdePoDate':thisDateLastYearFormat,'fechaHastaPoDate':thisDateFormat};
+  }
+
+  formatoFecha(fecha) {    
+    var thisDate = fecha.getDate()+'/';     
+    thisDate += (fecha.getMonth() + 1)+'/';
+    thisDate += fecha.getFullYear();
+    return thisDate;
   }
 
   ngOnInit(): void {
-   this.cargueCompleto();
+    this.filterForm = this._formBuilder.group({ 
+      fechaDesdePoDate:[''],
+      fechaHastaPoDate:[''],
+    }); 
+   
   }
 
   ngAfterViewInit(): void {    
   }
 
-  cargueCompleto (): void{
-    this._httpClient.post(variablesGlobales.urlBackend + '/production/',{})
+  getData(objectToFilter){
+    this._httpClient.post(variablesGlobales.urlBackend + '/production/',objectToFilter)
     .subscribe(
       (response:any) => {         
         this.clearData(response.result); 
@@ -290,6 +315,11 @@ export class InicioComponent implements OnInit {
   } 
 
   updateTotalValues(){
+    this.valorTotalPO = 0;
+    this.valorTotalFacturado = 0;
+    this.valorTotalIva = 0;
+    this.valorTotalPagado = 0;    
+
     this.datosHoja.forEach(element => {
       this.valorTotalPO += element.valorPO;
       this.valorTotalFacturado += element.valorPoFacturado;
@@ -303,5 +333,16 @@ export class InicioComponent implements OnInit {
     this.optionsValuesPO.series = [{
       data: [this.valorTotalPO, this.valorTotalFacturado, this.valorTotalIva, this.valorTotalFacturado + this.valorTotalIva, this.valorTotalPagado]
     }];  
+  }
+
+  getDataFilter(){
+    //console.log("value to filter:"+JSON.stringify(this.filterForm.value));
+    if(this.filterForm.value.fechaDesdePoDate){
+      this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
+    };
+    if(this.filterForm.value.fechaHastaPoDate){
+      this.filterForm.value.fechaHastaPoDate = this.filterForm.value.fechaHastaPoDate.format('DD/MM/YYYY');
+    };
+    this.getData(this.filterForm.value);
   }
 }
