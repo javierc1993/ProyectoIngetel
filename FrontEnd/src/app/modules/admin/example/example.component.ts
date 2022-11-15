@@ -148,7 +148,7 @@ export class ExampleComponent implements OnInit{
 
    filtroSuma(){
   // var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
-   var formFiltros = {};
+   const formFiltros = {};
    
    var newDatosHoja: transaction[] =[];
     if(this.filterForm.value.SMP){
@@ -158,30 +158,22 @@ export class ExampleComponent implements OnInit{
           });
     };
     if(this.filterForm.value.PO){
-        formFiltros={'PO':this.filterForm.value.PO}
         Object.defineProperty(formFiltros, 'PO', {
             value:this.filterForm.value.PO,
             writable: false
           });
     };
     if(this.filterForm.value.valorPO){
-        formFiltros={'valorPO':this.filterForm.value.valorPO}
         Object.defineProperty(formFiltros, 'valorPO', {
             value:this.filterForm.value.valorPO,
             writable: false
           });
     };
     if(this.filterForm.value.fechaDesdeInstalacion){
-        Object.defineProperty(formFiltros, 'fechaDesdeInstalacion', {
-            value:this.filterForm.value.fechaDesdeInstalacion.format('DD/MM/YYYY'),
-            writable: false
-          });
+        this.filterForm.value.fechaDesdeInstalacion=this.filterForm.value.fechaDesdeInstalacion.format('DD/MM/YYYY');
     };
     if(this.filterForm.value.fechaHastaInstalacion){
-        Object.defineProperty(formFiltros, 'fechaDesdeInstalacion', {
-            value:this.filterForm.value.fechaHastaInstalacion.format('DD/MM/YYYY'),
-            writable: false
-          });
+        this.filterForm.value.fechaHastaInstalacion=this.filterForm.value.fechaHastaInstalacion.format('DD/MM/YYYY');
     };
     if(this.filterForm.value.operadorValorPO){
        Object.defineProperty(formFiltros, 'operadorValorPO', {
@@ -196,12 +188,13 @@ export class ExampleComponent implements OnInit{
           });
     };
     this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
-    console.log(formFiltros);
+ /*  console.log(formFiltros);
+    console.log(this.filterForm.value);*/
     
     this._httpClient
        .post(
            variablesGlobales.urlBackend + '/production/',
-            formFiltros
+            this.filterForm.value
        )
        .subscribe(
            (response:any) => {
