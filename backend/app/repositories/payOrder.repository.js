@@ -71,6 +71,18 @@ class PayOrderRepository {
     }
     return false;
   }
+
+  async updatePayOrder (reference, value, oldValue) {
+    let po = await this.getPoByReference(reference);
+    console.log(po);
+    if (po) {
+      po.value = value.valorPo;
+      po.band = oldValue.band;
+      po.save();
+      return true
+    }
+    return false;
+  }
 }
 
 module.exports = new PayOrderRepository();

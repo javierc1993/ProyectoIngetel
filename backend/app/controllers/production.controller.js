@@ -3,7 +3,7 @@ const XLSX = require('xlsx');
 
 const FileService = require('../services/file.service');
 const PayOrderService = require('../services/payOrder.service');
-
+const PayOrderRepository = require('../repositories/payOrder.repository');
 
 
 
@@ -25,9 +25,10 @@ class ProductionController {
 
   async update (req, res) {
     try {
-      const body = req.body;
-      console.log(body);
-      const resp = await PayOrderService.getPayOrders(body);
+      const reference = req.body.reference;
+      const value = req.body.valueUpdate;
+      const oldValue = req.body.OldValue;
+      const resp = await PayOrderRepository.updatePayOrder(reference, value, oldValue);
       return res.status(200).json({
         resultMsg: 'OK',
         result: resp
