@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
-
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { variablesGlobales } from 'GLOBAL';
-import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl, ReactiveFormsModule} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'services/exporter.service';
@@ -24,6 +22,10 @@ export interface transaction {
     fechaPago: Date;
     estado: string;
 }
+interface Operator {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-billing-status',
@@ -35,8 +37,7 @@ export class BillingStatusComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   filterForm: UntypedFormGroup;
-  formFieldHelpers: UntypedFormGroup;
-  private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+  formFieldHelpers: UntypedFormGroup;  
   recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
@@ -49,6 +50,17 @@ export class BillingStatusComponent implements OnInit {
     end: new FormControl<Date | null>(null),
     fechaDesdeInstalacion:new FormControl<Date | null>(null),
   });
+  operatorsValue: Operator[] = [
+    {value: 'igual', viewValue: 'igual'},
+    {value: 'top', viewValue: 'mayor'},
+    {value: 'button', viewValue: 'menor'}
+  ];
+
+  operatorsString: Operator[] = [
+    {value: 'content', viewValue: 'contiene'},
+    {value: 'noContent', viewValue: 'no contiene'}
+  ];
+
   constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { 
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];     
     const initDateBilling = this.getFilterLastYear();
@@ -74,18 +86,21 @@ export class BillingStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({            
-            PO:[''],
-            factura:[''],
-            fechaDesdeFactura:[''],
-            fechaHastaFactura:[''],
-            fechaDesdePago:[''],
-            fechaHastaPago:[''],
-        });
+        PO:[''],
+        factura:[''],
+        fechaDesdeFactura:[''],
+        fechaHastaFactura:[''],
+        fechaDesdePago:[''],
+        fechaHastaPago:[''],
+        operadorPO:[''],
+        operadorFactura:[''],
+    });
     this.range = new FormGroup({
-            start: new FormControl<Date | null>(null),
-            end: new FormControl<Date | null>(null),
-            fechaDesdeInstalacion:new FormControl<Date | null>(null),
-          });
+      start: new FormControl<Date | null>(null),
+      end: new FormControl<Date | null>(null),
+      fechaDesdeInstalacion:new FormControl<Date | null>(null),
+    });
+    
   }
 
   getData(objectToFilter){
@@ -148,7 +163,7 @@ export class BillingStatusComponent implements OnInit {
     //console.log($event);
   }
   exportAsXLSX():void{
-    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Billing_status')
     console.log("descargando")
   }
   getDataFilter(){
@@ -165,9 +180,17 @@ export class BillingStatusComponent implements OnInit {
     if(this.filterForm.value.fechaHastaPago){   
      this.filterForm.value.fechaHastaPago = this.filterForm.value.fechaHastaPago.format('DD/MM/YYYY');   
     };
+    if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
+    if(!this.filterForm.value.factura){this.filterForm.value.operadorFactura = ""}
     //console.log(this.filterForm.value);
+    // if(this.filterForm.value.operadorPO){
+    //     Object.defineProperty(formFiltros, 'operadorPO', {
+    //         value:this.filterForm.value.operatorPO,
+    //         writable: false
+    //       });
+    // };
 
-    this.getData(this.filterForm.value);
+     this.getData(this.filterForm.value);
     
 
   }

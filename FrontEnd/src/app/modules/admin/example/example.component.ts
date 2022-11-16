@@ -2,17 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation,ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { variablesGlobales } from 'GLOBAL';
-import { CommonModule } from '@angular/common';
-import { BehaviorSubject, elementAt, Observable, tap } from 'rxjs';
-import {MatDividerModule} from '@angular/material/divider';
-import {FormGroup, FormControl,ReactiveFormsModule} from '@angular/forms';
+import { BehaviorSubject} from 'rxjs';
+import {FormGroup, FormControl} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
-import {
-    UntypedFormBuilder,
-    UntypedFormGroup,
-    NgForm,
-    Validators,
-} from '@angular/forms';
+import { ExporterService } from 'services/exporter.service';
+import {UntypedFormBuilder, UntypedFormGroup,} from '@angular/forms';
 export interface transaction {
     SMP: string;
     SITE_Name:string;
@@ -25,7 +19,6 @@ export interface transaction {
     PO: string;
     Valor_PO: string;
     instalacion: string;
-
 }
 interface Operator {
     value: string;
@@ -51,12 +44,13 @@ export class ExampleComponent implements OnInit{
      recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
      recentTransactionsTableColumns: string[] = [];
      datosHoja: transaction[] =[];
+     listPO: any;
      drawerOpened=false;
      drawerMode='side';
      range = new FormGroup({
         start: new FormControl<Date | null>(null),
         end: new FormControl<Date | null>(null),
-        fechaDesdeInstalacion:new FormControl<Date | null>(null),
+        fechaDesdePoDate:new FormControl<Date | null>(null),
       });
 
     /*Inicializador de interfaz para filtros*/
@@ -70,52 +64,83 @@ export class ExampleComponent implements OnInit{
         {value: 'noContent', viewValue: 'no contiene'}];
 
     /*constructor*/
-     constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder) { }
-
+    constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder,private excelService:ExporterService) {       
+       const initDateBilling = this.getFilterLastYear();
+       /*llamada a la función para cargar la info de prod desde el backend*/ 
+       this.getData(initDateBilling);
+    }
+    getFilterLastYear(){
+        var thisDate = new Date();
+        var thisDateFormat = this.formatoFecha(thisDate);
+        var dateLastYear = new Date();
+        dateLastYear.setMonth(dateLastYear.getMonth()-12);    
+        var thisDateLastYearFormat = this.formatoFecha(dateLastYear); 
+        return {'fechaDesdeFactura':thisDateLastYearFormat,'fechaHastaFactura':thisDateFormat};
+    }
+    formatoFecha(fecha) {
+        var thisDate = fecha.getDate()+'/';     
+        thisDate += (fecha.getMonth() + 1)+'/';
+        thisDate += fecha.getFullYear();
+        return thisDate;
+    }
 
     ngOnInit(): void {
         /*construccion controles de formulario*/
         this.filterForm = this._formBuilder.group({
-            SMP:[''],
             PO:[''],
+            SMP:[''],            
             valorPO:[''],
-            fechaDesdeInstalacion:[''],
-            fechaHastaInstalacion:[''],
+            fechaDesdePoDate:[''],
+            fechaHastaPoDate:[''],
             operadorValorPO:[''],
             operadorPO:[''],
             operadorSitio:['']
         });
-      /*llamada a la función para cargar la info de prod desde el backend*/  
-      this.cargueCompleto();
     }
-
-    /*modificador de eventos despues de la carga de las vistas (paginador)*/
-    ngAfterViewInit() {
-        this.recentTransactionsDataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel="Cantidad";
-      }
-      
+    
     /*funcion para traer la información*/
-    cargueCompleto(){
+    getData(objectToFilter){
+        //console.log(objectToFilter)
+        if(!objectToFilter){objectToFilter = this.getFilterLastYear();}
+        console.log(objectToFilter)
         this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
         this._httpClient
-            .post(
-                variablesGlobales.urlBackend + '/production/',{}
-            )
-            .subscribe(
-                (response:any) => {
-                    for (let index = 0; index < response.result.length; index++) {
-                        const element = response.result[index];
-                        console.log(element);
-                        this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:element.leader?element.leader.name+' '+element.leader.lastname:'', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
-                        );
-                    }
-                    this.recentTransactionsDataSource.data = this.datosHoja;
-                },
-                (error) => {
-                    console.log(error);
-                }
+            .post(variablesGlobales.urlBackend + '/production/',objectToFilter)
+            .subscribe((response:any) => {
+                this.listPO = response.result.reduce((acc, el)=>({
+                  ...acc, 
+                  [el.reference]:el,
+                }),{}); 
+                this.loadDataTable();                    
+            },
+            (error) => {console.log(error);}
             );
+    }
+    loadDataTable(): void {
+        this.datosHoja = Object.values(this.listPO).map(function(thisPO : any){
+            var thisInstalationDate : any = 'Pendiente';
+            if(thisPO.instalation.date){
+                var thisDate = new Date(thisPO.instalation.date);
+                thisInstalationDate = thisDate.getDate()+'/';     
+                thisInstalationDate += (thisDate.getMonth() + 1)+'/';
+                thisInstalationDate += thisDate.getFullYear();
+            }
+            return {
+                SMP: thisPO.site.smp, 
+                SITE_Name: thisPO.site.name, 
+                Escenario:thisPO.scenery, 
+                Banda:thisPO.band, 
+                Lider:thisPO.leader?thisPO.leader.name+' '+thisPO.leader.lastname:'', 
+                Fecha_de_integracion:thisPO.integration.date,
+                ON_AIR:thisPO.onAir.date,
+                mos_HW:thisPO.mosHw.date,
+                PO:thisPO.reference,
+                Valor_PO :thisPO.value,
+                instalacion: thisInstalationDate
+            }
+        });
+        this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
+        this.recentTransactionsDataSource.paginator = this.paginator;
     }
 
     /**
@@ -124,113 +149,63 @@ export class ExampleComponent implements OnInit{
      * @param strategy 
      */
    perfilesVisualizacion(strategy){
-    this.recentTransactionsTableColumns=['SMP','SITE Name', 'PO', 'Valor PO', 'Escenario'];
-    var data=this.datosHoja;
-    console.log(strategy);
-    /*construccion de la nueva interfaz
-     *para visualizar nvos datos */
-    interface transaction {
-        SMP: string;
-        SITE_Name:string;
-        Escenario: string;
-        PO: string;
-        Valor_PO: string;
+    if(strategy == "production"){
+        this.recentTransactionsTableColumns=['SMP','SITE Name', 'PO', 'Valor PO', 'Escenario'];
+        interface transaction {
+            SMP: string;
+            SITE_Name:string;        
+            PO: string;
+            Valor_PO: string;
+            Escenario: string;
+        }
+        var newData: transaction[] =[]; 
+        newData = Object.values(this.listPO).map(function(thisPO : any){
+            return {
+                SMP: thisPO.site.smp, 
+                SITE_Name: thisPO.site.name, 
+                PO:thisPO.reference,
+                Valor_PO :thisPO.value,
+                Escenario:thisPO.scenery                
+            }
+        });
+        this.recentTransactionsDataSource = new MatTableDataSource(newData);
+        this.recentTransactionsDataSource.paginator = this.paginator;
+    }else{
+        this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
+        this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
+        this.recentTransactionsDataSource.paginator = this.paginator;
     }
-    var newData: transaction[] =[];
     
-    for (let index = 0; index < data.length; index++) {
-        const element = data[index];
-        newData.push(  {SMP: element.SMP, SITE_Name: element.SITE_Name, Escenario:element.Escenario, PO:element.PO, Valor_PO :element.Valor_PO},
-        );
-        this.recentTransactionsDataSource.data = newData;
-    }
+    //this.recentTransactionsDataSource.data = newData;    
    }
 
-   filtroSuma(){
-  // var  fechaDesde= this.filterForm.value.fechaDesdeInstalacion.format('MM/DD/YYYY');
-   const formFiltros = {};
+   getDataFilter(){
+    if(this.filterForm.value.fechaDesdePoDate){
+      this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
+    };
+    if(this.filterForm.value.fechaHastaPoDate){
+      this.filterForm.value.fechaHastaPoDate = this.filterForm.value.fechaHastaPoDate.format('DD/MM/YYYY');
+    };
+    if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
+    if(!this.filterForm.value.SMP){this.filterForm.value.operadorSitio = ""}
+    if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
+    this.getData(this.filterForm.value);
+
+   }
    
-   var newDatosHoja: transaction[] =[];
-    if(this.filterForm.value.SMP){
-        Object.defineProperty(formFiltros, 'SMP', {
-            value:this.filterForm.value.SMP,
-            writable: false
-          });
-    };
-    if(this.filterForm.value.PO){
-        Object.defineProperty(formFiltros, 'PO', {
-            value:this.filterForm.value.PO,
-            writable: false
-          });
-    };
-    if(this.filterForm.value.valorPO){
-        Object.defineProperty(formFiltros, 'valorPO', {
-            value:this.filterForm.value.valorPO,
-            writable: false
-          });
-    };
-    if(this.filterForm.value.fechaDesdeInstalacion){
-        this.filterForm.value.fechaDesdeInstalacion=this.filterForm.value.fechaDesdeInstalacion.format('DD/MM/YYYY');
-    };
-    if(this.filterForm.value.fechaHastaInstalacion){
-        this.filterForm.value.fechaHastaInstalacion=this.filterForm.value.fechaHastaInstalacion.format('DD/MM/YYYY');
-    };
-    if(this.filterForm.value.operadorValorPO){
-       Object.defineProperty(formFiltros, 'operadorValorPO', {
-            value:this.filterForm.value.operatorValorPO,
-            writable: false
-          });
-    };
-    if(this.filterForm.value.operadorPO){
-        Object.defineProperty(formFiltros, 'operadorPO', {
-            value:this.filterForm.value.operatorPO,
-            writable: false
-          });
-    };
-    this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
- /*  console.log(formFiltros);
-    console.log(this.filterForm.value);*/
-    
-    this._httpClient
-       .post(
-           variablesGlobales.urlBackend + '/production/',
-            this.filterForm.value
-       )
-       .subscribe(
-           (response:any) => {
-                this.datosHoja=[];
-               for (let index = 0; index < response.result.length; index++) {
-                   const element = response.result[index];
-                   //console.log(element);
-                   this.sumPO=true;
-                    this.sumPOvalue = this.sumPOvalue +  element.value;
-                    //console.log(this.sumPOvalue);
-                   this.datosHoja.push(  {SMP: element.site.smp, SITE_Name: element.site.name, Escenario:element.scenery, Banda:element.band, Lider:element.leader?element.leader.name+' '+element.leader.lastname:'', Fecha_de_integracion:element.integration.date,ON_AIR:element.onAir.date, mos_HW:element.mosHw.date, PO:element.reference, Valor_PO :element.value, instalacion: element.instalation.date? element.instalation.date :'pendiente'},
-                   );
-               }
-               this.recentTransactionsDataSource.data = this.datosHoja;
-               
-           },
-           (error) => {
-               console.log(error);
-           }
-       );
-
-       
+   toggleDrawerOpen(): void{this.drawerOpened = !this.drawerOpened;}
+   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
+   
+   applyFilter(event: Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.recentTransactionsDataSource.filter = filterValue.trim().toLowerCase();
+    if (this.recentTransactionsDataSource.paginator) {
+      this.recentTransactionsDataSource.paginator.firstPage();
+    }
    }
-
-    toggleDrawerOpen(): void
-    {
-    this.drawerOpened = !this.drawerOpened;
-    }
-/**
- * Drawer opened changed
- *
- * @param opened
- */
-    drawerOpenedChanged(opened: boolean): void
-    {
-     this.drawerOpened = opened;
-    }
+   exportAsXLSX():void{
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Produccion_status')
+    console.log("descargando")
+  }
 
 }

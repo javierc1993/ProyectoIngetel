@@ -21,6 +21,10 @@ export interface transaction {
     porcentajePagado: string;
     estado: string;
 }
+interface Operator {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-po-status',
@@ -40,6 +44,15 @@ export class PoStatusComponent implements OnInit {
   thisPO: any;
   drawerOpened=false;
   drawerMode='side';
+  operatorsValue: Operator[] = [
+    {value: 'igual', viewValue: 'igual'},
+    {value: 'top', viewValue: 'mayor'},
+    {value: 'button', viewValue: 'menor'}
+  ];
+  operatorsString: Operator[] = [
+    {value: 'content', viewValue: 'contiene'},
+    {value: 'noContent', viewValue: 'no contiene'}
+  ];
 
   constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public dialog: MatDialog) { 
     this.recentTransactionsTableColumns=['SMP','SITE Name','PO','poDate','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO' ,'Estado'];
@@ -65,12 +78,15 @@ export class PoStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({            
-            PO:[''],
-            SMP:[''],
-            // sitio:[''],
-            fechaDesdePoDate:[''],
-            fechaHastaPoDate:[''],
-        });        
+      PO:[''],
+      SMP:[''],
+      valorPO:[''],
+      fechaDesdePoDate:[''],
+      fechaHastaPoDate:[''],      
+      operadorPO:[''],
+      operadorSitio:[''],
+      operadorValorPO:['']
+    });        
   }
 
   getData(objectToFilter){
@@ -175,6 +191,10 @@ export class PoStatusComponent implements OnInit {
     if(this.filterForm.value.fechaHastaPoDate){
       this.filterForm.value.fechaHastaPoDate = this.filterForm.value.fechaHastaPoDate.format('DD/MM/YYYY');
     };
+    if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
+    if(!this.filterForm.value.SMP){this.filterForm.value.operadorSitio = ""}
+    if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
+
     this.getData(this.filterForm.value);
   }
   

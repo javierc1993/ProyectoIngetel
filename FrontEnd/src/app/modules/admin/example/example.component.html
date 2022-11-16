@@ -37,25 +37,30 @@
     .example-headers-align .mat-form-field+.mat-form-field {
         margin-left: 8px;
     }
-    .mat-select{
+    
+    .mat-select {
         margin-left: 5px;
     }
 </style>
 
 
-<div class="relative flex overflow-hidden border mt-8 min-h-80">
+<div class="relative w-full flex overflow-hidden border mt-8 min-h-80">
 
     <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
         <button class="m-5" mat-flat-button [color]="'primary'" (click)="toggleDrawerOpen();">
         <mat-icon>filter_list</mat-icon>
             Filtros
         </button>
-        <div class= "example-section" *ngIf="sumPO">
+        <mat-form-field class="p-4" appearance="standard">
+            <mat-label class="text-2xl">Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+        </mat-form-field>
+        <!-- <div class="example-section" *ngIf="sumPO">
             <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">
                valor total de las PO encontradas: {{sumPOvalue|currency:"USD":"symbol"}}
             </span>
-           
-        </div>
+
+        </div> -->
         <div class="overflow-x-auto mx-6">
 
             <table class="w-full bg-transparent" mat-table matSort [dataSource]="recentTransactionsDataSource" #recentTransactionsTable>
@@ -139,7 +144,7 @@
                     </th>
                     <td mat-cell *matCellDef="let transaction">
                         <span class="pr-6 font-medium whitespace-nowrap">
-                              {{transaction.Fecha_de_integracion}}
+                              {{transaction.Fecha_de_integracion | date:'dd/MM/YYYY'}}
                           </span>
                     </td>
                 </ng-container>
@@ -159,7 +164,7 @@
                     </th>
                     <td mat-cell *matCellDef="let transaction">
                         <span class="pr-6 font-medium whitespace-nowrap">
-                              {{transaction.mos_HW}}
+                              {{transaction.mos_HW | date:'dd/MM/YYYY'}}
                           </span>
                     </td>
                 </ng-container>
@@ -188,8 +193,8 @@
                         Instalacion
                     </th>
                     <td mat-cell *matCellDef="let transaction">
-                        <span class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase" [ngClass]="{'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': transaction.instalacion != 'pendiente',
-                          'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50 ': transaction.instalacion==='pendiente'}">
+                        <span class="inline-flex items-center font-bold font-medium px-2.5 py-0.5 rounded-full tracking-wide" [ngClass]="{'bg-green-200 text-green-800': transaction.instalacion !== 'Pendiente',
+                          'bg-red-200 text-red-800': transaction.instalacion==='Pendiente'}">
                           <span class="leading-relaxed whitespace-nowrap">{{transaction.instalacion}}</span>
                         </span>
                     </td>
@@ -207,8 +212,13 @@
             </table>
 
         </div>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Cantidad de elementos">
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons aria-label="Cantidad de elementos">
         </mat-paginator>
+        <div class="relative p-4">
+            <button mat-flat-button color="primary" (click)="exportAsXLSX()">
+                <mat-icon svgIcon="mat_outline:sim_card_download"></mat-icon>
+                Exportar datos</button>
+        </div>
     </div>
 
     <!-- Right drawer must be positioned after the content-->
@@ -217,24 +227,12 @@
         <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por SMP</mat-label>
-                    <input id="SMPControl" matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
-                    <mat-hint>SMP</mat-hint>
-                    <mat-select [formControlName]="'operadorSitio'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                          {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
                     <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
                     <mat-hint>PO</mat-hint>
                     <mat-select [formControlName]="'operadorPO'">
                         <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                          {{operatorString.viewValue}}
+                            {{operatorString.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -245,25 +243,36 @@
                     <input class="text-right" matInput [formControlName]="'valorPO'">
                     <span matPrefix>$</span>
                     <mat-select [formControlName]="'operadorValorPO'">
-                      <mat-option *ngFor="let operator of operators" [value]="operator.value">
-                        {{operator.viewValue}}
-                      </mat-option>
+                        <mat-option *ngFor="let operator of operators" [value]="operator.value">
+                            {{operator.viewValue}}
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por fecha de instalación</mat-label>
-
+                    <mat-label>Búsqueda por SMP</mat-label>
+                    <input id="SMPControl" matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
+                    <mat-hint>SMP</mat-hint>
+                    <mat-select [formControlName]="'operadorSitio'">
+                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                            {{operatorString.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por fecha de PO</mat-label>
                     <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
-                        <input matStartDate [formControlName]="'fechaDesdeInstalacion'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaInstalacion" placeholder="End date">
+                        <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
+                        <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
                     </mat-date-range-input>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
             </div>
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
+            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
                     <span> Buscar </span>
                 </button>
         </form>
@@ -274,17 +283,16 @@
                         Perfiles de visualizaciòn.
                     </mat-panel-title>
                     <mat-panel-description>
-
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <section class="example-section">
                     <label class="example-margin">Perfíl:</label>
                     <mat-radio-group>
-                        <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('value')">
+                        <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('production')">
 
                             Producción</mat-radio-button>
-                        <mat-radio-button class="example-margin" value="before" (change)="cargueCompleto()">Completo</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="before" (change)="perfilesVisualizacion('total')">Completo</mat-radio-button>
                     </mat-radio-group>
                 </section>
 
