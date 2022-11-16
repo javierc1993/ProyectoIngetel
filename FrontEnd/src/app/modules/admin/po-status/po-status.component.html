@@ -199,20 +199,37 @@
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
                     <input matInput [formControlName]="'PO'" [placeholder]="'PO'">
+                    <mat-select [formControlName]="'operadorPO'">
+                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                            {{operatorString.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por valor de la PO</mat-label>
+                    <input matInput [formControlName]="'valorPO'">
+                    <span matPrefix>$</span>
+                    <mat-select [formControlName]="'operadorValorPO'">
+                        <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
+                            {{operator.viewValue}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
                     <input matInput [formControlName]="'SMP'">
+                    <mat-select [formControlName]="'operadorSitio'">
+                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                            {{operatorString.viewValue}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
-            <!-- <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por sitio</mat-label>
-                    <input matInput [formControlName]="'sitio'" [placeholder]="'Ingresa el sitio'">
-                </mat-form-field>
-            </div> -->
+
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de PO</mat-label>
