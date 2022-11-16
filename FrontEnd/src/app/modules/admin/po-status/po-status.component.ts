@@ -222,7 +222,7 @@ export class PoStatusDialog implements OnInit {
   // poID: EventEmitter<any> = new EventEmitter<any>();
   // invoices: any;
   // payments: any;
-  constructor(public dialogRef: MatDialogRef<PoStatusDialog>, @Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {
+  constructor(private _httpClient: HttpClient ,public dialogRef: MatDialogRef<PoStatusDialog>, @Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {
     this.chartBarValues = {
       
       chart: {
@@ -397,6 +397,19 @@ export class PoStatusDialog implements OnInit {
     }
      console.log(this.thisPO);
     // this.poID.emit(this.updatePOForm.value.po);
+    this._httpClient
+    .post(
+        variablesGlobales.urlBackend + '/production/update',
+         {"valueUpdate": this.updatePOForm.value , "reference":this.thisPO.reference, "OldValue":this.thisPO}
+    )
+    .subscribe(
+        (response:any) => {
+          console.log(response);
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
     this.dialogRef.close();    
     
   }
