@@ -41,6 +41,10 @@ export class BillingStatusComponent implements OnInit {
   recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
+  valorTotalPO: number = 0;
+  valorTotalFacturado: number = 0;
+  valorTotalIva: number = 0;
+  valorTotalPagado: number = 0;
   listInvoice: any;
   thisInvoice: any;
   drawerOpened=false;
@@ -145,7 +149,7 @@ export class BillingStatusComponent implements OnInit {
       fechaPago: fechaPago,
       documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
       valorPagado: thisBill.pay ? thisBill.pay.amountUtilized:null,
-      estado: thisBill.pay ? 'pagado':'pendiente'
+      estado: thisBill.pay ? 'Pagado':'Pendiente'
     }
     }); 
     //console.log(this.datosHoja);        

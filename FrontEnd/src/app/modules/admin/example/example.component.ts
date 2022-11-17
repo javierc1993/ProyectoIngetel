@@ -44,6 +44,10 @@ export class ExampleComponent implements OnInit{
      recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
      recentTransactionsTableColumns: string[] = [];
      datosHoja: transaction[] =[];
+     valorTotalPO: number = 0;
+     valorTotalFacturado: number = 0;
+     valorTotalIva: number = 0;
+     valorTotalPagado: number = 0;
      listPO: any;
      drawerOpened=false;
      drawerMode='side';

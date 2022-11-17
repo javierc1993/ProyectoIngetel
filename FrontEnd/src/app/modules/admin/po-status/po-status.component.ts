@@ -40,6 +40,10 @@ export class PoStatusComponent implements OnInit {
   recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];  
   datosHoja: transaction[] =[];
+  valorTotalPO: number = 0;
+  valorTotalFacturado: number = 0;
+  valorTotalIva: number = 0;
+  valorTotalPagado: number = 0;
   listPO: any;
   thisPO: any;
   drawerOpened=false;
