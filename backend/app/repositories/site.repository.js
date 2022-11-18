@@ -11,6 +11,11 @@ class SiteRepository {
     return site;
   }
 
+  async getSiteByPrk(prk){
+    const site = await Site.findByPk(prk);
+    return site;
+  }
+
   async createSite (site) {
     try {
       return Site.findOrCreate({

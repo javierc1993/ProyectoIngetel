@@ -1,10 +1,41 @@
 'use strict';
-const { PayOrder, Instalation, Integration, MosHw, OnAir, Production, Site, User, Release } = require('../models');
+const { PayOrder, Instalation, Integration, Invoice, MosHw, OnAir, Production, Pay, Site, User, Release } = require('../models');
 const SiteRepository = require('./site.repository');
 const UserRepository = require('./user.repository');
 const { Op, Sequelize } = require('sequelize');
 
 class PayOrderRepository {
+  async getSiteByPrk(prk){
+    const site = await Site.findByPk(prk);
+    return site;
+  }
+  async getReleaseByPoId(poId){
+    const site = await Release.findOne({
+      where: {
+        payOrderId: poId
+      }
+    });
+    return site;
+  }
+
+  async getInvoiceByPayOrderId(payOrderId){
+    const site = await Invoice.findAll({
+      where: {
+        payOrderId: payOrderId
+      }
+    });
+    return site;
+  }
+
+  async getPayByInvoice(invoiceId){
+     
+    return Pay.findAll({
+      where: {
+        invoiceId: invoiceId
+      }
+    });
+  }
+
   async getAll (include, where = null) {
 
     if (where) {
@@ -74,13 +105,40 @@ class PayOrderRepository {
 
   async updatePayOrder (reference, value, oldValue) {
     let po = await this.getPoByReference(reference);
-    console.log(po);
+    //console.log(po);
     if (po) {
       po.value = value.valorPo;
       po.band = oldValue.band;
+      po.scenery = value.scenery;
       po.save();
+      let site = await this.getSiteByPrk(po.siteId);
+      console.log(value);
+      console.log(po);
+      if (site) {
+       site.name= value.siteName;
+       site.region = value.regionName;
+       site.smp = value.smp;
+       site.save();
+       let release = await this.getReleaseByPoId(po.id);
+       console.log(release);
+       if(release)
+        {
+          release.totalPercent = value.releases;
+          release.save();
+          let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
+          console.log(invoice[0]);
+          if(invoice)
+          {
+             
+            //let pay = await this.getPayByInvoice(invoice.id);
+          }
+          
+        }
+      }
+
       return true
     }
+    
     return false;
   }
 }
