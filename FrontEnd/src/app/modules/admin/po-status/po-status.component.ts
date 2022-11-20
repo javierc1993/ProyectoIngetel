@@ -14,12 +14,15 @@ export interface transaction {
     po: string;
     poDate: Date;
     escenario: string;
-    valorPo: string;
+    valorPo: number;
     //instalacion: string;
     porcentajeLiberado:string;
     porcentajeFacturado: string;
     porcentajePagado: string;
     estado: string;
+    valorPoFacturado : number;    
+    valorPoIva: number;
+    valorPoPagado: number;
 }
 interface Operator {
   value: string;
@@ -104,6 +107,7 @@ export class PoStatusComponent implements OnInit {
         }),{});         
         console.log(this.listPO);
         this.loadDataTable();
+        this.updateTotalValues();
       },
       (error) => {console.log(error);}                
     );
@@ -166,12 +170,32 @@ export class PoStatusComponent implements OnInit {
             porcentajeLiberado: percentLiberado,
             porcentajeFacturado: percentFacturado,
             porcentajePagado: percentPagado,
-            estado: estado
+            estado,
+            valorPoFacturado,
+            valorPoIva,
+            valorPoPagado,
           }
         });         
         this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
         this.recentTransactionsDataSource.paginator = this.paginator;
   }
+
+  updateTotalValues(){        
+        this.valorTotalPO = 0;
+        this.valorTotalFacturado = 0;
+        this.valorTotalIva = 0;
+        this.valorTotalPagado = 0;   
+        this.recentTransactionsDataSource.filteredData.forEach(element => {
+          this.valorTotalPO += element.valorPo;
+          this.valorTotalFacturado += element.valorPoFacturado;
+          this.valorTotalIva += element.valorPoIva;
+          this.valorTotalPagado += element.valorPoPagado;
+        });
+        this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
+        this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+        this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+        this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
+    }
 
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
@@ -181,6 +205,7 @@ export class PoStatusComponent implements OnInit {
     if (this.recentTransactionsDataSource.paginator) {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
+    this.updateTotalValues();
   }
   exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')

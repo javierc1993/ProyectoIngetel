@@ -9,10 +9,10 @@ import { ExporterService } from 'services/exporter.service';
 export interface transaction {
     fechaFactura: Date;
     numeroFactura:string;
-    subtotal: string;
-    totalFactura: string;
-    rtf: string;
-    rtiva: string;
+    subtotal: number;
+    totalFactura: number;
+    rtf: number;
+    rtiva: number;
     //totalPagar:string;
     poID: string;
     smpID: string;    
@@ -20,7 +20,11 @@ export interface transaction {
     proyecto: string;
     porcentajeFactura: string;
     fechaPago: Date;
+    valorUtilizado: number;
     estado: string;
+    iva: number;    
+    valorTransaccion: number;
+    valorPagado: number;
 }
 interface Operator {
   value: string;
@@ -41,9 +45,10 @@ export class BillingStatusComponent implements OnInit {
   recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
-  valorTotalPO: number = 0;
   valorTotalFacturado: number = 0;
   valorTotalIva: number = 0;
+  valorTotalUtilizado: number = 0;
+  valorTotalCostoTransaccion: number = 0;
   valorTotalPagado: number = 0;
   listInvoice: any;
   thisInvoice: any;
@@ -120,6 +125,7 @@ export class BillingStatusComponent implements OnInit {
           [el.invoice]:el,
         }),{});        
         this.loadDataTable();
+        this.updateTotalValues(); 
       },
       (error) => {console.log(error);}                
     );
@@ -148,14 +154,40 @@ export class BillingStatusComponent implements OnInit {
       porcentajeFactura: thisBill.percentInvoice,
       fechaPago: fechaPago,
       documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
-      valorPagado: thisBill.pay ? thisBill.pay.amountUtilized:null,
-      estado: thisBill.pay ? 'Pagado':'Pendiente'
+      valorUtilizado: thisBill.pay ? thisBill.pay.amountUtilized:0,
+      estado: thisBill.pay ? 'Pagado':'Pendiente',
+      iva: thisBill.iva,
+      valorTransaccion: thisBill.pay ? thisBill.pay.financialCost:0,
+      valorPagado: thisBill.pay ? thisBill.pay.totalPaid:0
+
     }
     }); 
     //console.log(this.datosHoja);        
     this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
     this.recentTransactionsDataSource.paginator = this.paginator;
   }
+
+  updateTotalValues(){
+    this.valorTotalFacturado = 0;
+    this.valorTotalIva = 0;
+    this.valorTotalUtilizado = 0;   
+    this.valorTotalCostoTransaccion = 0;
+    this.valorTotalPagado = 0;
+
+    this.recentTransactionsDataSource.filteredData.forEach(element => {
+      this.valorTotalFacturado += element.subtotal;
+      this.valorTotalIva += element.iva;          
+      this.valorTotalUtilizado += element.valorUtilizado;
+      this.valorTotalCostoTransaccion += element.valorTransaccion;
+      this.valorTotalPagado += element.valorPagado;          
+    });
+    this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+    this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+    this.valorTotalUtilizado = parseFloat(this.valorTotalUtilizado.toFixed(2));
+    this.valorTotalCostoTransaccion = parseFloat(this.valorTotalCostoTransaccion.toFixed(2));
+    this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
+  }
+
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
   applyFilter(event: Event){
@@ -164,6 +196,7 @@ export class BillingStatusComponent implements OnInit {
     if (this.recentTransactionsDataSource.paginator) {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
+    this.updateTotalValues();
     //console.log($event);
   }
   exportAsXLSX():void{
