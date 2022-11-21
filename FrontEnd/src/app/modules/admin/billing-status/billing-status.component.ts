@@ -5,6 +5,7 @@ import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl} from '@ang
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'services/exporter.service';
+import { FuseConfirmationService} from '@fuse/services/confirmation';
 
 export interface transaction {
     fechaFactura: Date;
@@ -26,6 +27,7 @@ export interface transaction {
     valorTransaccion: number;
     valorPagado: number;
 }
+
 interface Operator {
   value: string;
   viewValue: string;
@@ -70,8 +72,8 @@ export class BillingStatusComponent implements OnInit {
     {value: 'noContent', viewValue: 'no contiene'}
   ];
 
-  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { 
-    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];     
+  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public _fuseConfirmationService: FuseConfirmationService) { 
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Eliminar','Estado'];     
     const initDateBilling = this.getFilterLastYear();
     //console.log(JSON.stringify(initDateBilling))
     this.getData(initDateBilling);
@@ -132,7 +134,7 @@ export class BillingStatusComponent implements OnInit {
   }
 
   loadDataTable(): void {
-    //console.log(this.listInvoice);
+    console.log("loading");
     this.datosHoja = Object.values(this.listInvoice).map(function(thisBill : any){ 
     var fechaFactura = new Date(thisBill.date);  
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
@@ -203,8 +205,7 @@ export class BillingStatusComponent implements OnInit {
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Billing_status')
     console.log("descargando")
   }
-  getDataFilter(){
-    
+  getDataFilter(){    
     if(this.filterForm.value.fechaDesdeFactura){
       this.filterForm.value.fechaDesdeFactura = this.filterForm.value.fechaDesdeFactura.format('DD/MM/YYYY');
     };
@@ -228,7 +229,36 @@ export class BillingStatusComponent implements OnInit {
     // };
 
      this.getData(this.filterForm.value);
-    
+  }
 
+  confirmDelete(numeroFactura):void {
+    const dialogRef = this._fuseConfirmationService.open({title: "Eliminar factura",
+      message : "Seguro quieres eliminar la factura: "+numeroFactura+"?",
+      actions : {
+            confirm: {
+                show : true,
+                label: 'Eliminar',
+                color: 'warn'
+            },
+            cancel : {
+                show : true,
+                label: 'Cancelar'
+            }
+        },
+      dismissible: true
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if(result == "confirmed"){
+        this.deleteInvoice(numeroFactura);
+        this.loadDataTable();
+        this.updateTotalValues(); 
+      }else{
+        console.log("dont delete");
+      }       
+    });
+  }
+  deleteInvoice(numeroFactura){ 
+    delete this.listInvoice[numeroFactura];    
   }
 }

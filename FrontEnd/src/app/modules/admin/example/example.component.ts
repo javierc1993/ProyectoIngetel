@@ -106,10 +106,8 @@ export class ExampleComponent implements OnInit{
     }
     
     /*funcion para traer la información*/
-    getData(objectToFilter){
-        //console.log(objectToFilter)
+    getData(objectToFilter){     
         if(!objectToFilter){objectToFilter = this.getFilterLastYear();}
-        console.log(objectToFilter)
         this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
         this._httpClient
             .post(variablesGlobales.urlBackend + '/production/',objectToFilter)
@@ -118,6 +116,7 @@ export class ExampleComponent implements OnInit{
                   ...acc, 
                   [el.reference]:el,
                 }),{}); 
+                console.log(this.listPO);
                 this.loadDataTable();  
                 this.updateTotalValues();                  
             },
@@ -268,7 +267,6 @@ export class ExampleComponent implements OnInit{
    }
    exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Produccion_status')
-    console.log("descargando")
   }
 
 }

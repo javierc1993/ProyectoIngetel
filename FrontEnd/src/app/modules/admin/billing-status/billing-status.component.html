@@ -227,6 +227,15 @@
                           </span>
                     </td>
                 </ng-container>
+                <!-- Ver la PO completa -->
+                <ng-container matColumnDef="Eliminar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Eliminar factura</th>
+                    <td mat-cell *matCellDef="let transaction">
+                        <button mat-mini-fab color="warn" (click)="confirmDelete(transaction.numeroFactura);">
+                            <mat-icon svgIcon="mat_outline:delete"></mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
                 <!-- estado -->
                 <ng-container matColumnDef="Estado">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>

@@ -25,6 +25,7 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { MatChipsModule } from '@angular/material/chips';
 import { ExporterService } from 'services/exporter.service';
  import {MatDialogModule} from '@angular/material/dialog';
+ import { FuseConfirmationModule } from '@fuse/services/confirmation';
 @NgModule({
     imports: [CommonModule,
         FormsModule,
@@ -51,7 +52,8 @@ import { ExporterService } from 'services/exporter.service';
         MatGridListModule,       
         MatMomentDateModule,
         MatChipsModule,
-         MatDialogModule
+         MatDialogModule,
+         FuseConfirmationModule
     ],
     exports: [CommonModule,
         FormsModule,
@@ -78,7 +80,8 @@ import { ExporterService } from 'services/exporter.service';
         MatGridListModule,       
         MatMomentDateModule,
         MatChipsModule,
-         MatDialogModule
+         MatDialogModule,
+         FuseConfirmationModule
     ],
     providers:[ExporterService]
 })
