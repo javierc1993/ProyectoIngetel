@@ -36,19 +36,11 @@
         <div class="max-h-24 flex flex-auto bg-card shadow rounded-2xl">
             <div class="flex flex-auto w-full m-4 text-md font-semibold justify-center">
                 <div class="p-4 leading-none rounded-l-xl border border-r-0">
-                    <div class="font-medium text-secondary">Total PO</div>
-                    <div class="mt-2 font-sans">{{valorTotalPO|currency:"USD":"symbol"}}</div>
-                </div>
-                <div class="p-4 leading-none border border-r-0">
                     <div class="font-medium text-secondary">Total facturado</div>
                     <div class="mt-2 font-sans">{{valorTotalFacturado|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Total por facturar</div>
-                    <div class="mt-2 font-sans">{{(valorTotalPO - valorTotalFacturado)|currency:"USD":"symbol"}}</div>
-                </div>
-                <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Total IVA facturado</div>
+                    <div class="font-medium text-secondary">Total IVA</div>
                     <div class="mt-2 font-sans">{{valorTotalIva|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
@@ -56,12 +48,20 @@
                     <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva)|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Total Pagado</div>
+                    <div class="font-medium text-secondary">Total Utilizado</div>
+                    <div class="mt-2 font-sans">{{valorTotalUtilizado|currency:"USD":"symbol"}}</div>
+                </div>
+                <div class="p-4 leading-none border border-r-0">
+                    <div class="font-medium text-secondary">Total costo transacción</div>
+                    <div class="mt-2 font-sans">{{valorTotalCostoTransaccion|currency:"USD":"symbol"}}</div>
+                </div>
+                <div class="p-4 leading-none border border-r-0">
+                    <div class="font-medium text-secondary">Total pagado</div>
                     <div class="mt-2 font-sans">{{valorTotalPagado|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none rounded-r-xl border">
                     <div class="font-medium text-secondary">Total por pagar</div>
-                    <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva - valorTotalPagado).toFixed(2)|currency:"USD":"symbol"}}</div>
+                    <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva - valorTotalUtilizado).toFixed(2)|currency:"USD":"symbol"}}</div>
                 </div>
             </div>
         </div>
@@ -216,15 +216,24 @@
                           </span>
                     </td>
                 </ng-container>
-                <!-- valorPagado -->
+                <!-- valorUtilizado -->
                 <ng-container matColumnDef="Valor pagado">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        Valor pagado
+                        Valor utilizado
                     </th>
                     <td mat-cell *matCellDef="let transaction">
                         <span class="pr-6 font-medium whitespace-nowrap">
-                              {{transaction.valorPagado|currency:"USD":"symbol"}}
+                              {{transaction.valorUtilizado|currency:"USD":"symbol"}}
                           </span>
+                    </td>
+                </ng-container>
+                <!-- Ver la PO completa -->
+                <ng-container matColumnDef="Eliminar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Eliminar factura</th>
+                    <td mat-cell *matCellDef="let transaction">
+                        <button mat-mini-fab color="warn" (click)="confirmDelete(transaction.numeroFactura);">
+                            <mat-icon svgIcon="mat_outline:delete"></mat-icon>
+                        </button>
                     </td>
                 </ng-container>
                 <!-- estado -->

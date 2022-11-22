@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, Input, Inject, ViewEncapsulation, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexDataLabels, ApexLegend, ApexGrid} from "ng-apexcharts";
 import { variablesGlobales } from 'GLOBAL';
-import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators, FormGroup, FormArray, FormControl, ReactiveFormsModule} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators, FormGroup, FormArray, FormControl} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'services/exporter.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { FuseConfirmationService} from '@fuse/services/confirmation';
 
 export interface transaction {
     smp: string;
@@ -14,12 +15,15 @@ export interface transaction {
     po: string;
     poDate: Date;
     escenario: string;
-    valorPo: string;
+    valorPo: number;
     //instalacion: string;
     porcentajeLiberado:string;
     porcentajeFacturado: string;
     porcentajePagado: string;
     estado: string;
+    valorPoFacturado : number;    
+    valorPoIva: number;
+    valorPoPagado: number;
 }
 interface Operator {
   value: string;
@@ -58,8 +62,8 @@ export class PoStatusComponent implements OnInit {
     {value: 'noContent', viewValue: 'no contiene'}
   ];
 
-  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public dialog: MatDialog) { 
-    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','poDate','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO' ,'Estado'];
+  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public dialog: MatDialog, public _fuseConfirmationService: FuseConfirmationService) { 
+    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','poDate','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO', 'eliminar PO' ,'Estado'];
     const initDateBilling = this.getFilterLastYear();
     this.getData(initDateBilling);
   }
@@ -104,6 +108,7 @@ export class PoStatusComponent implements OnInit {
         }),{});         
         console.log(this.listPO);
         this.loadDataTable();
+        this.updateTotalValues();
       },
       (error) => {console.log(error);}                
     );
@@ -166,12 +171,32 @@ export class PoStatusComponent implements OnInit {
             porcentajeLiberado: percentLiberado,
             porcentajeFacturado: percentFacturado,
             porcentajePagado: percentPagado,
-            estado: estado
+            estado,
+            valorPoFacturado,
+            valorPoIva,
+            valorPoPagado,
           }
         });         
         this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
         this.recentTransactionsDataSource.paginator = this.paginator;
   }
+
+  updateTotalValues(){        
+        this.valorTotalPO = 0;
+        this.valorTotalFacturado = 0;
+        this.valorTotalIva = 0;
+        this.valorTotalPagado = 0;   
+        this.recentTransactionsDataSource.filteredData.forEach(element => {
+          this.valorTotalPO += element.valorPo;
+          this.valorTotalFacturado += element.valorPoFacturado;
+          this.valorTotalIva += element.valorPoIva;
+          this.valorTotalPagado += element.valorPoPagado;
+        });
+        this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
+        this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+        this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+        this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
+    }
 
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
@@ -181,6 +206,7 @@ export class PoStatusComponent implements OnInit {
     if (this.recentTransactionsDataSource.paginator) {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
+    this.updateTotalValues();
   }
   exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
@@ -214,6 +240,39 @@ export class PoStatusComponent implements OnInit {
       this.loadDataTable();   
     });
   }
+
+  confirmDelete(numeroPo):void {
+    const dialogRef = this._fuseConfirmationService.open({title: "Eliminar PO",
+      message : "Seguro quieres eliminar la PO: "+numeroPo+"?",
+      actions : {
+            confirm: {
+                show : true,
+                label: 'Eliminar',
+                color: 'warn'
+            },
+            cancel : {
+                show : true,
+                label: 'Cancelar'
+            }
+        },
+      dismissible: true
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if(result == "confirmed"){
+        this.deleteInvoice(numeroPo);
+        this.loadDataTable();
+        this.updateTotalValues();
+      }else{
+        console.log("dont delete");
+      }
+      
+    });
+  }
+  deleteInvoice(numeroPo){
+    console.log(numeroPo);
+    delete this.listPO[numeroPo];
+  }
   
   
 }
@@ -242,10 +301,7 @@ export class PoStatusDialog implements OnInit {
   public percentFacturado: Int16Array;
   public percentPagado: Int16Array;
   public chartBarValues: Partial<ChartOptions>;
-  // @Output()
-  // poID: EventEmitter<any> = new EventEmitter<any>();
-  // invoices: any;
-  // payments: any;
+
   constructor(private _httpClient: HttpClient ,public dialogRef: MatDialogRef<PoStatusDialog>, @Inject(MAT_DIALOG_DATA) public thisPO: any, private _formBuilder: UntypedFormBuilder) {
     this.chartBarValues = {
       

@@ -5,14 +5,15 @@ import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl} from '@ang
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'services/exporter.service';
+import { FuseConfirmationService} from '@fuse/services/confirmation';
 
 export interface transaction {
     fechaFactura: Date;
     numeroFactura:string;
-    subtotal: string;
-    totalFactura: string;
-    rtf: string;
-    rtiva: string;
+    subtotal: number;
+    totalFactura: number;
+    rtf: number;
+    rtiva: number;
     //totalPagar:string;
     poID: string;
     smpID: string;    
@@ -20,8 +21,13 @@ export interface transaction {
     proyecto: string;
     porcentajeFactura: string;
     fechaPago: Date;
+    valorUtilizado: number;
     estado: string;
+    iva: number;    
+    valorTransaccion: number;
+    valorPagado: number;
 }
+
 interface Operator {
   value: string;
   viewValue: string;
@@ -41,9 +47,10 @@ export class BillingStatusComponent implements OnInit {
   recentTransactionsDataSource: MatTableDataSource<transaction>;
   recentTransactionsTableColumns: string[] = [];
   datosHoja: transaction[] =[];
-  valorTotalPO: number = 0;
   valorTotalFacturado: number = 0;
   valorTotalIva: number = 0;
+  valorTotalUtilizado: number = 0;
+  valorTotalCostoTransaccion: number = 0;
   valorTotalPagado: number = 0;
   listInvoice: any;
   thisInvoice: any;
@@ -65,8 +72,8 @@ export class BillingStatusComponent implements OnInit {
     {value: 'noContent', viewValue: 'no contiene'}
   ];
 
-  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService) { 
-    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Estado'];     
+  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public _fuseConfirmationService: FuseConfirmationService) { 
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Eliminar','Estado'];     
     const initDateBilling = this.getFilterLastYear();
     //console.log(JSON.stringify(initDateBilling))
     this.getData(initDateBilling);
@@ -120,13 +127,14 @@ export class BillingStatusComponent implements OnInit {
           [el.invoice]:el,
         }),{});        
         this.loadDataTable();
+        this.updateTotalValues(); 
       },
       (error) => {console.log(error);}                
     );
   }
 
   loadDataTable(): void {
-    //console.log(this.listInvoice);
+    console.log("loading");
     this.datosHoja = Object.values(this.listInvoice).map(function(thisBill : any){ 
     var fechaFactura = new Date(thisBill.date);  
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
@@ -148,14 +156,40 @@ export class BillingStatusComponent implements OnInit {
       porcentajeFactura: thisBill.percentInvoice,
       fechaPago: fechaPago,
       documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
-      valorPagado: thisBill.pay ? thisBill.pay.amountUtilized:null,
-      estado: thisBill.pay ? 'Pagado':'Pendiente'
+      valorUtilizado: thisBill.pay ? thisBill.pay.amountUtilized:0,
+      estado: thisBill.pay ? 'Pagado':'Pendiente',
+      iva: thisBill.iva,
+      valorTransaccion: thisBill.pay ? thisBill.pay.financialCost:0,
+      valorPagado: thisBill.pay ? thisBill.pay.totalPaid:0
+
     }
     }); 
     //console.log(this.datosHoja);        
     this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
     this.recentTransactionsDataSource.paginator = this.paginator;
   }
+
+  updateTotalValues(){
+    this.valorTotalFacturado = 0;
+    this.valorTotalIva = 0;
+    this.valorTotalUtilizado = 0;   
+    this.valorTotalCostoTransaccion = 0;
+    this.valorTotalPagado = 0;
+
+    this.recentTransactionsDataSource.filteredData.forEach(element => {
+      this.valorTotalFacturado += element.subtotal;
+      this.valorTotalIva += element.iva;          
+      this.valorTotalUtilizado += element.valorUtilizado;
+      this.valorTotalCostoTransaccion += element.valorTransaccion;
+      this.valorTotalPagado += element.valorPagado;          
+    });
+    this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+    this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+    this.valorTotalUtilizado = parseFloat(this.valorTotalUtilizado.toFixed(2));
+    this.valorTotalCostoTransaccion = parseFloat(this.valorTotalCostoTransaccion.toFixed(2));
+    this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
+  }
+
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
   applyFilter(event: Event){
@@ -164,14 +198,14 @@ export class BillingStatusComponent implements OnInit {
     if (this.recentTransactionsDataSource.paginator) {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
+    this.updateTotalValues();
     //console.log($event);
   }
   exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Billing_status')
     console.log("descargando")
   }
-  getDataFilter(){
-    
+  getDataFilter(){    
     if(this.filterForm.value.fechaDesdeFactura){
       this.filterForm.value.fechaDesdeFactura = this.filterForm.value.fechaDesdeFactura.format('DD/MM/YYYY');
     };
@@ -195,7 +229,36 @@ export class BillingStatusComponent implements OnInit {
     // };
 
      this.getData(this.filterForm.value);
-    
+  }
 
+  confirmDelete(numeroFactura):void {
+    const dialogRef = this._fuseConfirmationService.open({title: "Eliminar factura",
+      message : "Seguro quieres eliminar la factura: "+numeroFactura+"?",
+      actions : {
+            confirm: {
+                show : true,
+                label: 'Eliminar',
+                color: 'warn'
+            },
+            cancel : {
+                show : true,
+                label: 'Cancelar'
+            }
+        },
+      dismissible: true
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if(result == "confirmed"){
+        this.deleteInvoice(numeroFactura);
+        this.loadDataTable();
+        this.updateTotalValues(); 
+      }else{
+        console.log("dont delete");
+      }       
+    });
+  }
+  deleteInvoice(numeroFactura){ 
+    delete this.listInvoice[numeroFactura];    
   }
 }

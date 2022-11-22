@@ -17,8 +17,11 @@ export interface transaction {
     ON_AIR:string;
     mos_HW: string;
     PO: string;
-    Valor_PO: string;
+    Valor_PO: number;
     instalacion: string;
+    valorPoFacturado : number;    
+    valorPoIva: number;
+    valorPoPagado: number;
 }
 interface Operator {
     value: string;
@@ -43,7 +46,7 @@ export class ExampleComponent implements OnInit{
      private _data: BehaviorSubject<any> = new BehaviorSubject(null);
      recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
      recentTransactionsTableColumns: string[] = [];
-     datosHoja: transaction[] =[];
+     datosHoja: transaction[]=[];
      valorTotalPO: number = 0;
      valorTotalFacturado: number = 0;
      valorTotalIva: number = 0;
@@ -103,10 +106,8 @@ export class ExampleComponent implements OnInit{
     }
     
     /*funcion para traer la información*/
-    getData(objectToFilter){
-        //console.log(objectToFilter)
+    getData(objectToFilter){     
         if(!objectToFilter){objectToFilter = this.getFilterLastYear();}
-        console.log(objectToFilter)
         this.recentTransactionsTableColumns=['SMP','SITE Name', 'Escenario', 'Banda', 'Lider', 'Fecha de integracion','ON AIR', 'mos_HW', 'PO', 'Valor PO', 'instalacion'];
         this._httpClient
             .post(variablesGlobales.urlBackend + '/production/',objectToFilter)
@@ -115,7 +116,9 @@ export class ExampleComponent implements OnInit{
                   ...acc, 
                   [el.reference]:el,
                 }),{}); 
-                this.loadDataTable();                    
+                console.log(this.listPO);
+                this.loadDataTable();  
+                this.updateTotalValues();                  
             },
             (error) => {console.log(error);}
             );
@@ -123,11 +126,25 @@ export class ExampleComponent implements OnInit{
     loadDataTable(): void {
         this.datosHoja = Object.values(this.listPO).map(function(thisPO : any){
             var thisInstalationDate : any = 'Pendiente';
+            var valorPoFacturado;
+            var valorPoIva;
+            var valorPoPagado;
             if(thisPO.instalation.date){
                 var thisDate = new Date(thisPO.instalation.date);
                 thisInstalationDate = thisDate.getDate()+'/';     
                 thisInstalationDate += (thisDate.getMonth() + 1)+'/';
                 thisInstalationDate += thisDate.getFullYear();
+            }
+            if(thisPO.invoice){
+                var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
+                var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva);                        
+                var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
+                    if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
+                    else{return 0;}
+                });
+                valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
+                valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
+                valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0); 
             }
             return {
                 SMP: thisPO.site.smp, 
@@ -140,11 +157,31 @@ export class ExampleComponent implements OnInit{
                 mos_HW:thisPO.mosHw.date,
                 PO:thisPO.reference,
                 Valor_PO :thisPO.value,
-                instalacion: thisInstalationDate
+                instalacion: thisInstalationDate,
+                valorPoFacturado,
+                valorPoIva,
+                valorPoPagado
             }
         });
         this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
         this.recentTransactionsDataSource.paginator = this.paginator;
+    }
+
+    updateTotalValues(){        
+        this.valorTotalPO = 0;
+        this.valorTotalFacturado = 0;
+        this.valorTotalIva = 0;
+        this.valorTotalPagado = 0;   
+        this.recentTransactionsDataSource.filteredData.forEach(element => {
+          this.valorTotalPO += element.Valor_PO;
+          this.valorTotalFacturado += element.valorPoFacturado;
+          this.valorTotalIva += element.valorPoIva;
+          this.valorTotalPagado += element.valorPoPagado;
+        });
+        this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
+        this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+        this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+        this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
     }
 
     /**
@@ -161,15 +198,35 @@ export class ExampleComponent implements OnInit{
             PO: string;
             Valor_PO: string;
             Escenario: string;
+            valorPoFacturado : number;    
+            valorPoIva: number;
+            valorPoPagado: number;    
         }
         var newData: transaction[] =[]; 
         newData = Object.values(this.listPO).map(function(thisPO : any){
+            var valorPoFacturado;
+            var valorPoIva;
+            var valorPoPagado;
+            if(thisPO.invoice){
+                var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
+                var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva);                        
+                var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
+                    if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
+                    else{return 0;}
+                });
+                valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
+                valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
+                valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0); 
+            }
             return {
                 SMP: thisPO.site.smp, 
                 SITE_Name: thisPO.site.name, 
                 PO:thisPO.reference,
                 Valor_PO :thisPO.value,
-                Escenario:thisPO.scenery                
+                Escenario:thisPO.scenery,
+                valorPoFacturado,
+                valorPoIva,
+                valorPoPagado
             }
         });
         this.recentTransactionsDataSource = new MatTableDataSource(newData);
@@ -206,10 +263,10 @@ export class ExampleComponent implements OnInit{
     if (this.recentTransactionsDataSource.paginator) {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
+    this.updateTotalValues();
    }
    exportAsXLSX():void{
     this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Produccion_status')
-    console.log("descargando")
   }
 
 }
