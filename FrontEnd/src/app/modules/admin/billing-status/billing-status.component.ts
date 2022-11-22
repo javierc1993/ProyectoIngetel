@@ -121,7 +121,7 @@ export class BillingStatusComponent implements OnInit {
     this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',objectToFilter)
       .subscribe((response:any) => { 
         //  console.log("response: ") 
-        //  console.log(response)  
+          console.log(response)  
         this.listInvoice = response.reduce((acc, el)=>({
           ...acc, 
           [el.invoice]:el,
@@ -133,8 +133,7 @@ export class BillingStatusComponent implements OnInit {
     );
   }
 
-  loadDataTable(): void {
-    console.log("loading");
+  loadDataTable(): void {    
     this.datosHoja = Object.values(this.listInvoice).map(function(thisBill : any){ 
     var fechaFactura = new Date(thisBill.date);  
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );

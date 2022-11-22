@@ -463,8 +463,7 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].iva = element.iva;
         this.thisPO.invoice[index].rtf = element.rtf;
         this.thisPO.invoice[index].rtIva = element.rtIva;
-        this.thisPO.invoice[index].subTotal = element.subTotal;
-
+        this.thisPO.invoice[index].total = element.subTotal + element.iva;
         if(!this.thisPO.invoice[index].pay){
           this.thisPO.invoice[index].pay = new Object();
         }
@@ -475,7 +474,7 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.datePay = element.datePay ? element.datePay+"T00:00:00.000Z": thisDate.toISOString();
       })
     }
-     console.log(this.thisPO);
+    console.log(this.thisPO);
     // this.poID.emit(this.updatePOForm.value.po);
     this._httpClient
     .post(
