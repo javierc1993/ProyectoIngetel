@@ -9,6 +9,7 @@ const ReleaseRoute = require('./app/routes/release.route');
 const SyncroRoute = require('./app/routes/syncro.route');
 const InvoiceRoute = require('./app/routes/invoice.route');
 const PayRoute = require('./app/routes/pay.route');
+const PayOrderRoute = require('./app/routes/pay-order.route');
 
 const { sequelize } = require('./app/models');
 
@@ -36,6 +37,7 @@ app.use('/api/v1/invoice/', InvoiceRoute);
 app.use('/api/v1/syncro/', SyncroRoute);
 app.use('/api/v1/release/', ReleaseRoute);
 app.use('/api/v1/production/', ProductionRoute);
+app.use('/api/v1/payOrder/', PayOrderRoute);
 app.use('/api/v1/auth/', AuthRoute);
 app.use('/api/v1/', AppRoute);
 

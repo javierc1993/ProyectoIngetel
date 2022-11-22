@@ -11,11 +11,20 @@ const { FilterProductionEntity } = require('../entities/filterProduction.entity'
 const { PayOrderEntity } = require('../entities/payOrder.entity');
 
 class PayOrderService {
+  async deletePayOrder (reference) {
+    const po = await this.getPayOrders({ PO: reference });
+    if (po.length == 0)
+      throw new Error('PayOrder NOT FOUND');
+    // delete: [instalations, integrations, mosHws, onAirs, pays, invoice]
+    // const delInstalations = await deleteInstalations()
+    const deletePo = await PayOrderRepository.deletePayOrderById(po[0].id);
+  }
+
   async getPayOrders (filters = null) {
     filters = new FilterProductionEntity(filters);
     const include = await createIncludeGetAll(filters);
     const where = await createWhereGetAll(filters);
-    const payOrders= await PayOrderRepository.getAll(include, where);
+    const payOrders = await PayOrderRepository.getAll(include, where);
     return payOrders;
   }
 
@@ -63,7 +72,7 @@ const createWhereGetAll = async (filters = null) => {
   let fields = ['reference', 'valuePayOrder', 'scenery', 'band', 'poDate'];
   if (filters) {
     for (const field of fields) {
-      if (filters[field]?.data || filters[field]?.init || filters[field]?.until ) {
+      if (filters[field]?.data || filters[field]?.init || filters[field]?.until) {
         where = { ...where, ...asingFilter(filters[field]).where };
       }
     }
