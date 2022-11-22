@@ -130,7 +130,17 @@ class PayOrderRepository {
           {
              value.invoices.forEach(function(invoiceUpdate, i){invoice.forEach(function(invoiceUpdated, j){
               if(invoiceUpdate.invoice === invoiceUpdated.invoice){
+                
+                invoiceUpdated.invoice= invoiceUpdate.invoice;
+                invoiceUpdated.subTotal = invoiceUpdate.subTotal;
+                invoiceUpdated.iva = invoiceUpdate.iva;
+                invoiceUpdated.total ;
+                invoiceUpdated.rtf = invoiceUpdate.rtf;
+                invoiceUpdated.rtIva = invoiceUpdate.rtIva;
+                invoiceUpdated.toPaid;
                 invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
+                invoiceUpdated.percentInvoice = invoiceUpdate.totalPaid;
+                invoiceUpdated.state = invoiceUpdate.status;
                 invoice[j].save();
               }
 
