@@ -5,11 +5,28 @@ const UserRepository = require('./user.repository');
 const { Op, Sequelize } = require('sequelize');
 
 class PayOrderRepository {
-  async getSiteByPrk(prk){
+
+  async deletePayOrderById (id) {
+    try {
+      const deleteId = await PayOrder.destroy({
+        // truncate: true,
+        where: {
+          id: id
+        }
+      })
+      return true;
+
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  async getSiteByPrk (prk) {
     const site = await Site.findByPk(prk);
     return site;
   }
-  async getReleaseByPoId(poId){
+  async getReleaseByPoId (poId) {
     const site = await Release.findOne({
       where: {
         payOrderId: poId
@@ -18,7 +35,7 @@ class PayOrderRepository {
     return site;
   }
 
-  async getInvoiceByPayOrderId(payOrderId){
+  async getInvoiceByPayOrderId (payOrderId) {
     const site = await Invoice.findAll({
       where: {
         payOrderId: payOrderId
@@ -27,8 +44,8 @@ class PayOrderRepository {
     return site;
   }
 
-  async getPayByInvoice(invoiceId){
-     
+  async getPayByInvoice (invoiceId) {
+
     return Pay.findAll({
       where: {
         invoiceId: invoiceId
@@ -112,48 +129,48 @@ class PayOrderRepository {
       po.scenery = value.scenery;
       po.save();
       let site = await this.getSiteByPrk(po.siteId);
- 
+
       if (site) {
-       site.name= value.siteName;
-       site.region = value.regionName;
-       site.smp = value.smp;
-       site.save();
-       let release = await this.getReleaseByPoId(po.id);
-    
-       if(release)
-        {
+        site.name = value.siteName;
+        site.region = value.regionName;
+        site.smp = value.smp;
+        site.save();
+        let release = await this.getReleaseByPoId(po.id);
+
+        if (release) {
           release.totalPercent = value.releases;
           release.save();
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
-         
-          if(invoice)
-          {
-             value.invoices.forEach(function(invoiceUpdate, i){invoice.forEach(function(invoiceUpdated, j){
-              if(invoiceUpdate.invoice === invoiceUpdated.invoice){
-                
-                invoiceUpdated.invoice= invoiceUpdate.invoice;
-                invoiceUpdated.subTotal = invoiceUpdate.subTotal;
-                invoiceUpdated.iva = invoiceUpdate.iva;
-                invoiceUpdated.total ;
-                invoiceUpdated.rtf = invoiceUpdate.rtf;
-                invoiceUpdated.rtIva = invoiceUpdate.rtIva;
-                invoiceUpdated.toPaid;
-                invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
-                invoiceUpdated.percentInvoice = invoiceUpdate.totalPaid;
-                invoiceUpdated.state = invoiceUpdate.status;
-                invoice[j].save();
-              }
 
-             })});
-             
+          if (invoice) {
+            value.invoices.forEach(function (invoiceUpdate, i) {
+              invoice.forEach(function (invoiceUpdated, j) {
+                if (invoiceUpdate.invoice === invoiceUpdated.invoice) {
+
+                  invoiceUpdated.invoice = invoiceUpdate.invoice;
+                  invoiceUpdated.subTotal = invoiceUpdate.subTotal;
+                  invoiceUpdated.iva = invoiceUpdate.iva;
+                  invoiceUpdated.total;
+                  invoiceUpdated.rtf = invoiceUpdate.rtf;
+                  invoiceUpdated.rtIva = invoiceUpdate.rtIva;
+                  invoiceUpdated.toPaid;
+                  invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
+                  invoiceUpdated.percentInvoice = invoiceUpdate.totalPaid;
+                  invoiceUpdated.state = invoiceUpdate.status;
+                  invoice[j].save();
+                }
+
+              })
+            });
+
           }
-          
+
         }
       }
 
       return true
     }
-    
+
     return false;
   }
 }
