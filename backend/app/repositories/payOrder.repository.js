@@ -112,25 +112,30 @@ class PayOrderRepository {
       po.scenery = value.scenery;
       po.save();
       let site = await this.getSiteByPrk(po.siteId);
-      console.log(value);
-      console.log(po);
+ 
       if (site) {
        site.name= value.siteName;
        site.region = value.regionName;
        site.smp = value.smp;
        site.save();
        let release = await this.getReleaseByPoId(po.id);
-       console.log(release);
+    
        if(release)
         {
           release.totalPercent = value.releases;
           release.save();
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
-          console.log(invoice[0]);
+         
           if(invoice)
           {
+             value.invoices.forEach(function(invoiceUpdate, i){invoice.forEach(function(invoiceUpdated, j){
+              if(invoiceUpdate.invoice === invoiceUpdated.invoice){
+                invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
+                invoice[j].save();
+              }
+
+             })});
              
-            //let pay = await this.getPayByInvoice(invoice.id);
           }
           
         }
