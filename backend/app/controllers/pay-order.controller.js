@@ -1,35 +1,26 @@
 'use strict';
 
 const PayOrderService = require('../services/payOrder.service');
-
+const { MandatoryFieldError } = require('../entities/error-entity');
+const { responseCreated } = require('../lib/response');
 
 
 
 class PayOrderController {
 
-
   async deletePayOrder (req, res) {
     try {
       const reference = req.params.reference ?? null;
-      if (!reference) throw new Error('Ned parameter');
+      if (!reference) throw new MandatoryFieldError('reference');
       const resp = await PayOrderService.deletePayOrder(reference);
-      return res.status(200).json({
-        resultMsg: 'OK',
-        result: resp
-      })
-
+      return responseCreated(res);
     } catch (error) {
-      return res.status(404).json({
-        resultMsg: 'NOT FOUND REFERENSE PO'
+      return res.status(error.statusCode ?? 400).json({
+        resultMsg: error.resultMsg ?? null,
+        resultCode: error.resultCode ?? null
       })
-
     }
   }
-
-
-
 };
-
-
 
 module.exports = new PayOrderController();

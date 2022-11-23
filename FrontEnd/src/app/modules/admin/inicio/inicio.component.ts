@@ -332,7 +332,7 @@ export class InicioComponent implements OnInit {
     this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
     this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
     this.optionsValuesPO.series = [{
-      data: [this.valorTotalPO, this.valorTotalFacturado, this.valorTotalIva, this.valorTotalFacturado + this.valorTotalIva, this.valorTotalPagado]
+      data: [this.valorTotalPO, this.valorTotalFacturado, this.valorTotalIva, parseFloat((this.valorTotalFacturado + this.valorTotalIva).toFixed(2)), this.valorTotalPagado]
     }];  
   }
 

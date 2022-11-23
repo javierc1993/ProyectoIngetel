@@ -3,6 +3,7 @@ const { PayOrder, Instalation, Integration, Invoice, MosHw, OnAir, Production, P
 const SiteRepository = require('./site.repository');
 const UserRepository = require('./user.repository');
 const { Op, Sequelize } = require('sequelize');
+const { ForbiddenError } = require('../entities/error-entity');
 
 class PayOrderRepository {
 
@@ -18,7 +19,7 @@ class PayOrderRepository {
 
     } catch (error) {
       console.log(error);
-      return false;
+      throw new ForbiddenError();
     }
   }
 

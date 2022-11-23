@@ -66,26 +66,20 @@ export class AuthService
      * @param credentials
      */
     signIn(credentials: { userName: string; password: string }): Observable<any>
-    {debugger;
+    {
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {
             return throwError('User is already logged in.');
         }
-
         return this._httpClient.post(variablesGlobales.urlBackend+'/auth/login', credentials).pipe(
-           
             switchMap((response: any) => {
-                debugger;
                 // Store the access token in the local storage
                 this.accessToken = response.token;
-
                 // Set the authenticated flag to true
                 this._authenticated = true;
-
                 // Store the user on the user service
                 this._userService.user = response.user;
-
                 // Return a new observable with the response
                 return of(response);
             })
@@ -102,7 +96,6 @@ export class AuthService
             accessToken: this.accessToken
         }).pipe(
             catchError(() =>
-
                 // Return false
                 of(false)
             ),
@@ -115,17 +108,11 @@ export class AuthService
                 // in using the token, you should generate a new one on the server
                 // side and attach it to the response object. Then the following
                 // piece of code can replace the token with the refreshed one.
-                if ( response.accessToken )
-                {
-                    this.accessToken = response.accessToken;
-                }
-
+                if (response.accessToken){this.accessToken = response.accessToken;}
                 // Set the authenticated flag to true
                 this._authenticated = true;
-
                 // Store the user on the user service
                 this._userService.user = response.user;
-
                 // Return true
                 return of(true);
             })

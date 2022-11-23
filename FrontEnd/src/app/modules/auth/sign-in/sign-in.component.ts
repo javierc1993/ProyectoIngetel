@@ -78,6 +78,7 @@ export class AuthSignInComponent implements OnInit {
                 // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                 // to the correct page after a successful sign in. This way, that url can be set via
                 // routing file and we don't have to touch here.
+                localStorage.setItem('userName',this.signInForm.value.username);
                 const redirectURL =
                     this._activatedRoute.snapshot.queryParamMap.get(
                         'redirectURL'
