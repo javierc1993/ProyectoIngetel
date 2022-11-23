@@ -441,7 +441,7 @@ export class PoStatusDialog implements OnInit {
   
   updatePO(){
     console.log("actuaizar  PO");
-    //console.log(this.updatePOForm.value)
+    console.log(this.updatePOForm.value)
     var date = Date.now()
     var thisDate = new Date(date);
     this.thisPO.poDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
@@ -450,6 +450,9 @@ export class PoStatusDialog implements OnInit {
     this.thisPO.site.region = this.updatePOForm.value.regionName;
     this.thisPO.scenery = this.updatePOForm.value.scenery;
     this.thisPO.band = this.updatePOForm.value.band;
+    if(!this.thisPO.onAir){
+      this.thisPO.onAir = new Object();
+    }
     this.thisPO.onAir.date = this.updatePOForm.value.onAir;
     this.thisPO.value = this.updatePOForm.value.valorPo;
     this.thisPO.release[0].totalPercent = this.updatePOForm.value.releases;
