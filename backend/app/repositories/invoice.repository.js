@@ -1,5 +1,6 @@
 'use strict';
 const { Invoice } = require('../models');
+const { ForbiddenError } = require('../entities/error-entity');
 
 class InvoiceRepository {
 
@@ -52,6 +53,35 @@ class InvoiceRepository {
       return invoice;
     } catch (error) {
       console.log(error)
+      return null;
+    }
+  }
+  async getInvoiceById (id) {
+    try {
+      const invoice = await Invoice.findOne({
+        where: {
+          id: id
+        }
+      });
+      return invoice;
+    } catch (error) {
+      console.log(error)
+      return null;
+    }
+  }
+
+  async deleteInvoice (invoice) {
+    try {
+      const deleteId = await Invoice.destroy({
+        // truncate: true,
+        where: {
+          id: invoice.id
+        }
+      })
+      return true;
+
+    } catch (error) {
+      console.log(error);
       return null;
     }
   }

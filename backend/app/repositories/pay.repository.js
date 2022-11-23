@@ -57,6 +57,22 @@ class PayRepository {
       return null;
     }
   }
+
+  async deletePay (pay) {
+    try {
+      const deleteId = await Pay.destroy({
+        // truncate: true,
+        where: {
+          id: pay.id
+        }
+      })
+      return true;
+
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 }
 
 module.exports = new PayRepository();

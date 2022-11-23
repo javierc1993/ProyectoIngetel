@@ -9,11 +9,14 @@ const InstalationRepository = require('../repositories/instalation.repository');
 const IntegrationRepository = require('../repositories/integration.repository');
 const MosHwRepository = require('../repositories/mosHw.repository');
 const OnAirRepository = require('../repositories/onAir.repository');
+const PayRepository = require('../repositories/pay.repository')
 
 const { deleteDuplicateByLabel } = require('../lib/formatData');
 const { FilterProductionEntity } = require('../entities/filterProduction.entity');
 const { PayOrderEntity } = require('../entities/payOrder.entity');
 const { NotFoundError } = require('../entities/error-entity');
+const InvoiceRepository = require('../repositories/invoice.repository');
+
 class PayOrderService {
   async deletePayOrder (reference) {
     const po = await this.getPayOrders({ PO: reference });
@@ -25,7 +28,12 @@ class PayOrderService {
     if(po[0].integration) await IntegrationRepository.deleteIntegrationById(po[0].integration.id)
     if(po[0].mosHw) await MosHwRepository.deleteMosHwById(po[0].mosHw.id)
     if(po[0].onAir) await OnAirRepository.deleteOnAirById(po[0].onAir.id)
-
+    if (po[0].invoice.length) {
+      po[0].invoice.forEach(async invoice => {
+        if(invoice.pay) await PayRepository.deletePay(invoice.pay)
+        const deleteInvoice = await  InvoiceRepository.deleteInvoice(invoice)
+      });
+    }
     const deletePo = await PayOrderRepository.deletePayOrderById(po[0].id);
     return true;
   }
