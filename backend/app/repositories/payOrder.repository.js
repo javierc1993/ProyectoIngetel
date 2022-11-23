@@ -26,6 +26,10 @@ class PayOrderRepository {
     const site = await Site.findByPk(prk);
     return site;
   }
+  async getPayByPrk (prk) {
+    const pay = await Pay.findByPk(prk);
+    return pay;
+  }
   async getReleaseByPoId (poId) {
     const site = await Release.findOne({
       where: {
@@ -120,6 +124,7 @@ class PayOrderRepository {
     return false;
   }
 
+
   async updatePayOrder (reference, value, oldValue) {
     let po = await this.getPoByReference(reference);
     //console.log(po);
@@ -129,7 +134,6 @@ class PayOrderRepository {
       po.scenery = value.scenery;
       po.save();
       let site = await this.getSiteByPrk(po.siteId);
-
       if (site) {
         site.name = value.siteName;
         site.region = value.regionName;
@@ -141,23 +145,34 @@ class PayOrderRepository {
           release.totalPercent = value.releases;
           release.save();
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
-
+          var that = this;
+          //console.log(value);
           if (invoice) {
-            value.invoices.forEach(function (invoiceUpdate, i) {
-              invoice.forEach(function (invoiceUpdated, j) {
+            value.invoices.forEach(async function (invoiceUpdate, i) {
+              invoice.forEach(async function (invoiceUpdated, j) {
+                
                 if (invoiceUpdate.invoice === invoiceUpdated.invoice) {
 
                   invoiceUpdated.invoice = invoiceUpdate.invoice;
                   invoiceUpdated.subTotal = invoiceUpdate.subTotal;
                   invoiceUpdated.iva = invoiceUpdate.iva;
-                  invoiceUpdated.total;
+                  invoiceUpdated.date ;
                   invoiceUpdated.rtf = invoiceUpdate.rtf;
                   invoiceUpdated.rtIva = invoiceUpdate.rtIva;
                   invoiceUpdated.toPaid;
                   invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
-                  invoiceUpdated.percentInvoice = invoiceUpdate.totalPaid;
-                  invoiceUpdated.state = invoiceUpdate.status;
+                  invoiceUpdated.percentInvoice = invoiceUpdate.percentInvoice;
                   invoice[j].save();
+                  let pay = await that.getPayByPrk(invoice[j].id);
+                  if(pay){
+                    console.log(invoiceUpdate);
+                    pay.documentNumber= invoiceUpdate.documentNumber;
+                    pay.amountUtilized= invoiceUpdate.valorUtilizado;
+                    pay.financialCost=  invoiceUpdate.financialCost;
+                    pay.totalPaid= invoiceUpdate.totalPaid;
+                    pay.datePay = invoiceUpdate.datePay;
+                    pay.save();
+                  }
                 }
 
               })
