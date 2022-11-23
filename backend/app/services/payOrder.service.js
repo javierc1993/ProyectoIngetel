@@ -5,19 +5,29 @@ const { Instalation, Integration, MosHw, OnAir, Site, User, Release, Pay, Invoic
 const PayOrderRepository = require('../repositories/payOrder.repository');
 const SiteRepository = require('../repositories/site.repository');
 const UserRepository = require('../repositories/user.repository');
+const InstalationRepository = require('../repositories/instalation.repository');
+const IntegrationRepository = require('../repositories/integration.repository');
+const MosHwRepository = require('../repositories/mosHw.repository');
+const OnAirRepository = require('../repositories/onAir.repository');
 
 const { deleteDuplicateByLabel } = require('../lib/formatData');
 const { FilterProductionEntity } = require('../entities/filterProduction.entity');
 const { PayOrderEntity } = require('../entities/payOrder.entity');
-
+const { NotFoundError } = require('../entities/error-entity');
 class PayOrderService {
   async deletePayOrder (reference) {
     const po = await this.getPayOrders({ PO: reference });
     if (po.length == 0)
-      throw new Error('PayOrder NOT FOUND');
+      throw new NotFoundError('Pay order not found');
     // delete: [instalations, integrations, mosHws, onAirs, pays, invoice]
     // const delInstalations = await deleteInstalations()
+    if(po[0].instalation) await InstalationRepository.deleteInstalationById(po[0].instalation.id)
+    if(po[0].integration) await IntegrationRepository.deleteIntegrationById(po[0].integration.id)
+    if(po[0].mosHw) await MosHwRepository.deleteMosHwById(po[0].mosHw.id)
+    if(po[0].onAir) await OnAirRepository.deleteOnAirById(po[0].onAir.id)
+
     const deletePo = await PayOrderRepository.deletePayOrderById(po[0].id);
+    return true;
   }
 
   async getPayOrders (filters = null) {
@@ -155,22 +165,22 @@ const templateInclude = () => {
     {
       model: Instalation,
       as: 'instalation',
-      attributes: ['date']
+      attributes: ['id', 'date']
     },
     {
       model: Integration,
       as: 'integration',
-      attributes: ['date']
+      attributes: ['id', 'date']
     },
     {
       model: MosHw,
       as: 'mosHw',
-      attributes: ['date']
+      attributes: ['id', 'date']
     },
     {
       model: OnAir,
       as: 'onAir',
-      attributes: ['date']
+      attributes: ['id', 'date']
     },
     {
       model: Site,

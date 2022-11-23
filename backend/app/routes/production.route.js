@@ -19,7 +19,7 @@ const upload = multer({ storage })
 ProductionRoute.post('/upload',upload.single('file'), ProductionController.upload);
 ProductionRoute.post('/update', ProductionController.update);
 ProductionRoute.post('/', ProductionController.getProduction);
-ProductionRoute.delete('/', ProductionController.deletePayOrder);
+
 
 
 module.exports = ProductionRoute;
