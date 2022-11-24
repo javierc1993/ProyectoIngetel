@@ -18,6 +18,7 @@ const upload = multer({ storage })
 
 InvoiceRoute.post('/upload', upload.single('file'), InvoiceController.upload);
 InvoiceRoute.post('/', InvoiceController.getAllInvoice);
+InvoiceRoute.delete('/:invoice', InvoiceController.deleteInvoice);
 
 
 module.exports = InvoiceRoute;

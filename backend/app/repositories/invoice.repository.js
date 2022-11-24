@@ -4,7 +4,21 @@ const { ForbiddenError } = require('../entities/error-entity');
 
 class InvoiceRepository {
 
+  async deleteInvoiceById (invoiceId) {
+    try {
+      const deleteId = await Invoice.destroy({
+        // truncate: true,
+        where: {
+          id: invoiceId
+        }
+      })
+      return true;
 
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
   async createInvoice (invoice, payOrder = null) {
     try {
       let resp = await this.getInvoiceByNumber(invoice.invoice);

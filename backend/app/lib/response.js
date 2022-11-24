@@ -29,6 +29,9 @@ const responseOK = (res, body, customHeaders = null) => {
 const responseCreated = (res, customHeaders = null) => {
   return new Response(res, 204, {}, customHeaders);
 };
+const responseDeleted = (res, customHeaders = null) => {
+  return new Response(res, 204, {}, customHeaders);
+};
 
 const responseError = (res, error) => {
   console.error(error);
@@ -44,5 +47,6 @@ module.exports = {
   Response,
   responseOK,
   responseCreated,
-  responseError
+  responseError,
+  responseDeleted
 };
