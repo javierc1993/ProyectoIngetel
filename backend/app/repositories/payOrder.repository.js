@@ -128,7 +128,6 @@ class PayOrderRepository {
 
   async updatePayOrder (reference, value, oldValue) {
     let po = await this.getPoByReference(reference);
-    //console.log(po);
     if (po) {
       po.value = value.valorPo;
       po.band = oldValue.band;
@@ -148,7 +147,6 @@ class PayOrderRepository {
           release.save();
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
           var that = this;
-          console.log(value);
           if (invoice) {
             value.invoices.forEach(async function (invoiceUpdate, i) {
               invoice.forEach(async function (invoiceUpdated, j) {
