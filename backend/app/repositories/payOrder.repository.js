@@ -166,7 +166,6 @@ class PayOrderRepository {
                   invoice[j].save();
                   let pay = await that.getPayByPrk(invoice[j].id);
                   if(pay){
-                    console.log(invoiceUpdate);
                     pay.documentNumber= invoiceUpdate.documentNumber;
                     pay.amountUtilized= invoiceUpdate.valorUtilizado;
                     pay.financialCost=  invoiceUpdate.financialCost;
