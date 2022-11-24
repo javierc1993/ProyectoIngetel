@@ -241,7 +241,7 @@ export class InicioComponent implements OnInit {
 
       return {
         valorPO: thisPO.value,
-        instalacion: thisPO.instalation.date? thisPO.instalation.date :'pendiente',
+        instalacion: thisPO.instalation?.date ? thisPO.instalation.date :'pendiente',
         porcentajeTotalLiberado,
         porcentajeTotalFacturado,
         valorPoFacturado,

@@ -175,7 +175,7 @@ export class PoStatusComponent implements OnInit {
         poDate : fechaPo,
         escenario: thisBill.scenery,
         valorPo: thisBill.value,
-        //instalacion: thisBill.instalation ? thisBill.instalation.date:'pendiente',
+        //instalacion: thisBill.instalation?.date ? thisBill.instalation.date:'pendiente',
         porcentajeLiberado: percentLiberado,
         porcentajeFacturado: percentFacturado,
         porcentajePagado: percentPagado,
@@ -381,7 +381,7 @@ export class PoStatusDialog implements OnInit {
       regionName: this.thisPO.site.region,      
       scenery: this.thisPO.scenery,
       band:this.thisPO.band,
-      onAir: this.thisPO.onAir ? this.thisPO.onAir.date : null,
+      onAir: this.thisPO.onAir?.date,
       valorPo:this.thisPO.value,
       releases: porcentajeTotalLiberado,
       invoices: new FormArray([])        

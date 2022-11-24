@@ -129,7 +129,7 @@ export class ExampleComponent implements OnInit{
             var valorPoFacturado;
             var valorPoIva;
             var valorPoPagado;
-            if(thisPO.instalation.date){
+            if(thisPO.instalation?.date){
                 var thisDate = new Date(thisPO.instalation.date);
                 thisInstalationDate = thisDate.getDate()+'/';     
                 thisInstalationDate += (thisDate.getMonth() + 1)+'/';
@@ -153,9 +153,9 @@ export class ExampleComponent implements OnInit{
                 Escenario:thisPO.scenery, 
                 Banda:thisPO.band, 
                 Lider:thisPO.leader?thisPO.leader.name+' '+thisPO.leader.lastname:'', 
-                Fecha_de_integracion:thisPO.integration.date ? thisPO.integration.date : null,
-                ON_AIR: thisPO.onAir.date ? thisPO.onAir.date : null,
-                mos_HW: thisPO.mosHw.date ? thisPO.mosHw.date : null,
+                Fecha_de_integracion: thisPO.integration?.date,
+                ON_AIR: thisPO.onAir?.date,
+                mos_HW: thisPO.mosHw?.date,
                 PO:thisPO.reference,
                 Valor_PO :thisPO.value,
                 instalacion: thisInstalationDate,
