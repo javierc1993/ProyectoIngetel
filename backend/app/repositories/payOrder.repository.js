@@ -97,17 +97,17 @@ class PayOrderRepository {
       let resp = await this.getPoByReference(po.reference);
       if (!resp) {
         resp = await PayOrder.create(po);
-        Instalation.create({ date: po.Instalations.date, payOrderId: resp.id });
-        Integration.create({ date: po.Integrations.date, payOrderId: resp.id });
-        MosHw.create({ date: po.MosHws.date, payOrderId: resp.id });
-        OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id });
+        if (po.Instalations.date) Instalation.create({ date: po.Instalations.date, payOrderId: resp.id });
+        if (po.Integrations.date) Integration.create({ date: po.Integrations.date, payOrderId: resp.id });
+        if (po.MosHws.date) MosHw.create({ date: po.MosHws.date, payOrderId: resp.id });
+        if (po.OnAirs.date) OnAir.create({ date: po.OnAirs.date, payOrderId: resp.id });
       }
 
       resp.set(po);
-      Instalation.update({ date: po.Instalations.date }, { where: { payOrderId: resp.id } });
-      Integration.update({ date: po.Integrations.date }, { where: { payOrderId: resp.id } });
-      MosHw.update({ date: po.MosHws.date }, { where: { payOrderId: resp.id } });
-      OnAir.update({ date: po.OnAirs.date }, { where: { payOrderId: resp.id } });
+      if (po.Instalations.date) Instalation.update({ date: po.Instalations.date }, { where: { payOrderId: resp.id } });
+      if (po.Integrations.date) Integration.update({ date: po.Integrations.date }, { where: { payOrderId: resp.id } });
+      if (po.MosHws.date) MosHw.update({ date: po.MosHws.date }, { where: { payOrderId: resp.id } });
+      if (po.OnAirs.date) OnAir.update({ date: po.OnAirs.date }, { where: { payOrderId: resp.id } });
       return resp.save();
     } catch (err) {
       console.log(err);
@@ -150,7 +150,7 @@ class PayOrderRepository {
           if (invoice) {
             value.invoices.forEach(async function (invoiceUpdate, i) {
               invoice.forEach(async function (invoiceUpdated, j) {
-                
+
                 if (invoiceUpdate.invoice === invoiceUpdated.invoice) {
 
                   invoiceUpdated.invoice = invoiceUpdate.invoice;
@@ -164,11 +164,11 @@ class PayOrderRepository {
                   invoiceUpdated.percentInvoice = invoiceUpdate.percentInvoice;
                   invoice[j].save();
                   let pay = await that.getPayByPrk(invoice[j].id);
-                  if(pay){
-                    pay.documentNumber= invoiceUpdate.documentNumber;
-                    pay.amountUtilized= invoiceUpdate.valorUtilizado;
-                    pay.financialCost=  invoiceUpdate.financialCost;
-                    pay.totalPaid= invoiceUpdate.totalPaid;
+                  if (pay) {
+                    pay.documentNumber = invoiceUpdate.documentNumber;
+                    pay.amountUtilized = invoiceUpdate.valorUtilizado;
+                    pay.financialCost = invoiceUpdate.financialCost;
+                    pay.totalPaid = invoiceUpdate.totalPaid;
                     pay.datePay = new Date(invoiceUpdate.datePay);
                     pay.save();
                   }
