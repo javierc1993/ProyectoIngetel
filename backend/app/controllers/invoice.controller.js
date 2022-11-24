@@ -4,8 +4,8 @@ const XLSX = require('xlsx');
 const FileService = require('../services/file.service');
 const InvoiceService = require('../services/invoice.service');
 
-
-
+const { MandatoryFieldError } = require('../entities/error-entity');
+const { responseDeleted } = require('../lib/response');
 
 class InvoiceController {
   async upload (req, res) {
@@ -30,6 +30,20 @@ class InvoiceController {
       )
     } catch (error) {
       return res.status(400)
+    }
+  }
+
+  async deleteInvoice (req, res) {
+    try {
+      const invoiceNumber = req.params.invoice ?? null;
+      if (!invoiceNumber) throw new MandatoryFieldError('invoiceNumber');
+      const resp = await InvoiceService.deleteInvoice(invoiceNumber);
+      return responseDeleted(res);
+    } catch (error) {
+      return res.status(error.statusCode ?? 400).json({
+        resultMsg: error.resultMsg ?? null,
+        resultCode: error.resultCode ?? null
+      })
     }
   }
 
