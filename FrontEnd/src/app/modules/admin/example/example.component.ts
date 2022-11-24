@@ -146,15 +146,16 @@ export class ExampleComponent implements OnInit{
                 valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
                 valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0); 
             }
+            
             return {
                 SMP: thisPO.site.smp, 
                 SITE_Name: thisPO.site.name, 
                 Escenario:thisPO.scenery, 
                 Banda:thisPO.band, 
                 Lider:thisPO.leader?thisPO.leader.name+' '+thisPO.leader.lastname:'', 
-                Fecha_de_integracion:thisPO.integration.date,
-                ON_AIR:thisPO.onAir.date,
-                mos_HW:thisPO.mosHw.date,
+                Fecha_de_integracion:thisPO.integration.date ? thisPO.integration.date : null,
+                ON_AIR: thisPO.onAir.date ? thisPO.onAir.date : null,
+                mos_HW: thisPO.mosHw.date ? thisPO.mosHw.date : null,
                 PO:thisPO.reference,
                 Valor_PO :thisPO.value,
                 instalacion: thisInstalationDate,
