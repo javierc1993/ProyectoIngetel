@@ -69,6 +69,14 @@
             <mat-label class="text-2xl">Buscar</mat-label>
             <input matInput (keyup)="applyFilter($event)" #input>
         </mat-form-field>
+
+        <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'deleteInvoiceOk'" [type]="'success'">
+            PO eliminada correctamente
+        </fuse-alert>
+        <fuse-alert [appearance]="'outline'" [dismissible]="true" [dismissed]="true" [name]="'deleteInvoiceError'" [type]="'error'">
+            Error al eliminar la PO
+        </fuse-alert>
+
         <div class="overflow-x-auto mx-6">
 
             <table class="w-full bg-transparent" mat-table matSort [dataSource]="recentTransactionsDataSource" #recentTransactionsTable>

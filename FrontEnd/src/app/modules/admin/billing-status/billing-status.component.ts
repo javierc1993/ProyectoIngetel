@@ -6,6 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'services/exporter.service';
 import { FuseConfirmationService} from '@fuse/services/confirmation';
+import { FuseAlertService } from '@fuse/components/alert';
 
 export interface transaction {
     fechaFactura: Date;
@@ -72,7 +73,13 @@ export class BillingStatusComponent implements OnInit {
     {value: 'noContent', viewValue: 'no contiene'}
   ];
 
-  constructor(private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public _fuseConfirmationService: FuseConfirmationService) { 
+  constructor(
+    private _httpClient: HttpClient,
+    private _formBuilder: UntypedFormBuilder,
+    private excelService:ExporterService,
+    public _fuseConfirmationService: FuseConfirmationService,
+    private _fuseAlertService: FuseAlertService
+    ) { 
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Eliminar','Estado'];     
     const initDateBilling = this.getFilterLastYear();
     //console.log(JSON.stringify(initDateBilling))
@@ -249,15 +256,28 @@ export class BillingStatusComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if(result == "confirmed"){
-        this.deleteInvoice(numeroFactura);
-        this.loadDataTable();
-        this.updateTotalValues(); 
+        this.deleteInvoice(numeroFactura);        
       }else{
         console.log("dont delete");
       }       
     });
   }
   deleteInvoice(numeroFactura){ 
-    delete this.listInvoice[numeroFactura];    
+    console.log("eliminar: "+numeroFactura);
+    this._httpClient.delete(variablesGlobales.urlBackend+'/invoice/'+numeroFactura)
+      .subscribe((data) => {
+        console.log("delete OK");
+        delete this.listInvoice[numeroFactura];  
+        this.loadDataTable();
+        this.updateTotalValues();
+        this._fuseAlertService.show('deleteInvoiceOk');   
+        setTimeout(()=>{this._fuseAlertService.dismiss('deleteInvoiceOk')},3000)
+      },
+      (error) => {
+        console.log(error);
+        this._fuseAlertService.show('deleteInvoiceError');   
+        setTimeout(()=>{this._fuseAlertService.dismiss('deleteInvoiceError')},3000)
+      }                
+    ); 
   }
 }
