@@ -133,6 +133,7 @@ class PayOrderRepository {
       po.value = value.valorPo;
       po.band = oldValue.band;
       po.scenery = value.scenery;
+      po.poDate = new Date(value.poDate);
       po.save();
       let site = await this.getSiteByPrk(po.siteId);
       if (site) {
@@ -147,7 +148,7 @@ class PayOrderRepository {
           release.save();
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
           var that = this;
-          //console.log(value);
+          console.log(value);
           if (invoice) {
             value.invoices.forEach(async function (invoiceUpdate, i) {
               invoice.forEach(async function (invoiceUpdated, j) {
@@ -157,7 +158,7 @@ class PayOrderRepository {
                   invoiceUpdated.invoice = invoiceUpdate.invoice;
                   invoiceUpdated.subTotal = invoiceUpdate.subTotal;
                   invoiceUpdated.iva = invoiceUpdate.iva;
-                  invoiceUpdated.date ;
+                  invoiceUpdated.date = new Date(invoiceUpdate.date);
                   invoiceUpdated.rtf = invoiceUpdate.rtf;
                   invoiceUpdated.rtIva = invoiceUpdate.rtIva;
                   invoiceUpdated.toPaid;
@@ -170,7 +171,7 @@ class PayOrderRepository {
                     pay.amountUtilized= invoiceUpdate.valorUtilizado;
                     pay.financialCost=  invoiceUpdate.financialCost;
                     pay.totalPaid= invoiceUpdate.totalPaid;
-                    pay.datePay = invoiceUpdate.datePay;
+                    pay.datePay = new Date(invoiceUpdate.datePay);
                     pay.save();
                   }
                 }
