@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ExporterService } from 'services/exporter.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { FuseConfirmationService} from '@fuse/services/confirmation';
+import { FuseAlertService } from '@fuse/components/alert';
 
 export interface transaction {
     smp: string;
@@ -62,7 +63,14 @@ export class PoStatusComponent implements OnInit {
     {value: 'noContent', viewValue: 'no contiene'}
   ];
 
-  constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder, private excelService:ExporterService, public dialog: MatDialog, public _fuseConfirmationService: FuseConfirmationService) { 
+  constructor(
+    private _httpClient: HttpClient,
+    private _formBuilder: UntypedFormBuilder,
+    private excelService:ExporterService,
+    public dialog: MatDialog,
+    public _fuseConfirmationService: FuseConfirmationService,
+    private _fuseAlertService: FuseAlertService
+    ) { 
     this.recentTransactionsTableColumns=['SMP','SITE Name','PO','poDate','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO', 'eliminar PO' ,'Estado'];
     const initDateBilling = this.getFilterLastYear();
     this.getData(initDateBilling);
@@ -116,87 +124,87 @@ export class PoStatusComponent implements OnInit {
 
   loadDataTable(): void {
     this.datosHoja = Object.values(this.listPO).map(function(thisBill : any){
-          //console.log(thisBill);
-          var percentLiberado;
-          var percentFacturado;
-          var percentPagado;
-          var valorPoTotal = thisBill.value;
-          var valorPoFacturado;
-          var valorPoIva;
-          var valorPoPagado;
-          var estado;
+      //console.log(thisBill);
+      var percentLiberado;
+      var percentFacturado;
+      var percentPagado;
+      var valorPoTotal = thisBill.value;
+      var valorPoFacturado;
+      var valorPoIva;
+      var valorPoPagado;
+      var estado;
 
-          percentLiberado = thisBill.release[0] ? thisBill.release[0].totalPercent:0;   
-          var fechaPo = new Date(thisBill.poDate);  
-          fechaPo = new Date (fechaPo.getTime() + (3600000 * 5) );
+      percentLiberado = thisBill.release[0] ? thisBill.release[0].totalPercent:0;   
+      var fechaPo = new Date(thisBill.poDate);  
+      fechaPo = new Date (fechaPo.getTime() + (3600000 * 5) );
           
-          if(thisBill.invoice){
-            var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
-            var valorFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.subTotal);
-            var valorIva = thisBill.invoice.map(thisInvoice => thisInvoice.iva);
-            var porcentajePagado = thisBill.invoice.map(function(thisInvoice:any){
-                if(thisInvoice.pay && thisInvoice.pay.datePay && thisInvoice.pay.amountUtilized > 0){return thisInvoice.percentInvoice;}
-                else{return 0;}
-            });
-            var valorPagado = thisBill.invoice.map(function(thisInvoice:any){
-                //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
-                if(thisInvoice.pay && thisInvoice.pay.datePay){return thisInvoice.pay.amountUtilized;}
-                else{return 0;}
-            });
-            percentFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
-            valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
-            valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
-            percentPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
-            valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0);            
-          }         
+      if(thisBill.invoice){
+        var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
+        var valorFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.subTotal);
+        var valorIva = thisBill.invoice.map(thisInvoice => thisInvoice.iva);
+        var porcentajePagado = thisBill.invoice.map(function(thisInvoice:any){
+            if(thisInvoice.pay && thisInvoice.pay.datePay && thisInvoice.pay.amountUtilized > 0){return thisInvoice.percentInvoice;}
+            else{return 0;}
+        });
+        var valorPagado = thisBill.invoice.map(function(thisInvoice:any){
+            //if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
+            if(thisInvoice.pay && thisInvoice.pay.datePay){return thisInvoice.pay.amountUtilized;}
+            else{return 0;}
+        });
+        percentFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
+        valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
+        valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
+        percentPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
+        valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0);            
+      }         
           
-          if(percentFacturado > 100){estado = 'Error facturacion';}
-          else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
-          else if(percentLiberado == 0){estado = 'Pendiente';}
-          else if(percentLiberado > percentFacturado){estado = 'Liberado';}
-          else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
-          else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estado = 'Finalizado';}
-          else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
-          else if(percentFacturado == percentPagado && Math.trunc(valorPoFacturado + valorPoIva) != Math.trunc(valorPoPagado)){estado = 'Error pago';}
-          else if(percentFacturado > percentLiberado){estado = 'Por liberar';}
+      if(percentFacturado > 100){estado = 'Error facturacion';}
+      else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
+      else if(percentLiberado == 0){estado = 'Pendiente';}
+      else if(percentLiberado > percentFacturado){estado = 'Liberado';}
+      else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
+      else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estado = 'Finalizado';}
+      else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
+      else if(percentFacturado == percentPagado && Math.trunc(valorPoFacturado + valorPoIva) != Math.trunc(valorPoPagado)){estado = 'Error pago';}
+      else if(percentFacturado > percentLiberado){estado = 'Por liberar';}
 
-          return {
-            smp: thisBill.site.smp,
-            nombreSitio: thisBill.site.name,
-            po: thisBill.reference,
-            poDate : fechaPo,
-            escenario: thisBill.scenery,
-            valorPo: thisBill.value,
-            //instalacion: thisBill.instalation ? thisBill.instalation.date:'pendiente',
-            porcentajeLiberado: percentLiberado,
-            porcentajeFacturado: percentFacturado,
-            porcentajePagado: percentPagado,
-            estado,
-            valorPoFacturado,
-            valorPoIva,
-            valorPoPagado,
-          }
-        });         
-        this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
-        this.recentTransactionsDataSource.paginator = this.paginator;
+      return {
+        smp: thisBill.site.smp,
+        nombreSitio: thisBill.site.name,
+        po: thisBill.reference,
+        poDate : fechaPo,
+        escenario: thisBill.scenery,
+        valorPo: thisBill.value,
+        //instalacion: thisBill.instalation ? thisBill.instalation.date:'pendiente',
+        porcentajeLiberado: percentLiberado,
+        porcentajeFacturado: percentFacturado,
+        porcentajePagado: percentPagado,
+        estado,
+        valorPoFacturado,
+        valorPoIva,
+        valorPoPagado,
+      }
+    });         
+    this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
+    this.recentTransactionsDataSource.paginator = this.paginator;
   }
 
   updateTotalValues(){        
-        this.valorTotalPO = 0;
-        this.valorTotalFacturado = 0;
-        this.valorTotalIva = 0;
-        this.valorTotalPagado = 0;   
-        this.recentTransactionsDataSource.filteredData.forEach(element => {
-          this.valorTotalPO += element.valorPo;
-          this.valorTotalFacturado += element.valorPoFacturado;
-          this.valorTotalIva += element.valorPoIva;
-          this.valorTotalPagado += element.valorPoPagado;
-        });
-        this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
-        this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
-        this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
-        this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
-    }
+    this.valorTotalPO = 0;
+    this.valorTotalFacturado = 0;
+    this.valorTotalIva = 0;
+    this.valorTotalPagado = 0;   
+    this.recentTransactionsDataSource.filteredData.forEach(element => {
+      this.valorTotalPO += element.valorPo;
+      this.valorTotalFacturado += element.valorPoFacturado;
+      this.valorTotalIva += element.valorPoIva;
+      this.valorTotalPagado += element.valorPoPagado;
+    });
+    this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
+    this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
+    this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+    this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
+  }
 
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
@@ -260,9 +268,7 @@ export class PoStatusComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if(result == "confirmed"){
-        this.deleteInvoice(numeroPo);
-        this.loadDataTable();
-        this.updateTotalValues();
+        this.deleteInvoice(numeroPo);        
       }else{
         console.log("dont delete");
       }
@@ -270,8 +276,22 @@ export class PoStatusComponent implements OnInit {
     });
   }
   deleteInvoice(numeroPo){
-    console.log(numeroPo);
-    delete this.listPO[numeroPo];
+    console.log("eliminar: "+numeroPo);
+    this._httpClient.delete(variablesGlobales.urlBackend + '/payOrder/'+ numeroPo)
+      .subscribe((data) => {
+        console.log("delete OK");
+        delete this.listPO[numeroPo];
+        this.loadDataTable();
+        this.updateTotalValues();
+        this._fuseAlertService.show('deletePoOk');   
+        setTimeout(()=>{this._fuseAlertService.dismiss('deletePoOk')},3000)
+      },
+      (error) => {
+        console.log(error);
+        this._fuseAlertService.show('deletePoError');   
+        setTimeout(()=>{this._fuseAlertService.dismiss('deletePoError')},3000)
+      }                
+    );
   }
   
   
