@@ -84,24 +84,10 @@
                         <input matInput [formControlName]="'releases'">
                     </mat-form-field>
                 </div>
-                <!-- <div class="flex">
-                    <mat-form-field [ngClass]="updatePOForm" class="flex-auto" appearance="fill">
-
-
-
-                        <mat-label>Selecciona una fecha</mat-label>
-                        <input matInput [formControlName]="'nosHw'">
-                        <mat-hint>YYYY/MM/DD</mat-hint>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-
-
-                    </mat-form-field>
-                </div> -->
             </div>
 
-            <div *ngIf="isRelease">
-                <!-- <h4><b>Liberaciones</b></h4>
+            <!-- <div *ngIf="isRelease"> -->
+            <!-- <h4><b>Liberaciones</b></h4>
                 <div class="form-grid" formArrayName="releases">
                     <div class="form-field" *ngFor="let thisRelease of getCtrl('releases',updatePOForm).controls;index as id" class="flex">
                         <div class="grid grid-cols-4 gap-4" [formGroupName]="id">
@@ -126,107 +112,107 @@
                     </div>
                 </div> -->
 
-                <div *ngIf="isInvoice">
-                    <h2><b>Facturación y pagos</b></h2>
+            <div *ngIf="isInvoice">
+                <h2><b>Facturación y pagos</b></h2>
 
-                    <div class="form-grid" formArrayName="invoices">
-                        <div class="form-field" *ngFor="let thisInvoice of getCtrl('invoices',updatePOForm).controls;index as id">
-                            <h4 style="text-align: center" [ngClass]="{'text-green-600': thisInvoice.value.status === 'Pagado',
+                <div class="form-grid" formArrayName="invoices">
+                    <div class="form-field" *ngFor="let thisInvoice of getCtrl('invoices',updatePOForm).controls;index as id">
+                        <h4 style="text-align: center" [ngClass]="{'text-green-600': thisInvoice.value.status === 'Pagado',
                         'text-red-800': thisInvoice.value.status === 'Error pago',  
                         'text-red-600': thisInvoice.value.status === 'Error facturacion',  
                         'text-red-700': thisInvoice.value.status === 'Por pagar'}"><b>Factura-{{id+1}} {{thisInvoice.value.status}}</b></h4>
-                            <div class="grid grid-cols-6 grid-rows-2 gap-1" [formGroupName]="id">
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Factura</mat-label>
-                                        <input matInput formControlName='invoice' readonly>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Fecha</mat-label>
-                                        <input type="date" matInput formControlName='date'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>% Facturado</mat-label>
-                                        <input type="number" matInput formControlName='percentInvoice'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Subtotal</mat-label>
-                                        <input type="number" matInput formControlName='subTotal'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>IVA</mat-label>
-                                        <input type="number" matInput formControlName='iva'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>rtIva</mat-label>
-                                        <input type="number" matInput formControlName='rtIva'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>RTF</mat-label>
-                                        <input type="number" matInput formControlName='rtf'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Numero documento</mat-label>
-                                        <input matInput formControlName='documentNumber'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Valor utilizado</mat-label>
-                                        <input type="number" matInput formControlName='valorUtilizado'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Costo transacción</mat-label>
-                                        <input type="number" matInput formControlName='financialCost'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Valor pagado</mat-label>
-                                        <input type="number" matInput formControlName='totalPaid'>
-                                    </mat-form-field>
-                                </div>
-                                <div class="flex w-48">
-                                    <mat-form-field class="flex-auto">
-                                        <mat-label>Fecha pago</mat-label>
-                                        <input type="date" matInput formControlName='datePay'>
-                                    </mat-form-field>
-                                </div>
+                        <div class="grid grid-cols-6 grid-rows-2 gap-1" [formGroupName]="id">
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Factura</mat-label>
+                                    <input matInput formControlName='invoice' readonly>
+                                </mat-form-field>
                             </div>
-                            <br>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Fecha</mat-label>
+                                    <input type="date" matInput formControlName='date'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>% Facturado</mat-label>
+                                    <input type="number" matInput formControlName='percentInvoice'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Subtotal</mat-label>
+                                    <input type="number" matInput formControlName='subTotal'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>IVA</mat-label>
+                                    <input type="number" matInput formControlName='iva'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>rtIva</mat-label>
+                                    <input type="number" matInput formControlName='rtIva'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>RTF</mat-label>
+                                    <input type="number" matInput formControlName='rtf'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Numero documento</mat-label>
+                                    <input matInput formControlName='documentNumber'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Valor utilizado</mat-label>
+                                    <input type="number" matInput formControlName='valorUtilizado'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Costo transacción</mat-label>
+                                    <input type="number" matInput formControlName='financialCost'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Valor pagado</mat-label>
+                                    <input type="number" matInput formControlName='totalPaid'>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex w-48">
+                                <mat-form-field class="flex-auto">
+                                    <mat-label>Fecha pago</mat-label>
+                                    <input type="date" matInput formControlName='datePay'>
+                                </mat-form-field>
+                            </div>
                         </div>
+                        <br>
                     </div>
                 </div>
-                <div *ngIf="!isInvoice" class="flex flex-col flex-auto w-full items-center">
-                    <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="false" [name]="'dontRelease'" [type]="'warning'">
-                        Esta PO no tiene facturación
-                    </fuse-alert>
-                </div>
-
             </div>
-            <div *ngIf="!isRelease" class="flex flex-col flex-auto w-full items-center">
+            <div *ngIf="!isInvoice" class="flex flex-col flex-auto w-full items-center">
                 <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="false" [name]="'dontRelease'" [type]="'warning'">
-                    Esta PO no tiene liberaciones
+                    Esta PO no tiene facturación
                 </fuse-alert>
             </div>
 
         </div>
+        <!-- <div *ngIf="!isRelease" class="flex flex-col flex-auto w-full items-center">
+                <fuse-alert [appearance]="'outline'" [dismissible]="true" dismissed="false" [name]="'dontRelease'" [type]="'warning'">
+                    Esta PO no tiene liberaciones
+                </fuse-alert>
+            </div> 
+
+        </div>-->
     </form>
 
 </mat-dialog-content>

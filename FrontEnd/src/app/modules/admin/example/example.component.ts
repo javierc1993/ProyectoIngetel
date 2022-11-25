@@ -82,7 +82,7 @@ export class ExampleComponent implements OnInit{
         var dateLastYear = new Date();
         dateLastYear.setMonth(dateLastYear.getMonth()-12);    
         var thisDateLastYearFormat = this.formatoFecha(dateLastYear); 
-        return {'fechaDesdeFactura':thisDateLastYearFormat,'fechaHastaFactura':thisDateFormat};
+        return {'fechaDesdePoDate':thisDateLastYearFormat,'fechaHastaPoDate':thisDateFormat};
     }
     formatoFecha(fecha) {
         var thisDate = fecha.getDate()+'/';     
@@ -148,8 +148,8 @@ export class ExampleComponent implements OnInit{
             }
             
             return {
-                SMP: thisPO.site.smp, 
-                SITE_Name: thisPO.site.name, 
+                SMP: thisPO.site?.smp, 
+                SITE_Name: thisPO.site?.name, 
                 Escenario:thisPO.scenery, 
                 Banda:thisPO.band, 
                 Lider:thisPO.leader?thisPO.leader.name+' '+thisPO.leader.lastname:'', 
@@ -220,8 +220,8 @@ export class ExampleComponent implements OnInit{
                 valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0); 
             }
             return {
-                SMP: thisPO.site.smp, 
-                SITE_Name: thisPO.site.name, 
+                SMP: thisPO.site?.smp, 
+                SITE_Name: thisPO.site?.name, 
                 PO:thisPO.reference,
                 Valor_PO :thisPO.value,
                 Escenario:thisPO.scenery,

@@ -106,7 +106,7 @@ export class PoStatusComponent implements OnInit {
   }
 
   getData(objectToFilter){
-    //console.log("cargando el componente billing status: "+(objectToFilter));
+    console.log(objectToFilter);
     this._httpClient.post(variablesGlobales.urlBackend + '/production/', objectToFilter)
       .subscribe((response:any) => {
         // console.log(response.result);
@@ -169,8 +169,8 @@ export class PoStatusComponent implements OnInit {
       else if(percentFacturado > percentLiberado){estado = 'Por liberar';}
 
       return {
-        smp: thisBill.site.smp,
-        nombreSitio: thisBill.site.name,
+        smp: thisBill.site?.smp,
+        nombreSitio: thisBill.site?.name,
         po: thisBill.reference,
         poDate : fechaPo,
         escenario: thisBill.scenery,
