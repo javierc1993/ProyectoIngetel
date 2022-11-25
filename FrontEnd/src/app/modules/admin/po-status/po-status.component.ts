@@ -382,7 +382,7 @@ export class PoStatusDialog implements OnInit {
       scenery: this.thisPO.scenery,
       band:this.thisPO.band,
       onAir: this.thisPO.onAir?.date,
-      valorPo:this.thisPO.value,
+      valorPo:parseFloat(this.thisPO.value.toFixed(2)),
       releases: porcentajeTotalLiberado,
       invoices: new FormArray([])        
     });    
@@ -437,15 +437,15 @@ export class PoStatusDialog implements OnInit {
         status: new FormControl(statusInvoice),
         date: new FormControl(element.date.slice(0,10)),
         invoice: new FormControl(element.invoice),
-        subTotal: new FormControl(element.subTotal),
-        iva: new FormControl(element.iva),
-        rtIva: new FormControl(element.rtIva),
-        rtf: new FormControl(element.rtf),
+        subTotal: new FormControl(parseFloat(element.subTotal.toFixed(2))),
+        iva: new FormControl(parseFloat(element.iva.toFixed(2))),
+        rtIva: new FormControl(parseFloat(element.rtIva.toFixed(2))),
+        rtf: new FormControl(parseFloat(element.rtf.toFixed(2))),
         percentInvoice: new FormControl(element.percentInvoice),
         documentNumber: new FormControl(statusPay ? element.pay.documentNumber : null),
-        valorUtilizado: new FormControl(statusPay ? element.pay.amountUtilized : null),
-        financialCost: new FormControl(statusPay ? element.pay.financialCost : null),
-        totalPaid: new FormControl(statusPay ? element.pay.totalPaid : null),
+        valorUtilizado: new FormControl(element.pay.amountUtilized ? parseFloat(element.pay.amountUtilized.toFixed(2)) : null),
+        financialCost: new FormControl(element.pay.financialCost ? parseFloat(element.pay.financialCost.toFixed(2)) : null),
+        totalPaid: new FormControl(element.pay.totalPaid ? parseFloat(element.pay.totalPaid.toFixed(2)) : null),
         datePay: new FormControl(statusPay ? element.pay.datePay.slice(0,10) : null),
 
       })
