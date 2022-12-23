@@ -159,14 +159,15 @@ export class PoStatusComponent implements OnInit {
       }         
           
       if(percentFacturado > 100){estado = 'Error facturacion';}
-      else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
-      else if(percentLiberado == 0){estado = 'Pendiente';}
+      else if(Math.trunc(valorPoFacturado) != Math.trunc(valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
+      // else if(percentLiberado == 0){estado = 'Pendiente';}
       else if(percentLiberado > percentFacturado){estado = 'Liberado';}
       else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
       else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estado = 'Finalizado';}
       else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
       else if(percentFacturado == percentPagado && Math.trunc(valorPoFacturado + valorPoIva) != Math.trunc(valorPoPagado)){estado = 'Error pago';}
       else if(percentFacturado > percentLiberado){estado = 'Por liberar';}
+      
 
       return {
         smp: thisBill.site?.smp,
@@ -418,7 +419,7 @@ export class PoStatusDialog implements OnInit {
       }
 
       if(element.percentInvoice > 100){statusInvoice = "Error facturacion"}
-      else if(element.subTotal != (this.thisPO.value*(element.percentInvoice/100))){statusInvoice = "Error facturacion"}
+      else if(Math.trunc(element.subTotal) != Math.trunc(this.thisPO.value*(element.percentInvoice/100))){statusInvoice = "Error facturacion"}
       else if(!statusPay || element.pay.amountUtilized == 0){statusInvoice = "Por pagar"}
       else if(statusPay && Math.trunc(element.pay.amountUtilized) != Math.trunc(element.subTotal + element.iva)){statusInvoice = "Error pago"}
       else{statusInvoice = "Pagado"}
@@ -461,7 +462,8 @@ export class PoStatusDialog implements OnInit {
   
   updatePO(){
     console.log("actuaizar  PO");
-    console.log(this.updatePOForm.value)
+    console.log(this.updatePOForm.value);
+    console.log(this.thisPO);
     var date = Date.now()
     var thisDate = new Date(date);
     this.thisPO.poDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
@@ -474,7 +476,16 @@ export class PoStatusDialog implements OnInit {
       this.thisPO.onAir = new Object();
     }
     this.thisPO.onAir.date = this.updatePOForm.value.onAir;
-    this.thisPO.value = this.updatePOForm.value.valorPo;
+    this.thisPO.value = this.updatePOForm.value.valorPo; 
+    if(!this.thisPO.release[0]){
+      this.thisPO.release[0] = new Object();
+      this.thisPO.release[0].grDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
+      this.thisPO.release[0].iaDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
+      this.thisPO.release[0].proyect = this.updatePOForm.value.smp;
+      this.thisPO.release[0].vendorSapName = this.updatePOForm.value.smp;
+      this.thisPO.release[0].woName = this.updatePOForm.value.smp;
+      this.thisPO.release[0].sgrNumber = this.updatePOForm.value.po;
+    }   
     this.thisPO.release[0].totalPercent = this.updatePOForm.value.releases;
     if(this.updatePOForm.value.invoices){
       var index = 0;

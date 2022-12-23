@@ -230,8 +230,8 @@ export class InicioComponent implements OnInit {
       }
 
       if(porcentajeTotalFacturado > 100){estadoPO = 'Error facturacion';}
-      else if(valorPoFacturado != (valorTotalPo*porcentajeTotalFacturado/100)){estadoPO = 'Error facturacion';}
-      else if(porcentajeTotalLiberado == 0){estadoPO = 'Pendiente';}
+      else if(Math.trunc(valorPoFacturado) != Math.trunc(valorTotalPo*porcentajeTotalFacturado/100)){estadoPO = 'Error facturacion';}
+      //else if(porcentajeTotalLiberado == 0){estadoPO = 'Pendiente';}
       else if(porcentajeTotalLiberado > porcentajeTotalFacturado){estadoPO = 'Liberado';}
       else if(porcentajeTotalLiberado == porcentajeTotalFacturado && porcentajeTotalFacturado > porcentajeTotalPagado){estadoPO = 'Por pagar';}          
       else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estadoPO = 'Finalizado';}

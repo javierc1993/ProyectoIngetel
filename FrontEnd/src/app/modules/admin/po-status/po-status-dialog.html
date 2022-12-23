@@ -75,13 +75,13 @@
                 <div class="flex w-48">
                     <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
                         <mat-label>Valor</mat-label>
-                        <input matInput [formControlName]="'valorPo'">
+                        <input type="number" matInput [formControlName]="'valorPo'">
                     </mat-form-field>
                 </div>
                 <div class="flex w-48">
                     <mat-form-field [ngClass]="updatePOForm" class="flex-auto">
                         <mat-label>% Liberado</mat-label>
-                        <input matInput [formControlName]="'releases'">
+                        <input type="number" min="0" max="100" matInput [formControlName]="'releases'">
                     </mat-form-field>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                             <div class="flex w-48">
                                 <mat-form-field class="flex-auto">
                                     <mat-label>% Facturado</mat-label>
-                                    <input type="number" matInput formControlName='percentInvoice'>
+                                    <input type="number" min="0" max="100" matInput formControlName='percentInvoice'>
                                 </mat-form-field>
                             </div>
                             <div class="flex w-48">
