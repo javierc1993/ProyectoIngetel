@@ -230,13 +230,13 @@ export class InicioComponent implements OnInit {
       }
 
       if(porcentajeTotalFacturado > 100){estadoPO = 'Error facturacion';}
-      else if(Math.trunc(valorPoFacturado) != Math.trunc(valorTotalPo*porcentajeTotalFacturado/100)){estadoPO = 'Error facturacion';}
+      else if(Math.round(valorPoFacturado) != Math.round(valorTotalPo*porcentajeTotalFacturado/100)){estadoPO = 'Error facturacion';}
       //else if(porcentajeTotalLiberado == 0){estadoPO = 'Pendiente';}
       else if(porcentajeTotalLiberado > porcentajeTotalFacturado){estadoPO = 'Liberado';}
       else if(porcentajeTotalLiberado == porcentajeTotalFacturado && porcentajeTotalFacturado > porcentajeTotalPagado){estadoPO = 'Por pagar';}          
-      else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estadoPO = 'Finalizado';}
+      else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado == 100 && Math.round(valorPoFacturado + valorPoIva) == Math.round(valorPoPagado)){estadoPO = 'Finalizado';}
       else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado < 100){estadoPO = 'Pendiente';}
-      else if(porcentajeTotalFacturado == porcentajeTotalPagado && Math.trunc(valorPoFacturado + valorPoIva) != Math.trunc(valorPoPagado)){estadoPO = 'Error pago';}
+      else if(porcentajeTotalFacturado == porcentajeTotalPagado && Math.round(valorPoFacturado + valorPoIva) != Math.round(valorPoPagado)){estadoPO = 'Error pago';}
       else if(porcentajeTotalFacturado > porcentajeTotalLiberado){estadoPO = 'Por liberar';}
 
       return {

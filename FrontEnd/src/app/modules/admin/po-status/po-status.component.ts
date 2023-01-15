@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, Inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexDataLabels, ApexLegend, ApexGrid} from "ng-apexcharts";
-import { variablesGlobales } from 'GLOBAL';
-import {UntypedFormBuilder, UntypedFormGroup, NgForm, Validators, FormGroup, FormArray, FormControl} from '@angular/forms';
-import {MatPaginator} from '@angular/material/paginator';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ExporterService } from 'services/exporter.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { FuseConfirmationService} from '@fuse/services/confirmation';
 import { FuseAlertService } from '@fuse/components/alert';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { variablesGlobales } from 'GLOBAL';
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis } from "ng-apexcharts";
+import { ExporterService } from 'services/exporter.service';
 
 export interface transaction {
     smp: string;
@@ -159,13 +159,13 @@ export class PoStatusComponent implements OnInit {
       }         
           
       if(percentFacturado > 100){estado = 'Error facturacion';}
-      else if(Math.trunc(valorPoFacturado) != Math.trunc(valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
+      else if(Math.round(valorPoFacturado) != Math.round(valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
       // else if(percentLiberado == 0){estado = 'Pendiente';}
       else if(percentLiberado > percentFacturado){estado = 'Liberado';}
       else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
-      else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.trunc(valorPoFacturado + valorPoIva) == Math.trunc(valorPoPagado)){estado = 'Finalizado';}
+      else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.round(valorPoFacturado + valorPoIva) == Math.round(valorPoPagado)){estado = 'Finalizado';}
       else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
-      else if(percentFacturado == percentPagado && Math.trunc(valorPoFacturado + valorPoIva) != Math.trunc(valorPoPagado)){estado = 'Error pago';}
+      else if(percentFacturado == percentPagado && Math.round(valorPoFacturado + valorPoIva) != Math.round(valorPoPagado)){estado = 'Error pago';}
       else if(percentFacturado > percentLiberado){estado = 'Por liberar';}
       
 
@@ -419,9 +419,9 @@ export class PoStatusDialog implements OnInit {
       }
 
       if(element.percentInvoice > 100){statusInvoice = "Error facturacion"}
-      else if(Math.trunc(element.subTotal) != Math.trunc(this.thisPO.value*(element.percentInvoice/100))){statusInvoice = "Error facturacion"}
+      else if(Math.round(element.subTotal) != Math.round(this.thisPO.value*(element.percentInvoice/100))){statusInvoice = "Error facturacion"}
       else if(!statusPay || element.pay.amountUtilized == 0){statusInvoice = "Por pagar"}
-      else if(statusPay && Math.trunc(element.pay.amountUtilized) != Math.trunc(element.subTotal + element.iva)){statusInvoice = "Error pago"}
+      else if(statusPay && Math.round(element.pay.amountUtilized) != Math.round(element.subTotal + element.iva)){statusInvoice = "Error pago"}
       else{statusInvoice = "Pagado"}
 // if(percentFacturado > 100){estado = 'Error facturacion';}
 //           else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
