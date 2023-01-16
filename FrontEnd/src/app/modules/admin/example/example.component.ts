@@ -256,7 +256,8 @@ export class ExampleComponent implements OnInit{
    }
    
    toggleDrawerOpen(): void{this.drawerOpened = !this.drawerOpened;}
-   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
+   toggleDrawerClose(): void {this.drawerOpened = this.drawerOpened ? false:false;}
+   //drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
    
    applyFilter(event: Event){
     const filterValue = (event.target as HTMLInputElement).value;

@@ -25,6 +25,7 @@ export interface transaction {
     valorPoFacturado : number;    
     valorPoIva: number;
     valorPoPagado: number;
+    porcentajesConcat:string;
 }
 interface Operator {
   value: string;
@@ -184,6 +185,7 @@ export class PoStatusComponent implements OnInit {
         valorPoFacturado,
         valorPoIva,
         valorPoPagado,
+        porcentajesConcat:percentLiberado+'%'+percentFacturado+'%'+percentPagado+'%'
       }
     });         
     this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
@@ -208,7 +210,8 @@ export class PoStatusComponent implements OnInit {
   }
 
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
-  drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
+  toggleDrawerClose(): void {this.drawerOpened = this.drawerOpened ? false:false;}
+  //drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
   applyFilter(event: Event){
     const filterValue = (event.target as HTMLInputElement).value;    
     this.recentTransactionsDataSource.filter = filterValue.trim().toLowerCase();    
