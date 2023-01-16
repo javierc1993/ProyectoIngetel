@@ -159,7 +159,7 @@ export class BillingStatusComponent implements OnInit {
       smpID: thisBill.payOrder?.site?.smp,
       sitio: thisBill.payOrder?.site?.name,
       proyecto: thisBill.payOrder?.scenery,
-      porcentajeFactura: thisBill.percentInvoice,
+      porcentajeFactura: thisBill.percentInvoice+'%',
       fechaPago: fechaPago,
       documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
       valorUtilizado: thisBill.pay ? thisBill.pay.amountUtilized:0,

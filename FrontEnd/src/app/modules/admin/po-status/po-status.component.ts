@@ -177,9 +177,9 @@ export class PoStatusComponent implements OnInit {
         escenario: thisBill.scenery,
         valorPo: thisBill.value,
         //instalacion: thisBill.instalation?.date ? thisBill.instalation.date:'pendiente',
-        porcentajeLiberado: percentLiberado,
-        porcentajeFacturado: percentFacturado,
-        porcentajePagado: percentPagado,
+        porcentajeLiberado: percentLiberado+'%',
+        porcentajeFacturado: percentFacturado+'%',
+        porcentajePagado: percentPagado+'%',
         estado,
         valorPoFacturado,
         valorPoIva,
@@ -210,8 +210,8 @@ export class PoStatusComponent implements OnInit {
   toggleDrawerOpen(): void {this.drawerOpened = !this.drawerOpened;}
   drawerOpenedChanged(opened: boolean): void{this.drawerOpened = opened;}
   applyFilter(event: Event){
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.recentTransactionsDataSource.filter = filterValue.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value;    
+    this.recentTransactionsDataSource.filter = filterValue.trim().toLowerCase();    
     if (this.recentTransactionsDataSource.paginator) {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
