@@ -160,7 +160,9 @@ export class PoStatusComponent implements OnInit {
       }         
           
       if(percentFacturado > 100){estado = 'Error facturacion';}
-      else if(Math.round(valorPoFacturado) != Math.round(valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
+      else if((Math.round(valorPoFacturado) != Math.round(valorPoTotal*percentFacturado/100))&&(Math.round(valorPoFacturado)+1 != Math.round(valorPoTotal*percentFacturado/100) && Math.round(valorPoFacturado)-1 != Math.round(valorPoTotal*percentFacturado/100))){
+        estado = 'Error facturacion';
+      }
       // else if(percentLiberado == 0){estado = 'Pendiente';}
       else if(percentLiberado > percentFacturado){estado = 'Liberado';}
       else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
@@ -371,7 +373,7 @@ export class PoStatusDialog implements OnInit {
   initUpdatePOForm():void{
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
     this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;    
-    this.chartBarValues.series[0].data[0] = this.thisPO.value;
+    this.chartBarValues.series[0].data[0] = this.thisPO.value
     //this.chartBarValues.plotOptions.bar.columnWidth = "15";
     var porcentajeTotalLiberado;
     porcentajeTotalLiberado = this.isRelease?this.thisPO.release[0].totalPercent:0;
@@ -422,7 +424,9 @@ export class PoStatusDialog implements OnInit {
       }
 
       if(element.percentInvoice > 100){statusInvoice = "Error facturacion"}
-      else if(Math.round(element.subTotal) != Math.round(this.thisPO.value*(element.percentInvoice/100))){statusInvoice = "Error facturacion"}
+      else if((Math.round(element.subTotal) != Math.round(this.thisPO.value*(element.percentInvoice/100)))&&(Math.round(element.subTotal)+1 != Math.round(this.thisPO.value*(element.percentInvoice/100)) && Math.round(element.subTotal)-1 != Math.round(this.thisPO.value*(element.percentInvoice/100)))){
+        statusInvoice = "Error facturacion";
+      }
       else if(!statusPay || element.pay.amountUtilized == 0){statusInvoice = "Por pagar"}
       else if(statusPay && Math.round(element.pay.amountUtilized) != Math.round(element.subTotal + element.iva)){statusInvoice = "Error pago"}
       else{statusInvoice = "Pagado"}
@@ -453,9 +457,10 @@ export class PoStatusDialog implements OnInit {
         datePay: new FormControl(statusPay ? element.pay.datePay.slice(0,10) : null),
 
       })
-      refInvoices.push(thisInvoice);
-      
+      refInvoices.push(thisInvoice);      
     });
+
+    
   }
 
   getCtrl(key:string, form:FormGroup):any{
