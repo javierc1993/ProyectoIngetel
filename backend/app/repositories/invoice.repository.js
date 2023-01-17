@@ -19,16 +19,17 @@ class InvoiceRepository {
       return null;
     }
   }
-  async createInvoice (invoice, payOrder = null) {
+  async createInvoice (invoice, payOrder) {
     try {
+      if(!payOrder) throw new Error('PayOrder notFound');
       let resp = await this.getInvoiceByNumber(invoice.invoice);
       if (!resp) {
-        if (payOrder) invoice.payOrderId = payOrder.id;
+        invoice.payOrderId = payOrder.id;
         return Invoice.create(invoice);
       }
-      if (payOrder) {
-        await this.setPoToInvoice(payOrder.id, resp);
-      }
+      
+      await this.setPoToInvoice(payOrder.id, resp);
+      
       resp.set(invoice);
       return resp.save();
     } catch (err) {

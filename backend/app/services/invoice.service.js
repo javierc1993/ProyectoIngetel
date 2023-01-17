@@ -26,11 +26,13 @@ class InvoiceService {
     return Promise.all(invoices.filter(inv => inv['PO'] && inv['SUBTOTAL']).map(async invoice => {
       const invoiceDoc = new InvoiceDocEntity(invoice);
       const payOrder = await PayOrderRepository.getPoByReference(invoiceDoc.po);
-      const newInvoice = await InvoiceRepository.createInvoice(invoiceDoc, payOrder);
-      if (newInvoice) {
-        return { ...newInvoice, stateInvoice: 'new' };
+      if(payOrder){
+        const newInvoice = await InvoiceRepository.createInvoice(invoiceDoc, payOrder);
+        if (newInvoice) {
+          return { ...newInvoice, stateInvoice: 'new' };
+        }
       }
-      return { ...invoiceDoc, stateInvoice: 'omited' };
+      return { ...invoice, stateInvoice: 'omited' };
     }));
   }
 
