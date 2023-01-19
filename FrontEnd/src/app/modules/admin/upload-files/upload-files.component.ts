@@ -4,7 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { uploadFileService } from './uploadFile.services';
 import { catchError } from 'rxjs';
 import { FuseAlertService } from '@fuse/components/alert';
+import { ExporterService } from 'services/exporter.service';
 import { LocalizedString } from '@angular/compiler';
+
+export interface transaction {
+    factura:string;   
+    estado:string;  
+}
 
 @Component({
     selector: 'app-upload-files',
@@ -14,13 +20,15 @@ import { LocalizedString } from '@angular/compiler';
 export class UploadFilesComponent implements OnInit {
     uploadForm!: FormGroup;
     private fileTemp:any;
+    dataExporter: transaction[]=[];
 
     constructor(
         //public fileType : String,
         private readonly fb: FormBuilder,
         private _httpClient: HttpClient,
         private uploadFileService: uploadFileService,
-        private _fuseAlertService: FuseAlertService
+        private _fuseAlertService: FuseAlertService,
+        private excelService:ExporterService
     ) {}
 
     ngOnInit(): void {
@@ -60,8 +68,10 @@ export class UploadFilesComponent implements OnInit {
                 data => {
                     this._fuseAlertService.dismiss('uploadFileBad');
                     this._fuseAlertService.show('uploadFileOk');
-                    setTimeout(()=>{this._fuseAlertService.dismiss('uploadFileOk')},3000)                    
-                    console.log(data)
+                    setTimeout(()=>{this._fuseAlertService.dismiss('uploadFileOk')},3000) 
+                    if(fileType == "invoice"){
+                        this.validateInvoicesUpload(data.result);
+                    }  
                 },
                 err => {
                     this._fuseAlertService.dismiss('uploadFileOk');
@@ -72,6 +82,45 @@ export class UploadFilesComponent implements OnInit {
             )
         }
         
+    }
+
+    validateInvoicesUpload(data){
+        //console.log("invoices OK");
+        //console.log(data);
+        this.dataExporter = Object.values(data).map(function(thisInvoice : any){
+            var invoiceNumber;
+            var statusInvoice;
+            if(thisInvoice.stateInvoice == "omited"){
+                var newInvoice = JSON.stringify(thisInvoice).replace(/\s+/g,"");
+                //console.log(newInvoice);
+                var invoiceJson = JSON.parse(newInvoice);
+                //console.log(invoiceJson);
+                invoiceNumber = invoiceJson.NoFACTURA;
+                statusInvoice = "error";
+            }else{
+                invoiceNumber = thisInvoice.dataValues.invoice;
+                statusInvoice = "ok";
+            }
+            return{
+                factura: invoiceNumber, 
+                estado: statusInvoice, 
+            }            
+        });
+        // data.forEach(element => {
+            
+        //   if(element.stateInvoice == "omited"){
+        //     this.dataExporter.
+        //     console.log(element);
+        //   }else if( == "new"){
+
+    //     po: string;
+    // invoice:string;   
+    // status:string;  
+            
+        //   }
+        // });
+        console.log("invoices finish");
+        this.exportAsXLSX();
     }
 
     validFormat(fileName : string){
@@ -89,7 +138,13 @@ export class UploadFilesComponent implements OnInit {
             typeUpload: ['', [Validators.required]],
             thisFile: ['', [Validators.required]]            
         });
-    }    
+    }
+    
+    exportAsXLSX():void{
+        this._fuseAlertService.show('downloadResult');
+        setTimeout(()=>{this._fuseAlertService.dismiss('downloadResult')},3000)
+        this.excelService.exportToExcel(this.dataExporter, 'Estado_carga_facturas');
+    }
 }
 function then(arg0: (res: any) => void): (value: any) => void {
     throw new Error('Function not implemented.');

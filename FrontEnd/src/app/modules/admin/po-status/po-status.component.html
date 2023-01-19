@@ -258,6 +258,17 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por Escenario</mat-label>
+                    <input matInput [formControlName]="'escenario'">
+                    <mat-select [formControlName]="'operadorEscenario'">
+                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                            {{operatorString.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">

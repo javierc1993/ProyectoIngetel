@@ -98,11 +98,13 @@ export class PoStatusComponent implements OnInit {
       PO:[''],
       SMP:[''],
       valorPO:[''],
+      escenario:[''],
       fechaDesdePoDate:[''],
       fechaHastaPoDate:[''],      
       operadorPO:[''],
       operadorSitio:[''],
-      operadorValorPO:['']
+      operadorValorPO:[''],
+      operadorEscenario:['']
     });        
   }
 
@@ -238,6 +240,7 @@ export class PoStatusComponent implements OnInit {
     if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
     if(!this.filterForm.value.SMP){this.filterForm.value.operadorSitio = ""}
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
+    if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
 
     this.getData(this.filterForm.value);
   }
@@ -373,7 +376,7 @@ export class PoStatusDialog implements OnInit {
   initUpdatePOForm():void{
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
     this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;    
-    this.chartBarValues.series[0].data[0] = this.thisPO.value
+    this.chartBarValues.series[0].data[0] = parseFloat(this.thisPO.value.toFixed(2));
     //this.chartBarValues.plotOptions.bar.columnWidth = "15";
     var porcentajeTotalLiberado;
     porcentajeTotalLiberado = this.isRelease?this.thisPO.release[0].totalPercent:0;
@@ -413,14 +416,17 @@ export class PoStatusDialog implements OnInit {
   // }
 
   initFormInvoices():void{
+    var subtotalInvoices = 0;
+    var subtotalIvaInvoices = 0;
+    var amountUtilicedInvoices = 0;
     this.thisPO.invoice.forEach(element => {
       var statusPay = (!element.pay) ? false:true;
       var statusInvoice;
-      this.chartBarValues.series[0].data[1] += element.subTotal;
-      this.chartBarValues.series[0].data[2] += element.subTotal;
-      this.chartBarValues.series[0].data[2] += element.iva;
+      subtotalInvoices += element.subTotal;
+      subtotalIvaInvoices += element.subTotal;
+      subtotalIvaInvoices += element.iva;
       if(statusPay){
-        this.chartBarValues.series[0].data[3] += element.pay.amountUtilized;
+        amountUtilicedInvoices += element.pay.amountUtilized;
       }
 
       if(element.percentInvoice > 100){statusInvoice = "Error facturacion"}
@@ -459,6 +465,12 @@ export class PoStatusDialog implements OnInit {
       })
       refInvoices.push(thisInvoice);      
     });
+
+    
+    this.chartBarValues.series[0].data[1] = parseFloat(subtotalInvoices.toFixed(2));
+    this.chartBarValues.series[0].data[2] = parseFloat(subtotalIvaInvoices.toFixed(2));
+    this.chartBarValues.series[0].data[3] = parseFloat(amountUtilicedInvoices.toFixed(2));
+     
 
     
   }

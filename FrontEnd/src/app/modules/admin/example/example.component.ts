@@ -97,11 +97,13 @@ export class ExampleComponent implements OnInit{
             PO:[''],
             SMP:[''],            
             valorPO:[''],
+            escenario:[''],
             fechaDesdePoDate:[''],
             fechaHastaPoDate:[''],
             operadorValorPO:[''],
             operadorPO:[''],
-            operadorSitio:['']
+            operadorSitio:[''],
+            operadorEscenario:['']
         });
     }
     
@@ -251,6 +253,7 @@ export class ExampleComponent implements OnInit{
     if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
     if(!this.filterForm.value.SMP){this.filterForm.value.operadorSitio = ""}
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
+    if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
     this.getData(this.filterForm.value);
 
    }

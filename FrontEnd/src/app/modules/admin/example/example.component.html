@@ -262,7 +262,6 @@
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por PO</mat-label>
                     <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
-                    <mat-hint>PO</mat-hint>
                     <mat-select [formControlName]="'operadorPO'">
                         <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
                             {{operatorString.viewValue}}
@@ -286,8 +285,18 @@
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por SMP</mat-label>
                     <input id="SMPControl" matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
-                    <mat-hint>SMP</mat-hint>
                     <mat-select [formControlName]="'operadorSitio'">
+                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                            {{operatorString.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por Escenario</mat-label>
+                    <input matInput [formControlName]="'escenario'">
+                    <mat-select [formControlName]="'operadorEscenario'">
                         <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
                             {{operatorString.viewValue}}
                         </mat-option>

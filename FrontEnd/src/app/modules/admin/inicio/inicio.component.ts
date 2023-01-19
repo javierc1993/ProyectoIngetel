@@ -79,11 +79,21 @@ export class InicioComponent implements OnInit {
       plotOptions: {
         bar: {
           columnWidth: "15",
-          distributed: true
+          dataLabels: {
+              position: 'top', // top, center, bottom
+          },
         }
       },
       dataLabels: {
-        enabled: false
+        enabled: true,
+        formatter: function (val) {
+            return "$"+val;
+        },
+        offsetY: -20,
+          style: {
+            fontSize: '12px',
+            colors: ["#e37c39"]
+          }
       },
       legend: {
         show: false
