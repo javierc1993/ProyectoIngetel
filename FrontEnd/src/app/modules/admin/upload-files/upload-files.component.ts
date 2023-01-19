@@ -5,12 +5,8 @@ import { uploadFileService } from './uploadFile.services';
 import { catchError } from 'rxjs';
 import { FuseAlertService } from '@fuse/components/alert';
 import { ExporterService } from 'services/exporter.service';
+import { FuseConfirmationService} from '@fuse/services/confirmation';
 import { LocalizedString } from '@angular/compiler';
-
-export interface transaction {
-    factura:string;   
-    estado:string;  
-}
 
 @Component({
     selector: 'app-upload-files',
@@ -20,7 +16,7 @@ export interface transaction {
 export class UploadFilesComponent implements OnInit {
     uploadForm!: FormGroup;
     private fileTemp:any;
-    dataExporter: transaction[]=[];
+    dataExporter: any;
 
     constructor(
         //public fileType : String,
@@ -28,7 +24,8 @@ export class UploadFilesComponent implements OnInit {
         private _httpClient: HttpClient,
         private uploadFileService: uploadFileService,
         private _fuseAlertService: FuseAlertService,
-        private excelService:ExporterService
+        private excelService:ExporterService,
+        public _fuseConfirmationService: FuseConfirmationService,
     ) {}
 
     ngOnInit(): void {
@@ -87,40 +84,62 @@ export class UploadFilesComponent implements OnInit {
     validateInvoicesUpload(data){
         //console.log("invoices OK");
         //console.log(data);
-        this.dataExporter = Object.values(data).map(function(thisInvoice : any){
-            var invoiceNumber;
-            var statusInvoice;
-            if(thisInvoice.stateInvoice == "omited"){
-                var newInvoice = JSON.stringify(thisInvoice).replace(/\s+/g,"");
-                //console.log(newInvoice);
-                var invoiceJson = JSON.parse(newInvoice);
-                //console.log(invoiceJson);
-                invoiceNumber = invoiceJson.NoFACTURA;
-                statusInvoice = "error";
-            }else{
-                invoiceNumber = thisInvoice.dataValues.invoice;
-                statusInvoice = "ok";
-            }
-            return{
-                factura: invoiceNumber, 
-                estado: statusInvoice, 
-            }            
+        this.dataExporter = Object.values(data).filter(function(thisInvoice : any){
+            return thisInvoice.stateInvoice == "omited";
         });
-        // data.forEach(element => {
-            
-        //   if(element.stateInvoice == "omited"){
-        //     this.dataExporter.
-        //     console.log(element);
-        //   }else if( == "new"){
-
-    //     po: string;
-    // invoice:string;   
-    // status:string;  
-            
-        //   }
+        //console.log(dataFilter);
+        // this.dataExporter = Object.values(dataFilter).filter(function(thisInvoice : any){
+        //     return{
+        //         CLIENTE:thisInvoice.CLIENTE,
+        //         FECHA:thisInvoice.FECHA,
+        //         'No FACTURA':thisInvoice['No FACTURA'],
+        //         PROYECTO:thisInvoice.PROYECTO,
+        //         MES:thisInvoice.MES,
+        //         SUBTOTAL:thisInvoice.SUBTOTAL,
+        //         IVA:thisInvoice.IVA,
+        //         'TOTAL FACTURA':thisInvoice['TOTAL FACTURA'],
+        //         RTF:thisInvoice.RTF,
+        //         RTIVA:thisInvoice.RTIVA,
+        //         'A PAGAR':thisInvoice['A PAGAR'],
+        //         'TOTAL PAGADO':thisInvoice['TOTAL PAGADO'],
+        //         PO:thisInvoice.PO,
+        //         'FECHA PAGO':thisInvoice['FECHA PAGO'],
+        //         SITIO:thisInvoice.SITIO,
+        //         PROYECTO2:thisInvoice.PROYECTO2,
+        //         '% FACT':thisInvoice['% FACT']
+        //     }       
         // });
-        console.log("invoices finish");
-        this.exportAsXLSX();
+        if(this.dataExporter.length > 0){
+            const dialogRef = this._fuseConfirmationService.open({title: "Facturas sin cargar",
+              message : "Quieres descargar las facturas que no pudieron ser cargadas ?",
+              icon :{
+                show: true,
+                color: 'info'
+              },
+              actions : {
+                    confirm: {
+                        show : true,
+                        label: 'Descargar',
+                        color: 'primary'
+                    },
+                    cancel : {
+                        show : true,
+                        label: 'Cancelar'
+                    }
+                },
+              dismissible: true
+            });
+        
+            dialogRef.afterClosed().subscribe((result) => {
+              if(result == "confirmed"){
+                this.exportAsXLSX();     
+              }else{
+                console.log("dont download");
+              }       
+            });
+        }
+        //console.log("invoices finish");
+        
     }
 
     validFormat(fileName : string){
@@ -143,7 +162,7 @@ export class UploadFilesComponent implements OnInit {
     exportAsXLSX():void{
         this._fuseAlertService.show('downloadResult');
         setTimeout(()=>{this._fuseAlertService.dismiss('downloadResult')},3000)
-        this.excelService.exportToExcel(this.dataExporter, 'Estado_carga_facturas');
+        this.excelService.exportToExcel(this.dataExporter, 'Facturas_no_cargadas');
     }
 }
 function then(arg0: (res: any) => void): (value: any) => void {

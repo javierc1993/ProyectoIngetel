@@ -20,7 +20,9 @@ export class ExporterService {
   }
 
   private saveAsExcel(buffer:any,fileName:string):void{
+    const thisDate = new Date();
+    var dateFormat = thisDate.getDate()+'_'+thisDate.getMonth() + 1 +'_'+thisDate.getFullYear()+'_'+thisDate.getHours()+'_'+thisDate.getMinutes();
     const data: Blob = new Blob([buffer],{type: EXCEL_TYPE});
-    FileSaver.saveAs(data,fileName+'_export_'+new Date().getTime()+EXCEL_EXT);
+    FileSaver.saveAs(data,fileName+'_export_'+dateFormat+EXCEL_EXT);
   }
 }
