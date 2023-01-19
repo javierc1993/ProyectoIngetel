@@ -5,10 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   const Site = sequelize.define('Site', {
     name: DataTypes.STRING,
-    reference: DataTypes.STRING,
     smp: DataTypes.STRING,
-    smpName: DataTypes.STRING,
-    region: DataTypes.STRING
+    
   }, {
     tableName: 'sites'
   });

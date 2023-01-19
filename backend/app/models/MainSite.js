@@ -4,8 +4,10 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   const MainSite = sequelize.define('MainSite', {
-    name: DataTypes.STRING,
-    smp: DataTypes.STRING
+    smp: DataTypes.STRING,
+    proyect: DataTypes.STRING,
+    region: DataTypes.STRING
+
   }, {
     tableName: 'mainSites'
   });

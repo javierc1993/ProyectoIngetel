@@ -4,6 +4,7 @@ const { Op, Sequelize } = require('sequelize');
 const { Instalation, Integration, MosHw, OnAir, Site, User, Release, Pay, Invoice, Production } = require('../models');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 const SiteRepository = require('../repositories/site.repository');
+const MainSiteRepository = require('../repositories/mainSite.repository');
 const UserRepository = require('../repositories/user.repository');
 const InstalationRepository = require('../repositories/instalation.repository');
 const IntegrationRepository = require('../repositories/integration.repository');
@@ -51,17 +52,28 @@ class PayOrderService {
     const leadersOnly = await deleteDuplicateByLabel(request, 'Lider ')
 
     const leadersCreated = await Promise.all(leadersOnly.filter(po => po['Lider ']).map(async po => {
-      UserRepository.newLeader(po['Lider ']);
+      const resp = await UserRepository.newLeader(po['Lider ']);
+      return resp;
     })
     );
 
     const siteSaved = await Promise.all(sitesOnly.filter(po => po.SMP).map(async po => {
+     
       const site = {
         name: po['SITE NAME'],
-        smp: po.SMP,
-        region: po['Regional']
+        smp: po.SMP
       }
-      SiteRepository.createSite(site);
+      const mainSite = {
+        region: po['Regional'],
+        proyect: po['Proyecto '],
+        smp: po['SMP Principal']
+      }
+      
+      const mainSmp = await MainSiteRepository.createMainSite(mainSite);
+      const resp = await SiteRepository.createSite(site);
+      resp.mainSiteId=mainSmp.id;
+      resp.save();
+      return resp;
     })
     );
 

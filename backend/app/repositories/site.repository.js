@@ -2,7 +2,7 @@
 const { Site } = require('../models');
 
 class SiteRepository {
-  async getSiteBySmp (smp) {
+  async getSiteBySmp(smp) {
     const site = await Site.findOne({
       where: {
         smp: smp
@@ -11,27 +11,25 @@ class SiteRepository {
     return site;
   }
 
-  async getSiteByPrk(prk){
+  async getSiteByPrk(prk) {
     const site = await Site.findByPk(prk);
     return site;
   }
 
-  async createSite (site) {
+  async createSite(site) {
     try {
-      return Site.findOrCreate({
-        where: {
-          name: site.name,
-          smp: site.smp,
-          region: site.region
-        }
-      })
+      let resp = await this.getSiteBySmp(site.smp);
+      if (resp) return resp;
+      resp = await Site.create(site);
+      return resp;
+
     } catch (err) {
       console.log(err);
       return null;
     }
   }
 
-  async newSite (site) {
+  async newSite(site) {
     try {
       return Site.create(site);
 

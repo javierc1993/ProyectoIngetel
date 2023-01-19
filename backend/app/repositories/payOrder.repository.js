@@ -88,7 +88,7 @@ class PayOrderRepository {
       let leader;
       if (po.Sites.smp) {
         site = await SiteRepository.createSite(po.Sites)
-        po.siteId = site[0].dataValues.id
+        po.siteId = site.dataValues.id
       }
       if (po.Leaders.name) {
         leader = await UserRepository.newLeader(po.Leaders.name)

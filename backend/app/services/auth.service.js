@@ -13,9 +13,7 @@ class AuthService {
   }
 
   async validateToken (token, username) {
-    console.log(token);
     const decoded = jwt.verify(token, security.secretWord);
-    console.log(decoded)
     if (decoded.username == username) return true;
     throw new Error('Token invalid');
   }

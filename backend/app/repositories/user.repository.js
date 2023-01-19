@@ -38,12 +38,13 @@ class UserRepository {
         break;
     }
 
-    return User.findOrCreate({
+    const resp = await User.findOrCreate({
       where: {
         name: name,
         lastname: lastname
       }
     });
+    return resp;
   }
 
 

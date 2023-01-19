@@ -2,22 +2,25 @@
 const { MainSite } = require('../models');
 
 class PayOrderRepository {
-  async getMainSiteBySmp (smp) {
+  async getMainSiteBySmp (numbersmp) {
+
     const site = await MainSite.findOne({
       where: {
-        smp: smp
+        smp: numbersmp
       }
     });
-    if (site.length) return site[0].dataValues;
-    return null;
+    return site;
+    // if (site.length) return site[0].dataValues;
+    // return null;
   }
 
   async createMainSite (mainSite) {
     try {
-      const site = this.getMainSiteBySmp(mainSite.smp);
+      
+      const site = await this.getMainSiteBySmp(mainSite.smp);
       if (site) return site;
       const resp = await MainSite.create(mainSite);
-      return resp;
+      return resp.dataValues;
     } catch (err) {
       console.log(err);
       return null;
