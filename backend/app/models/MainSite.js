@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
   MainSite.associate = function (models) {
     //associations 
-    MainSite.hasMany(models.Site, {as:'site', foreignKey:'mainSiteId'})
+    // MainSite.hasMany(models.Site, {as:'site', foreignKey:'mainSiteId'})
   };
 
   return MainSite;

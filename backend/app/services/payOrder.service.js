@@ -1,7 +1,7 @@
 'use strict';
 const { Op, Sequelize } = require('sequelize');
 
-const { Instalation, Integration, MosHw, OnAir, Site, User, Release, Pay, Invoice, Production } = require('../models');
+const { Instalation, Integration, MosHw, OnAir, Site, User, Release, Pay, Invoice, MainSite } = require('../models');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 const SiteRepository = require('../repositories/site.repository');
 const MainSiteRepository = require('../repositories/mainSite.repository');
@@ -61,18 +61,13 @@ class PayOrderService {
      
       const site = {
         name: po['SITE NAME'],
-        smp: po.SMP
-      }
-      const mainSite = {
+        smp: po.SMP,
         region: po['Regional'],
         proyect: po['Proyecto '],
-        smp: po['SMP Principal']
+        mainSmp: po['SMP Principal']
       }
-      
-      const mainSmp = await MainSiteRepository.createMainSite(mainSite);
+     
       const resp = await SiteRepository.createSite(site);
-      resp.mainSiteId=mainSmp.id;
-      resp.save();
       return resp;
     })
     );
@@ -118,7 +113,11 @@ const asingFilter = (filter) => {
 }
 
 const createQueryField = (item, filter) => {
-  return filters[filter.type](item, filter);
+  console.log(filter)
+  for(const filterItem of filter){
+    item = filters[filterItem.type](item, filterItem);
+  }
+  return item;
 
 }
 
@@ -164,7 +163,7 @@ const filters = {
       //   });
       //   return item;
       // }
-      item.where = {};
+      if(!item.where) item.where = {};
       let search = data;
       if (operator == 'content') search = { [Op.like]: `%${data}%` }
       if (operator == 'noContent') search = { [Op.notLike]: `%${data}%` }
