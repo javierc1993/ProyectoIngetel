@@ -62,8 +62,8 @@ class PayOrderRepository {
 
     if (where) {
       return PayOrder.findAll({
-        where: where,
-        include: include
+        where,
+        include
       });
 
     }

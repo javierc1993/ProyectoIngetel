@@ -94,11 +94,10 @@ const createIncludeGetAll = async (filters = null) => {
 }
 const createWhereGetAll = async (filters = null) => {
   let where = {};
-  let fields = ['reference', 'valuePayOrder', 'scenery', 'band', 'poDate'];
-  if (filters) {
-    for (const field of fields) {
-      if (filters[field]?.data || filters[field]?.init || filters[field]?.until) {
-        where = { ...where, ...asingFilter(filters[field]).where };
+  if (filters.payOrder) {
+    for (const field of filters.payOrder) {
+      if (field.data || field.init || field.until) {
+        where = { ...where, ...asingFilter(field).where};
       }
     }
     if (Object.keys(where).length) return where
