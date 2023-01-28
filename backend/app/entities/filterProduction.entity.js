@@ -57,10 +57,16 @@ class FilterProductionEntity {
     ];
     this.release = [
       {
-        data: data.porcentajeLiberacion || null,
-        operator: data.operadorLiberacion || null,
+        data: data.numeroSgr || null,
+        operator: data.operadorNumeroSgr || null,
         fieldName: 'sgrNumber',
         type: 'string'
+      },
+      {
+        data: data.porcentajeLiberacion || null,
+        operator: data.operadorPorcentajeLiberacion || null,
+        fieldName: 'totalPercent',
+        type: 'number'
       }
     ];
     this.invoice = [
