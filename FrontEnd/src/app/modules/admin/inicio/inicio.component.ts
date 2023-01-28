@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
-import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive, ApexDataLabels, ApexPlotOptions, ApexGrid, ApexLegend} from "ng-apexcharts";
-import {UntypedFormBuilder, UntypedFormGroup, FormGroup, FormControl, ReactiveFormsModule} from '@angular/forms';
+import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexYAxis, ApexTitleSubtitle, ApexNonAxisChartSeries, ApexResponsive, ApexDataLabels, ApexPlotOptions, ApexGrid, ApexLegend} from "ng-apexcharts";
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import { variablesGlobales } from 'GLOBAL';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -24,6 +23,7 @@ export type optionsValuesPO = {
   dataLabels:ApexDataLabels;
   plotOptions: ApexPlotOptions;
   xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
   grid: ApexGrid;
   legend: ApexLegend;
   title: ApexTitleSubtitle;   
@@ -40,6 +40,7 @@ export type instalationPO = {
 export type statusPO = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
+  colors: any[];
   responsive: ApexResponsive[];
   labels: any;
   title: ApexTitleSubtitle;
@@ -76,24 +77,24 @@ export class InicioComponent implements OnInit {
         height: 350,
         type: "bar"
       },
+      dataLabels:{
+          enabled: false
+      },
       plotOptions: {
         bar: {
-          columnWidth: "15",
+          columnWidth: "40",
           dataLabels: {
               position: 'top', // top, center, bottom
           },
         }
       },
-      dataLabels: {
-        enabled: true,
-        formatter: function (val) {
-            return "$"+val;
-        },
-        offsetY: -20,
-          style: {
-            fontSize: '12px',
-            colors: ["#e37c39"]
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            const numero = value.toLocaleString("en");
+            return "$ "+numero;
           }
+        },
       },
       legend: {
         show: false
@@ -117,12 +118,12 @@ export class InicioComponent implements OnInit {
     };
 
     this.instalationPO = {
-      series: [0, 0, 0],
+      series: [0, 0],
       chart: {    
         height: 350,    
         type: "pie"
       },
-      labels: ["Team A", "Team B", "Team C"],
+      labels: ['pendiente', 'instalado'],
       responsive: [
         {
           breakpoint: 480,
@@ -139,12 +140,13 @@ export class InicioComponent implements OnInit {
       
     };
     this.statusPO = {
-      series: [0, 0, 0],
+      series: [0, 0, 0, 0, 0, 0, 0],
       chart: {    
         height: 350,    
         type: "donut"
       },
-      labels: ["Pagadas", "Pendientes pago", "Pendientes cobro"],
+      labels: ['Error facturacion', 'Pendiente', 'Liberado', 'Por pagar', 'Finalizado', 'Error pago', 'Por liberar'],
+      colors:['#DF2222', '#00CFB9', '#F6A26C', '#0800FF', '#00CF5B', '#FD5648', '#FFC636'],
       responsive: [
         {
           breakpoint: 480,
@@ -281,7 +283,6 @@ export class InicioComponent implements OnInit {
   } 
   updateStatusPO(){
     var dataSeries = new Array();
-    var dataLabels = ['Error facturacion', 'Pendiente', 'Liberado', 'Por pagar', 'Finalizado', 'Error pago', 'Por liberar'];
     var quantityErrorFacturacion = new Array;
     var quantityPendiente = new Array;
     var quantityLiberado = new Array;
@@ -325,7 +326,6 @@ export class InicioComponent implements OnInit {
     dataSeries.push(quantityErrorPago.length);
     dataSeries.push(quantityPorLiberar.length);
     this.statusPO.series = dataSeries;
-    this.statusPO.labels = dataLabels; 
   } 
 
   updateTotalValues(){

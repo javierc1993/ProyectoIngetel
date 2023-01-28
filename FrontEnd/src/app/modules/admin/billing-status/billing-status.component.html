@@ -33,8 +33,8 @@
         <mat-icon>filter_list</mat-icon>
             Filtros
         </button>
-        <div class="max-h-24 flex flex-auto bg-card shadow rounded-2xl" (click)="toggleDrawerClose();">
-            <div class="flex flex-auto w-full m-4 text-md font-semibold justify-center">
+        <div class="activScroll max-h-28 flex flex-auto bg-card shadow rounded-2xl" (click)="toggleDrawerClose();">
+            <div class="flex flex-auto m-4 text-md font-semibold justify-center">
                 <div class="p-4 leading-none rounded-l-xl border border-r-0">
                     <div class="font-medium text-secondary">Total facturado</div>
                     <div class="mt-2 font-sans">{{valorTotalFacturado|currency:"USD":"symbol"}}</div>
@@ -44,15 +44,15 @@
                     <div class="mt-2 font-sans">{{valorTotalIva|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Total facturado + IVA</div>
+                    <div class="font-medium text-secondary">Facturado + IVA</div>
                     <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva)|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Total Utilizado</div>
+                    <div class="font-medium text-secondary">Utilizado</div>
                     <div class="mt-2 font-sans">{{valorTotalUtilizado|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Total costo transacción</div>
+                    <div class="font-medium text-secondary">Costo transacción</div>
                     <div class="mt-2 font-sans">{{valorTotalCostoTransaccion|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
@@ -60,7 +60,7 @@
                     <div class="mt-2 font-sans">{{valorTotalPagado|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none rounded-r-xl border">
-                    <div class="font-medium text-secondary">Total por pagar</div>
+                    <div class="font-medium text-secondary">Por pagar</div>
                     <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva - valorTotalUtilizado).toFixed(2)|currency:"USD":"symbol"}}</div>
                 </div>
             </div>

@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FuseAlertService } from '@fuse/components/alert';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { variablesGlobales } from 'GLOBAL';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis, ApexYAxis} from "ng-apexcharts";
 import { ExporterService } from 'services/exporter.service';
 
 export interface transaction {
@@ -312,6 +312,7 @@ export type ChartOptions = {
   dataLabels:ApexDataLabels;
   plotOptions: ApexPlotOptions;
   xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
   grid: ApexGrid;
   legend: ApexLegend;
   title: ApexTitleSubtitle; 
@@ -340,8 +341,7 @@ export class PoStatusDialog implements OnInit {
       },
       plotOptions: {
         bar: {
-          columnWidth: "15",
-          distributed: true
+          columnWidth: "40"
         }
       },
       dataLabels: {
@@ -358,6 +358,14 @@ export class PoStatusDialog implements OnInit {
       },
       xaxis: {
         categories: ["Valor PO", "Valor facturado",  "Faturado + iva",  "Valor pagado"]
+      },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            const numero = value.toLocaleString("en");
+            return "$ "+numero;
+          }
+        },
       },
       series: [
         {
