@@ -23,6 +23,11 @@
     .example-headers-align .mat-form-field+.mat-form-field {
         margin-left: 8px;
     }
+    
+    div.activScrollY {
+        height: 700px;
+        overflow: auto;
+    }
 </style>
 
 
@@ -78,7 +83,15 @@
         <div class="overflow-x-auto mx-6" (click)="toggleDrawerClose();">
             <table class="w-full bg-transparent" mat-table [dataSource]="recentTransactionsDataSource" matSort>
 
-                <!-- Transaction ID -->
+                <!-- SMP. Pr -->
+                <ng-container matColumnDef="SMP Principal">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>SMP Pr</th>
+                    <td mat-cell *matCellDef="let transaction">
+                        <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">{{transaction.mainSmp}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- SMP -->
                 <ng-container matColumnDef="SMP">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>SMP</th>
                     <td mat-cell *matCellDef="let transaction">
@@ -223,70 +236,84 @@
     <!-- Right drawer must be positioned after the content-->
 
     <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
-        <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'PO'" [placeholder]="'PO'">
-                    <mat-select [formControlName]="'operadorPO'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por valor de la PO</mat-label>
-                    <input matInput [formControlName]="'valorPO'">
-                    <span matPrefix>$</span>
-                    <mat-select [formControlName]="'operadorValorPO'">
-                        <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
-                            {{operator.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por SMP</mat-label>
-                    <input matInput [formControlName]="'SMP'">
-                    <mat-select [formControlName]="'operadorSitio'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por Escenario</mat-label>
-                    <input matInput [formControlName]="'escenario'">
-                    <mat-select [formControlName]="'operadorEscenario'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+        <div class="activScrollY">
+            <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow" [formGroup]="filterForm">
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por PO</mat-label>
+                        <input matInput [formControlName]="'PO'" [placeholder]="'PO'">
+                        <mat-select [formControlName]="'operadorPO'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por valor de la PO</mat-label>
+                        <input matInput [formControlName]="'valorPO'">
+                        <span matPrefix>$</span>
+                        <mat-select [formControlName]="'operadorValorPO'">
+                            <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
+                                {{operator.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por SMP Principal</mat-label>
+                        <input matInput [formControlName]="'principalSmp'">
+                        <mat-select [formControlName]="'operadorPrincipalSmp'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por SMP</mat-label>
+                        <input matInput [formControlName]="'SMP'">
+                        <mat-select [formControlName]="'operadorSitio'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por Escenario</mat-label>
+                        <input matInput [formControlName]="'escenario'">
+                        <mat-select [formControlName]="'operadorEscenario'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por fecha de Producción</mat-label>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por fecha de Producción</mat-label>
 
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
-                        <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                </mat-form-field>
-            </div>
+                        <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
+                            <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
+                            <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
 
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
                 <span> Buscar </span>
             </button>
-        </form>
+            </form>
+        </div>
+
 
     </fuse-drawer>
 

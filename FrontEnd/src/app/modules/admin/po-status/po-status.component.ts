@@ -11,6 +11,7 @@ import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexLegend, A
 import { ExporterService } from 'services/exporter.service';
 
 export interface transaction {
+    mainSmp: string;
     smp: string;
     nombreSitio:string;
     po: string;
@@ -72,7 +73,7 @@ export class PoStatusComponent implements OnInit {
     public _fuseConfirmationService: FuseConfirmationService,
     private _fuseAlertService: FuseAlertService
     ) { 
-    this.recentTransactionsTableColumns=['SMP','SITE Name','PO','poDate','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO', 'eliminar PO' ,'Estado'];
+    this.recentTransactionsTableColumns=['SMP Principal','SMP','SITE Name','PO','poDate','Escenario', 'Valor PO', '% Liberado','% Facturado', '% Pagado', 'ver PO', 'eliminar PO' ,'Estado'];
     const initDateBilling = this.getFilterLastYear();
     this.getData(initDateBilling);
   }
@@ -96,12 +97,14 @@ export class PoStatusComponent implements OnInit {
   ngOnInit(): void {
     this.filterForm = this._formBuilder.group({            
       PO:[''],
+      principalSmp:[''],
       SMP:[''],
       valorPO:[''],
       escenario:[''],
       fechaDesdePoDate:[''],
       fechaHastaPoDate:[''],      
       operadorPO:[''],
+      operadorPrincipalSmp:[''],
       operadorSitio:[''],
       operadorValorPO:[''],
       operadorEscenario:['']
@@ -175,6 +178,7 @@ export class PoStatusComponent implements OnInit {
       
 
       return {
+        mainSmp: thisBill.site?.mainSmp,
         smp: thisBill.site?.smp,
         nombreSitio: thisBill.site?.name,
         po: thisBill.reference,
@@ -238,6 +242,7 @@ export class PoStatusComponent implements OnInit {
       this.filterForm.value.fechaHastaPoDate = this.filterForm.value.fechaHastaPoDate.format('DD/MM/YYYY');
     };
     if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
+    if(!this.filterForm.value.principalSmp){this.filterForm.value.operadorPrincipalSmp = ""}
     if(!this.filterForm.value.SMP){this.filterForm.value.operadorSitio = ""}
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
     if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
