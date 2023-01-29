@@ -72,7 +72,7 @@ class PayOrderService {
     })
     );
 
-    const response = Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO').map(async po => {
+    const response = Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO' && po.SMP).map(async po => {
       const payOrder = new PayOrderEntity(po);
       return PayOrderRepository.createPayOrder(payOrder);
     })
