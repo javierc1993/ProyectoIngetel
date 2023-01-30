@@ -294,6 +294,30 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda porcentaje liberado</mat-label>
+                        <input matInput [formControlName]="'totalPercent'">
+                        <span matPrefix>%</span>
+                        <mat-select [formControlName]="'operadorPorcentajeLiberacion'">
+                            <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
+                                {{operator.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda porcentaje facturado</mat-label>
+                        <input matInput [formControlName]="'percentInvoice'">
+                        <span matPrefix>%</span>
+                        <mat-select [formControlName]="'operadorPorcentajeFacturacion'">
+                            <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
+                                {{operator.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
                 <div class="flex">
                     <mat-form-field [ngClass]="filterForm" class="flex-auto">

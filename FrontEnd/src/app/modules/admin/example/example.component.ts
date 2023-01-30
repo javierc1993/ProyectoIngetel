@@ -61,7 +61,7 @@ export class ExampleComponent implements OnInit{
       });
 
     /*Inicializador de interfaz para filtros*/
-    operators: Operator[] = [
+    operatorsValue: Operator[] = [
         {value: 'igual', viewValue: 'igual'},
         {value: 'top', viewValue: 'mayor'},
         {value: 'button', viewValue: 'menor'}
@@ -95,15 +95,17 @@ export class ExampleComponent implements OnInit{
         /*construccion controles de formulario*/
         this.filterForm = this._formBuilder.group({
             PO:[''],
+            principalSmp:[''],
             SMP:[''],            
             valorPO:[''],
-            escenario:[''],
+            escenario:[''],            
             fechaDesdePoDate:[''],
             fechaHastaPoDate:[''],
             operadorValorPO:[''],
             operadorPO:[''],
+            operadorPrincipalSmp:[''],
             operadorSitio:[''],
-            operadorEscenario:['']
+            operadorEscenario:[''],            
         });
     }
     
@@ -251,9 +253,10 @@ export class ExampleComponent implements OnInit{
       this.filterForm.value.fechaHastaPoDate = this.filterForm.value.fechaHastaPoDate.format('DD/MM/YYYY');
     };
     if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
+    if(!this.filterForm.value.principalSmp){this.filterForm.value.operadorPrincipalSmp = ""}
     if(!this.filterForm.value.SMP){this.filterForm.value.operadorSitio = ""}
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
-    if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
+    if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}    
     this.getData(this.filterForm.value);
 
    }

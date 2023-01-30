@@ -275,8 +275,19 @@
                     <input class="text-right" matInput [formControlName]="'valorPO'">
                     <span matPrefix>$</span>
                     <mat-select [formControlName]="'operadorValorPO'">
-                        <mat-option *ngFor="let operator of operators" [value]="operator.value">
+                        <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
                             {{operator.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="flex">
+                <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                    <mat-label>Búsqueda por SMP Principal</mat-label>
+                    <input matInput [formControlName]="'principalSmp'">
+                    <mat-select [formControlName]="'operadorPrincipalSmp'">
+                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                            {{operatorString.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -303,6 +314,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+
             <div class="flex">
                 <mat-form-field [ngClass]="filterForm" class="flex-auto">
                     <mat-label>Búsqueda por fecha de Producción</mat-label>
