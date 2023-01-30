@@ -257,101 +257,103 @@
     <!-- Right drawer must be positioned after the content-->
 
     <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
-        <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
-                    <mat-select [formControlName]="'operadorPO'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por valor de la PO</mat-label>
-                    <input class="text-right" matInput [formControlName]="'valorPO'">
-                    <span matPrefix>$</span>
-                    <mat-select [formControlName]="'operadorValorPO'">
-                        <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
-                            {{operator.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por SMP Principal</mat-label>
-                    <input matInput [formControlName]="'principalSmp'">
-                    <mat-select [formControlName]="'operadorPrincipalSmp'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por SMP</mat-label>
-                    <input id="SMPControl" matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
-                    <mat-select [formControlName]="'operadorSitio'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por Escenario</mat-label>
-                    <input matInput [formControlName]="'escenario'">
-                    <mat-select [formControlName]="'operadorEscenario'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+        <div class="h-full activScrollY">
+            <form class="flex flex-col mt-4 p-4 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por PO</mat-label>
+                        <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
+                        <mat-select [formControlName]="'operadorPO'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por valor de la PO</mat-label>
+                        <input class="text-right" matInput [formControlName]="'valorPO'">
+                        <span matPrefix>$</span>
+                        <mat-select [formControlName]="'operadorValorPO'">
+                            <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
+                                {{operator.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por SMP Principal</mat-label>
+                        <input matInput [formControlName]="'principalSmp'">
+                        <mat-select [formControlName]="'operadorPrincipalSmp'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por SMP</mat-label>
+                        <input id="SMPControl" matInput [formControlName]="'SMP'" [placeholder]="'Ingresa un SMP a buscar'">
+                        <mat-select [formControlName]="'operadorSitio'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por Escenario</mat-label>
+                        <input matInput [formControlName]="'escenario'">
+                        <mat-select [formControlName]="'operadorEscenario'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por fecha de Producción</mat-label>
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
-                        <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                </mat-form-field>
-            </div>
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por fecha de Producción</mat-label>
+                        <mat-date-range-input [formGroup]="filterForm" [rangePicker]="picker">
+                            <input matStartDate [formControlName]="'fechaDesdePoDate'" placeholder="Start date">
+                            <input matEndDate formControlName="fechaHastaPoDate" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
                     <span> Buscar </span>
                 </button>
-        </form>
-        <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Perfiles de visualizaciòn.
-                    </mat-panel-title>
-                    <mat-panel-description>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
+            </form>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Perfiles de visualizaciòn.
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
 
-                <section class="example-section">
-                    <label class="example-margin">Perfíl:</label>
-                    <mat-radio-group>
-                        <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('production')">
+                    <section class="example-section">
+                        <label class="example-margin">Perfíl:</label>
+                        <mat-radio-group>
+                            <mat-radio-button class="example-margin" value="after" (change)="perfilesVisualizacion('production')">
 
-                            Producción</mat-radio-button>
-                        <mat-radio-button class="example-margin" value="before" (change)="perfilesVisualizacion('total')">Completo</mat-radio-button>
-                    </mat-radio-group>
-                </section>
+                                Producción</mat-radio-button>
+                            <mat-radio-button class="example-margin" value="before" (change)="perfilesVisualizacion('total')">Completo</mat-radio-button>
+                        </mat-radio-group>
+                    </section>
 
-            </mat-expansion-panel>
-        </mat-accordion>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </fuse-drawer>
 
 

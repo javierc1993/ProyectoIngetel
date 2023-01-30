@@ -106,12 +106,14 @@ export class BillingStatusComponent implements OnInit {
     this.filterForm = this._formBuilder.group({            
         PO:[''],
         factura:[''],
+        percentInvoice:[''],
         fechaDesdeFactura:[''],
         fechaHastaFactura:[''],
         fechaDesdePago:[''],
         fechaHastaPago:[''],
         operadorPO:[''],
         operadorFactura:[''],
+        operadorPorcentajeFacturacion:['']
     });
     this.range = new FormGroup({
       start: new FormControl<Date | null>(null),

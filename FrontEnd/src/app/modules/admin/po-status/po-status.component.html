@@ -23,15 +23,10 @@
     .example-headers-align .mat-form-field+.mat-form-field {
         margin-left: 8px;
     }
-    
-    div.activScrollY {
-        height: 700px;
-        overflow: auto;
-    }
 </style>
 
 
-<div class="relative w-full flex overflow-hidden border mt-8 min-h-80 ">
+<div class="relative w-full flex border mt-8 min-h-80 ">
 
     <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
         <button class="m-5" mat-flat-button [color]="'primary'" (click)="toggleDrawerOpen();">
@@ -236,8 +231,8 @@
     <!-- Right drawer must be positioned after the content-->
 
     <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
-        <div class="activScrollY">
-            <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow" [formGroup]="filterForm">
+        <div class="h-full activScrollY">
+            <form class="flex flex-col flex-auto mt-4 p-4 pb-4 bg-card rounded-2xl shadow" [formGroup]="filterForm">
                 <div class="flex">
                     <mat-form-field [ngClass]="filterForm" class="flex-auto">
                         <mat-label>Búsqueda por PO</mat-label>

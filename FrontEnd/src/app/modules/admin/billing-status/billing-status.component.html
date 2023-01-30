@@ -280,58 +280,72 @@
     <!-- Right drawer must be positioned after the content-->
 
     <fuse-drawer [name]="'leftDrawer'" [opened]="drawerOpened" [position]="'right'" [mode]="'side'">
-        <form class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por fecha de facturación</mat-label>
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerFactura">
-                        <input matStartDate [formControlName]="'fechaDesdeFactura'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaFactura" placeholder="End date">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="pickerFactura"></mat-datepicker-toggle>
-                    <mat-date-range-picker #pickerFactura></mat-date-range-picker>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por PO</mat-label>
-                    <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
-                    <mat-select [formControlName]="'operadorPO'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por número factura</mat-label>
-                    <input matInput [formControlName]="'factura'" [placeholder]="'Ingresa un número de factura'">
-                    <mat-select [formControlName]="'operadorFactura'">
-                        <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
-                            {{operatorString.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="flex">
-                <mat-form-field [ngClass]="filterForm" class="flex-auto">
-                    <mat-label>Búsqueda por fecha de pago</mat-label>
-                    <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerPago">
-                        <input matStartDate [formControlName]="'fechaDesdePago'" placeholder="Start date">
-                        <input matEndDate formControlName="fechaHastaPago" placeholder="End date">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="pickerPago"></mat-datepicker-toggle>
-                    <mat-date-range-picker #pickerPago></mat-date-range-picker>
-                </mat-form-field>
-            </div>
-            <!--  <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
+        <div class="h-full activScrollY">
+            <form class="flex flex-col mt-4 p-4 pb-4 bg-card rounded-2xl shadow overflow-hidden" [formGroup]="filterForm">
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por fecha de facturación</mat-label>
+                        <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerFactura">
+                            <input matStartDate [formControlName]="'fechaDesdeFactura'" placeholder="Start date">
+                            <input matEndDate formControlName="fechaHastaFactura" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="pickerFactura"></mat-datepicker-toggle>
+                        <mat-date-range-picker #pickerFactura></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por PO</mat-label>
+                        <input matInput [formControlName]="'PO'" [placeholder]="'Ingresa una PO a buscar'">
+                        <mat-select [formControlName]="'operadorPO'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por número factura</mat-label>
+                        <input matInput [formControlName]="'factura'" [placeholder]="'Ingresa un número de factura'">
+                        <mat-select [formControlName]="'operadorFactura'">
+                            <mat-option *ngFor="let operatorString of operatorsString" [value]="operatorString.value">
+                                {{operatorString.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda porcentaje facturado</mat-label>
+                        <input matInput [formControlName]="'percentInvoice'">
+                        <span matPrefix>%</span>
+                        <mat-select [formControlName]="'operadorPorcentajeFacturacion'">
+                            <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
+                                {{operator.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field [ngClass]="filterForm" class="flex-auto">
+                        <mat-label>Búsqueda por fecha de pago</mat-label>
+                        <mat-date-range-input [formGroup]="filterForm" [rangePicker]="pickerPago">
+                            <input matStartDate [formControlName]="'fechaDesdePago'" placeholder="Start date">
+                            <input matEndDate formControlName="fechaHastaPago" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="pickerPago"></mat-datepicker-toggle>
+                        <mat-date-range-picker #pickerPago></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <!--  <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="filtroSuma()">
                     <span> Buscar </span>
                 </button>-->
-            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
+                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'" (click)="getDataFilter()">
                 <span> Buscar </span>
             </button>
-        </form>
+            </form>
+        </div>
     </fuse-drawer>
 
 
