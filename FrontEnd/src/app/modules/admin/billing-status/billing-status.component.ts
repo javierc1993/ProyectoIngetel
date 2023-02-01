@@ -106,7 +106,7 @@ export class BillingStatusComponent implements OnInit {
     this.filterForm = this._formBuilder.group({            
         PO:[''],
         factura:[''],
-        percentInvoice:[''],
+        porcentajeFacturacion:[''],
         fechaDesdeFactura:[''],
         fechaHastaFactura:[''],
         fechaDesdePago:[''],
@@ -229,6 +229,7 @@ export class BillingStatusComponent implements OnInit {
     };
     if(!this.filterForm.value.PO){this.filterForm.value.operadorPO = ""}
     if(!this.filterForm.value.factura){this.filterForm.value.operadorFactura = ""}
+    if(!this.filterForm.value.porcentajeFacturacion){this.filterForm.value.operadorPorcentajeFacturacion = ""}
     //console.log(this.filterForm.value);
     // if(this.filterForm.value.operadorPO){
     //     Object.defineProperty(formFiltros, 'operadorPO', {
