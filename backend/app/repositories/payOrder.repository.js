@@ -3,6 +3,7 @@ const { PayOrder, Instalation, Integration, Invoice, MosHw, OnAir, Production, P
 const SiteRepository = require('./site.repository');
 const UserRepository = require('./user.repository');
 const ReleaseRepository = require('./release.repository');
+const PayRepository = require('./pay.repository');
 const { Op, Sequelize } = require('sequelize');
 const { ForbiddenError } = require('../entities/error-entity');
 const {ReleaseEntity} = require('../entities/release.entity');
@@ -154,6 +155,7 @@ class PayOrderRepository {
 
 
   async updatePayOrder (reference, value, oldValue) {
+    console.log(oldValue.invoice);
     let po = await this.getPoByReference(reference);
     if (po) {
       po.value = value.valorPo;
@@ -190,7 +192,7 @@ class PayOrderRepository {
           let invoice = await this.getInvoiceByPayOrderId(releaseData.payOrderId);
           var that = this;
           if (invoice) {
-            value.invoices.forEach(async function (invoiceUpdate, i) {
+            oldValue.invoice.forEach(async function (invoiceUpdate, i) {
               invoice.forEach(async function (invoiceUpdated, j) {
 
                 if (invoiceUpdate.invoice === invoiceUpdated.invoice) {
@@ -205,14 +207,26 @@ class PayOrderRepository {
                   invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
                   invoiceUpdated.percentInvoice = invoiceUpdate.percentInvoice;
                   invoice[j].save();
-                  let pay = await that.getPayByPrk(invoice[j].id);
-                  if (pay) {
-                    pay.documentNumber = invoiceUpdate.documentNumber;
-                    pay.amountUtilized = invoiceUpdate.valorUtilizado;
-                    pay.financialCost = invoiceUpdate.financialCost;
-                    pay.totalPaid = invoiceUpdate.totalPaid;
-                    pay.datePay = new Date(invoiceUpdate.datePay);
+
+
+                  
+                  let payData = await that.getPayByPrk(invoice[j].id);
+                  let pay = new Object();
+                  if (payData) {
+                    pay.documentNumber = invoiceUpdate.pay.documentNumber;
+                    pay.amountUtilized = invoiceUpdate.pay.amountUtilized;
+                    pay.financialCost = invoiceUpdate.pay.financialCost;
+                    pay.totalPaid = invoiceUpdate.pay.totalPaid;
+                    pay.datePay = new Date(invoiceUpdate.pay.datePay);
                     pay.save();
+                  }else{
+                    pay.invoiceId = invoiceUpdate.pay.invoiceId;
+                    pay.documentNumber = invoiceUpdate.pay.documentNumber;
+                    pay.amountUtilized = invoiceUpdate.pay.amountUtilized;
+                    pay.financialCost = invoiceUpdate.pay.financialCost;
+                    pay.totalPaid = invoiceUpdate.pay.totalPaid;
+                    pay.datePay = new Date(invoiceUpdate.pay.datePay);
+                    let response= await PayRepository.createPay(pay);
                   }
                 }
 
