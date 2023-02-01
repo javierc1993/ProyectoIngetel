@@ -301,18 +301,18 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <!-- <div class="flex">
+                <div class="flex">
                     <mat-form-field [ngClass]="filterForm" class="flex-auto">
                         <mat-label>Búsqueda porcentaje facturado</mat-label>
-                        <input matInput [formControlName]="'porcentajeFacturacion'">
+                        <input matInput [formControlName]="'porcentajeFacturacionAcumulado'">
                         <span matPrefix>%</span>
-                        <mat-select [formControlName]="'operadorPorcentajeFacturacion'">
+                        <mat-select [formControlName]="'operadorPorcentajeFacturacionAcumulado'">
                             <mat-option *ngFor="let operator of operatorsValue" [value]="operator.value">
                                 {{operator.viewValue}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div> -->
+                </div>
 
                 <div class="flex">
                     <mat-form-field [ngClass]="filterForm" class="flex-auto">

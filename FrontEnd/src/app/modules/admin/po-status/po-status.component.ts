@@ -102,7 +102,7 @@ export class PoStatusComponent implements OnInit {
       valorPO:[''],
       escenario:[''],
       porcentajeLiberacion:[''],
-      //porcentajeFacturacion:[''],
+      porcentajeFacturacionAcumulado:[''],
       fechaDesdePoDate:[''],
       fechaHastaPoDate:[''],      
       operadorPO:[''],
@@ -111,7 +111,7 @@ export class PoStatusComponent implements OnInit {
       operadorValorPO:[''],
       operadorEscenario:[''],
       operadorPorcentajeLiberacion:[''],
-      //operadorPorcentajeFacturacion:['']
+      operadorPorcentajeFacturacionAcumulado:['']
     });        
   }
 
@@ -251,7 +251,7 @@ export class PoStatusComponent implements OnInit {
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
     if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
     if(!this.filterForm.value.porcentajeLiberacion){this.filterForm.value.operadorPorcentajeLiberacion = ""}
-    //if(!this.filterForm.value.porcentajeFacturacion){this.filterForm.value.operadorPorcentajeFacturacion = ""}
+    if(!this.filterForm.value.porcentajeFacturacionAcumulado){this.filterForm.value.operadorPorcentajeFacturacionAcumulado = ""}
 
     this.getData(this.filterForm.value);
   }
