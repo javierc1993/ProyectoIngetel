@@ -86,9 +86,17 @@ const filters = {
 
 }
 
+const createQueryField = (item, filter) => {
+  console.log(filter)
+  for(const filterItem of filter){
+    item = filters[filterItem.type](item, filterItem);
+  }
+  return item;
 
+}
 
 module.exports = {
   excelDateToJSDate,
-  filters
+  filters,
+  createQueryField
 }

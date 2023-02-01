@@ -18,6 +18,8 @@ const { PayOrderEntity } = require('../entities/payOrder.entity');
 const { NotFoundError } = require('../entities/error-entity');
 const InvoiceRepository = require('../repositories/invoice.repository');
 
+const { filters, createQueryField } = require('../lib/utils');
+
 class PayOrderService {
   async deletePayOrder (reference) {
     const po = await this.getPayOrders({ PO: reference });
@@ -111,69 +113,69 @@ const asingFilter = (filter) => {
 
 }
 
-const createQueryField = (item, filter) => {
-  console.log(filter)
-  for(const filterItem of filter){
-    item = filters[filterItem.type](item, filterItem);
-  }
-  return item;
+// const createQueryField = (item, filter) => {
+//   console.log(filter)
+//   for(const filterItem of filter){
+//     item = filters[filterItem.type](item, filterItem);
+//   }
+//   return item;
 
-}
+// }
 
-const filters = {
-  date: (item, filter) => {
-    const { init, until, fieldName } = filter;
-    let search = {};
-    if (init || until) {
-      if (init && until) {
-        search = { [Op.gte]: init, [Op.lte]: until };
-      } else {
-        if (init) search = { [Op.gte]: init };
-        if (until) search = { [Op.lte]: until };
-      }
-      item.where = {};
-      item.where[fieldName] = search;
-      return item;
-    }
-    return item;
-  },
+// const filters = {
+//   date: (item, filter) => {
+//     const { init, until, fieldName } = filter;
+//     let search = {};
+//     if (init || until) {
+//       if (init && until) {
+//         search = { [Op.gte]: init, [Op.lte]: until };
+//       } else {
+//         if (init) search = { [Op.gte]: init };
+//         if (until) search = { [Op.lte]: until };
+//       }
+//       item.where = {};
+//       item.where[fieldName] = search;
+//       return item;
+//     }
+//     return item;
+//   },
 
-  number: (item, filter) => {
-    const { data, operator, fieldName } = filter
-    if (data) {
-      item.where = {};
-      let search = data;
-      if (operator == 'top') search = { [Op.gte]: data }
-      if (operator == 'button') search = { [Op.lte]: data }
-      item.where[fieldName] = search;
-      return item;
-    }
-    return item;
+//   number: (item, filter) => {
+//     const { data, operator, fieldName } = filter
+//     if (data) {
+//       item.where = {};
+//       let search = data;
+//       if (operator == 'top') search = { [Op.gte]: data }
+//       if (operator == 'button') search = { [Op.lte]: data }
+//       item.where[fieldName] = search;
+//       return item;
+//     }
+//     return item;
 
-  },
-  string: (item, filter) => {
-    const { data, operator, fieldName } = filter
+//   },
+//   string: (item, filter) => {
+//     const { data, operator, fieldName } = filter
 
-    if (data) {
-      // if (item.as == 'leader') {
-      //   item.where = Sequelize.where(Sequelize.fn('concat', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 
-      //   {
-      //     [Op.like]: `%${data}%`
-      //   });
-      //   return item;
-      // }
-      if(!item.where) item.where = {};
-      let search = data;
-      if (operator == 'content') search = { [Op.like]: `%${data}%` }
-      if (operator == 'noContent') search = { [Op.notLike]: `%${data}%` }
-      item.where[fieldName] = search;
-      return item;
-    }
-    return item;
-  }
+//     if (data) {
+//       // if (item.as == 'leader') {
+//       //   item.where = Sequelize.where(Sequelize.fn('concat', Sequelize.col('name'), ' ', Sequelize.col('lastname')), 
+//       //   {
+//       //     [Op.like]: `%${data}%`
+//       //   });
+//       //   return item;
+//       // }
+//       if(!item.where) item.where = {};
+//       let search = data;
+//       if (operator == 'content') search = { [Op.like]: `%${data}%` }
+//       if (operator == 'noContent') search = { [Op.notLike]: `%${data}%` }
+//       item.where[fieldName] = search;
+//       return item;
+//     }
+//     return item;
+//   }
 
 
-}
+// }
 
 
 

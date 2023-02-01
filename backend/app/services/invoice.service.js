@@ -6,7 +6,7 @@ const PayOrderRepository = require('../repositories/payOrder.repository');
 const PayRepository = require('../repositories/pay.repository');
 // const { hashText } = require('../lib/crypto');
 const { PayOrder, Pay, Site } = require('../models');
-const { filters } = require('../lib/utils');
+const { filters, createQueryField } = require('../lib/utils');
 const { NotFoundError } = require('../entities/error-entity');
 
 class InvoiceService {
@@ -61,14 +61,13 @@ const createIncludeGetAll = async (filters = null) => {
 
 const createWhereGetAll = async (filters = null) => {
   let where = {};
-  let fields = ['client', 'date', 'invoice', 'subTotal', 'iva', 'total', 'rtf', 'rtIva', 'toPaid', 'totalPaid', 'release', 'percentInvoice', 'observation', 'state'];
-  if (filters) {
-    for (const field of fields) {
-      if (filters[field]?.data || filters[field]?.init || filters[field]?.until) {
-        where = { ...where, ...asingFilter(filters[field]).where };
+  if (filters.invoice) {
+    for (const field of filters.invoice) {
+      if (field.data || field.init || field.until) {
+        where = { ...where, ...asingFilter(field).where};
       }
     }
-    if (Object.keys(where).length) return where;
+    if (Object.keys(where).length) return where
   }
   return null;
 }
@@ -79,9 +78,13 @@ const asingFilter = (filter) => {
 
 }
 
-const createQueryField = (item, filter) => {
-  return filters[filter?.type](item, filter);
-}
+// const createQueryField = (item, filter) => {
+//   console.log(filter)
+//   for(const filterItem of filter){
+//     item = filters[filterItem.type](item, filterItem);
+//   }
+//   return item;
+// }
 
 
 
