@@ -556,13 +556,16 @@ export class PoStatusDialog implements OnInit {
     )
     .subscribe(
         (response:any) => {
+          console.log("updateOK");
           console.log(response);
+          this.dialogRef.close();
         },
         (error) => {
-            console.log(error);
+          console.log("updateError");
+          console.log(error);
         }
     );
-    this.dialogRef.close();    
+        
     
   }
 }
