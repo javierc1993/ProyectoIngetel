@@ -64,12 +64,38 @@ class PayOrderRepository {
     if (where) {
       return PayOrder.findAll({
         where,
-        include
+        include,
+        attributes: {
+          include: [
+              [
+                  Sequelize.literal(`(
+                      SELECT SUM(invoices.percentInvoice)
+                      FROM invoices 
+                      WHERE
+                      invoices.payOrderId = PayOrder.id
+                  )`),
+                  'invoicePercentTotal'
+              ]
+          ]
+      }
       });
 
     }
     return PayOrder.findAll({
-      include: include
+      include: include,
+      attributes: {
+        include: [
+            [
+                Sequelize.literal(`(
+                    SELECT SUM(invoices.percentInvoice)
+                    FROM invoices 
+                    WHERE
+                    invoices.payOrderId = PayOrder.id
+                )`),
+                'invoicePercentTotal'
+            ]
+        ]
+    }
     });
   };
 
