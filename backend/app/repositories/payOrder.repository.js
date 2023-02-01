@@ -2,9 +2,10 @@
 const { PayOrder, Instalation, Integration, Invoice, MosHw, OnAir, Production, Pay, Site, User, Release } = require('../models');
 const SiteRepository = require('./site.repository');
 const UserRepository = require('./user.repository');
+const ReleaseRepository = require('./release.repository');
 const { Op, Sequelize } = require('sequelize');
 const { ForbiddenError } = require('../entities/error-entity');
-
+const {ReleaseEntity} = require('../entities/release.entity');
 class PayOrderRepository {
 
   async deletePayOrderById (id) {
@@ -140,11 +141,21 @@ class PayOrderRepository {
         site.region = value.regionName;
         site.smp = value.smp;
         site.save();
-        let release = await this.getReleaseByPoId(po.id);
+        if(!oldValue.release[0]){
+        releaseObject = new ReleaseEntity({
+          proyect: oldValue.release[0].proyect,
+          woName: oldValue.release[0].proyect,
+          vendorSapName: oldValue.release[0].proyect ,
+          iaDate: oldValue.release[0].proyect,
+          grDate: oldValue.release[0].proyect,
+          sgrNumber: oldValue.release[0].woname,
+          payOrderId: oldValue.release[0].sgrNumber,
 
-        if (release) {
-          release.totalPercent = value.releases;
-          release.save();
+        });}
+        releaseObject= {totalPercent : value.releases};
+
+        ReleaseRepository.createRelease(releaseObject);
+        let release = await this.getReleaseByPoId(po.id);
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
           var that = this;
           if (invoice) {
@@ -179,7 +190,7 @@ class PayOrderRepository {
 
           }
 
-        }
+        
       }
 
       return true
