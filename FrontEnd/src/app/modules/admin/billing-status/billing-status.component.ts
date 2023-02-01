@@ -130,7 +130,7 @@ export class BillingStatusComponent implements OnInit {
     this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',objectToFilter)
       .subscribe((response:any) => { 
         //  console.log("response: ") 
-          console.log(response)  
+         // console.log(response)  
         this.listInvoice = response.reduce((acc, el)=>({
           ...acc, 
           [el.invoice]:el,
