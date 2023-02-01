@@ -502,6 +502,9 @@ export class PoStatusDialog implements OnInit {
   
   updatePO(){
     this.updatePOForm.value.payOrderId = this.thisPO.id;
+    if(!this.updatePOForm.value.smp){
+      this.updatePOForm.value.smp = this.thisPO.site?.mainSmp;
+    }
     console.log("actuaizar PO value form");
     console.log(this.updatePOForm.value);
     console.log("value thisPOAfter");
