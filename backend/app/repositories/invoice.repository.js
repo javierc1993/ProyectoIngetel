@@ -48,11 +48,16 @@ class InvoiceRepository {
   }
   async getAllInvoice (include, where = null) {
     try {
-      const resp = await Invoice.findAll({
-        where: where,
+      if(where){
+
+        return Invoice.findAll({
+          where: where,
+          include: include
+        });
+      }
+     return Invoice.findAll({
         include: include
       });
-      return resp
     } catch (error) {
       return false;
     }

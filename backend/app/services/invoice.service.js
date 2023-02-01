@@ -51,8 +51,7 @@ const createIncludeGetAll = async (filters = null) => {
   let include = templateInclude();
   if (filters) {
     include = await include.map(item => {
-      if (filters[item.as]?.data || filters[item.as]?.init || filters[item.as]?.until) return createQueryField(item, filters[item.as])
-      return item;
+      return createQueryField(item, filters[item.as])
     })
   }
 
