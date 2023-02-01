@@ -102,7 +102,7 @@ export class PoStatusComponent implements OnInit {
       valorPO:[''],
       escenario:[''],
       porcentajeLiberacion:[''],
-      porcentajeFacturacion:[''],
+      //porcentajeFacturacion:[''],
       fechaDesdePoDate:[''],
       fechaHastaPoDate:[''],      
       operadorPO:[''],
@@ -111,7 +111,7 @@ export class PoStatusComponent implements OnInit {
       operadorValorPO:[''],
       operadorEscenario:[''],
       operadorPorcentajeLiberacion:[''],
-      operadorPorcentajeFacturacion:['']
+      //operadorPorcentajeFacturacion:['']
     });        
   }
 
@@ -251,7 +251,7 @@ export class PoStatusComponent implements OnInit {
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
     if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
     if(!this.filterForm.value.porcentajeLiberacion){this.filterForm.value.operadorPorcentajeLiberacion = ""}
-    if(!this.filterForm.value.porcentajeFacturacion){this.filterForm.value.operadorPorcentajeFacturacion = ""}
+    //if(!this.filterForm.value.porcentajeFacturacion){this.filterForm.value.operadorPorcentajeFacturacion = ""}
 
     this.getData(this.filterForm.value);
   }
@@ -546,6 +546,7 @@ export class PoStatusDialog implements OnInit {
         if(!this.thisPO.invoice[index].pay){
           this.thisPO.invoice[index].pay = new Object();
         }
+        this.thisPO.invoice[index].pay.invoiceId = this.thisPO.invoice[index].id;
         this.thisPO.invoice[index].pay.documentNumber = element.documentNumber ? element.documentNumber : element.invoice;
         this.thisPO.invoice[index].pay.amountUtilized = element.valorUtilizado ? element.valorUtilizado : element.totalPaid-element.financialCost;
         this.thisPO.invoice[index].pay.financialCost = element.financialCost ? element.financialCost:0;
