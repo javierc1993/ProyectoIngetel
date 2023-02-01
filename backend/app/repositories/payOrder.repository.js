@@ -167,9 +167,9 @@ class PayOrderRepository {
         site.region = value.regionName;
         site.smp = value.smp;
         site.save();
-        let releaseObject = new Object();
+        let release = new Object();
         if(oldValue.release[0]){
-        releaseObject = {
+        release = {
           proyect: oldValue.release[0].proyect,
           woName: oldValue.release[0].woName,
           vendorSapName: oldValue.release[0].vendorSapName ,
@@ -178,9 +178,10 @@ class PayOrderRepository {
           sgrNumber: oldValue.release[0].sgrNumber,
           payOrderId:po.id
         };}
-        releaseObject.totalPercent = value.releases;
-       let response= await ReleaseRepository.createRelease(releaseObject);
-        let release = await this.getReleaseByPoId(po.id);
+        release = await this.getReleaseByPoId(po.id);
+        release.totalPercent = value.releases;
+       let response= await ReleaseRepository.createRelease(release);
+        
           let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
           var that = this;
           if (invoice) {
