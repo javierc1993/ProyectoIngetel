@@ -124,7 +124,7 @@ export class PoStatusComponent implements OnInit {
           ...acc, 
           [el.reference]:el,
         }),{});         
-        console.log(this.listPO);
+        //console.log(this.listPO);
         this.loadDataTable();
         this.updateTotalValues();
       },
@@ -264,8 +264,8 @@ export class PoStatusComponent implements OnInit {
     });    
     
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed'); 
-      console.log(result);       
+      //console.log('The dialog was closed'); 
+      //console.log(result);       
       this.loadDataTable();   
     });
   }
@@ -401,7 +401,7 @@ export class PoStatusDialog implements OnInit {
     var porcentajeTotalLiberado;
     porcentajeTotalLiberado = this.isRelease?this.thisPO.release[0].totalPercent:0;
     
-    console.log(this.thisPO); 
+    //console.log(this.thisPO); 
     this.updatePOForm = this._formBuilder.group({
       po:  new FormControl(this.thisPO.reference), 
       poDate : new FormControl(this.thisPO.poDate.slice(0,10)),    
@@ -505,10 +505,10 @@ export class PoStatusDialog implements OnInit {
     if(!this.updatePOForm.value.smp){
       this.updatePOForm.value.smp = this.thisPO.site?.mainSmp;
     }
-    console.log("actuaizar PO value form");
-    console.log(this.updatePOForm.value);
-    console.log("value thisPOAfter");
-    console.log(this.thisPO);
+    // console.log("actuaizar PO value form");
+    // console.log(this.updatePOForm.value);
+    // console.log("value thisPOAfter");
+    // console.log(this.thisPO);
     var date = Date.now()
     var thisDate = new Date(date);
     this.thisPO.poDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
@@ -554,8 +554,8 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.datePay = element.datePay ? element.datePay+"T00:00:00.000Z": thisDate.toISOString();
       })
     }
-    console.log("valor PO before")
-    console.log(this.thisPO);
+    //console.log("valor PO before")
+    //console.log(this.thisPO);
     // this.poID.emit(this.updatePOForm.value.po);
     this._httpClient
     .post(

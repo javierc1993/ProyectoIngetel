@@ -175,7 +175,7 @@ export class InicioComponent implements OnInit {
   }
 
   formatoFecha(fecha) { 
-    console.log(this.initDateBilling)   
+    //console.log(this.initDateBilling)   
     var thisDate = fecha.getDate()+'/';     
     thisDate += (fecha.getMonth() + 1)+'/';
     thisDate += fecha.getFullYear();
@@ -183,7 +183,7 @@ export class InicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.initDateBilling);
+    //console.log(this.initDateBilling);
     
     this.filterForm = this._formBuilder.group({ 
       fechaDesdePoDate:[''],
@@ -275,7 +275,7 @@ export class InicioComponent implements OnInit {
         if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
         else{quantityPending.push(thisPO.instalacion)}
     })
-    console.log(this.datosHoja);
+    //console.log(this.datosHoja);
     dataSeries.push(quantityPending.length)
     dataSeries.push(quantityInstalling.length)
     this.instalationPO.series = dataSeries;
