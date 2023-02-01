@@ -76,8 +76,8 @@ class FilterInvoiceEntity {
         type: 'string'
       },
       {
-        data: data.porcentajeLiberacion || null,
-        operator: data.operadorLiberacion || null,
+        data: data.porcentajeFacturacion || null,
+        operator: data.operadorPorcentajeFacturacion || null,
         fieldName: 'percentInvoice',
         type: 'number'
       },
