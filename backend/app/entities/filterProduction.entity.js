@@ -84,8 +84,8 @@ class FilterProductionEntity {
       }
     ];
     this.sumPercentInvoice = {
-        data: data.porcentajeFacturacionAcomulado || null,
-        operator: data.operadorPorcentajeFacturacionAcomulado || null
+        data: data.porcentajeFacturacionAcumulado || null,
+        operator: data.operadorPorcentajeFacturacionAcumulado || null
     };
     this.payOrder = [
       {
