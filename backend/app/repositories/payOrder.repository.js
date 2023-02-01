@@ -184,9 +184,10 @@ class PayOrderRepository {
       }else{
         let release = await this.getReleaseByPoId(po.id);
         release.totalPercent = value.releases;
-        release.save
-      }
-          let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
+        release.save();
+      }   
+          let releaseData = await this.getReleaseByPoId(po.id);
+          let invoice = await this.getInvoiceByPayOrderId(releaseData.payOrderId);
           var that = this;
           if (invoice) {
             value.invoices.forEach(async function (invoiceUpdate, i) {
@@ -219,7 +220,7 @@ class PayOrderRepository {
             });
 
           }
-
+          
         
       }
 
