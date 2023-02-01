@@ -141,8 +141,9 @@ class PayOrderRepository {
         site.region = value.regionName;
         site.smp = value.smp;
         site.save();
+        releaseObject = new ReleaseEntity();
         if(!oldValue.release[0]){
-        releaseObject = new ReleaseEntity({
+        releaseObject = {
           proyect: oldValue.release[0].proyect,
           woName: oldValue.release[0].proyect,
           vendorSapName: oldValue.release[0].proyect ,
@@ -151,7 +152,7 @@ class PayOrderRepository {
           sgrNumber: oldValue.release[0].woname,
           payOrderId: oldValue.release[0].sgrNumber,
 
-        });}
+        };}
         releaseObject= {totalPercent : value.releases};
 
         ReleaseRepository.createRelease(releaseObject);
