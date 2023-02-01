@@ -60,9 +60,9 @@ class PayOrderRepository {
     });
   }
 
-  async getAll (include, where = null) {
+  async getAll (include, where = null, having = null) {
 
-    if (where) {
+    // if (where) {
       return PayOrder.findAll({
         where,
         include,
@@ -78,26 +78,28 @@ class PayOrderRepository {
                   'invoicePercentTotal'
               ]
           ]
-      }
+      },
+      having
       });
 
-    }
-    return PayOrder.findAll({
-      include: include,
-      attributes: {
-        include: [
-            [
-                Sequelize.literal(`(
-                    SELECT SUM(invoices.percentInvoice)
-                    FROM invoices 
-                    WHERE
-                    invoices.payOrderId = PayOrder.id
-                )`),
-                'invoicePercentTotal'
-            ]
-        ]
-    }
-    });
+    // }
+    // return PayOrder.findAll({
+    //   include: include,
+    //   attributes: {
+    //     include: [
+    //         [
+    //             Sequelize.literal(`(
+    //                 SELECT SUM(invoices.percentInvoice)
+    //                 FROM invoices 
+    //                 WHERE
+    //                 invoices.payOrderId = PayOrder.id
+    //             )`),
+    //             'invoicePercentTotal'
+    //         ]
+    //     ]
+    // },
+    // having:{invoicePercentTotal: 150}
+    // });
   };
 
   async getPoByReference (reference) {
