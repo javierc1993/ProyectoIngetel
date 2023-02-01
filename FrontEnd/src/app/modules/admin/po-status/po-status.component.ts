@@ -264,7 +264,8 @@ export class PoStatusComponent implements OnInit {
     });    
     
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed');  
+      console.log('The dialog was closed'); 
+      console.log(result);       
       this.loadDataTable();   
     });
   }
@@ -500,8 +501,13 @@ export class PoStatusDialog implements OnInit {
 
   
   updatePO(){
-    console.log("actuaizar  PO");
+    this.updatePOForm.value.payOrderId = this.thisPO.id;
+    if(!this.updatePOForm.value.smp){
+      this.updatePOForm.value.smp = this.thisPO.site?.mainSmp;
+    }
+    console.log("actuaizar PO value form");
     console.log(this.updatePOForm.value);
+    console.log("value thisPOAfter");
     console.log(this.thisPO);
     var date = Date.now()
     var thisDate = new Date(date);
@@ -547,6 +553,7 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.datePay = element.datePay ? element.datePay+"T00:00:00.000Z": thisDate.toISOString();
       })
     }
+    console.log("valor PO before")
     console.log(this.thisPO);
     // this.poID.emit(this.updatePOForm.value.po);
     this._httpClient

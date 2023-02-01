@@ -167,23 +167,27 @@ class PayOrderRepository {
         site.region = value.regionName;
         site.smp = value.smp;
         site.save();
-        releaseObject = new ReleaseEntity();
-        if(!oldValue.release[0]){
-        releaseObject = {
+        
+        if(oldValue.release[0]){
+        let release = new Object();
+        release = {
           proyect: oldValue.release[0].proyect,
-          woName: oldValue.release[0].proyect,
-          vendorSapName: oldValue.release[0].proyect ,
-          iaDate: oldValue.release[0].proyect,
-          grDate: oldValue.release[0].proyect,
-          sgrNumber: oldValue.release[0].woname,
-          payOrderId: oldValue.release[0].sgrNumber,
-
-        };}
-        releaseObject= {totalPercent : value.releases};
-
-        ReleaseRepository.createRelease(releaseObject);
+          woName: oldValue.release[0].woName,
+          vendorSapName: oldValue.release[0].vendorSapName ,
+          iaDate: oldValue.release[0].iaDate,
+          grDate: oldValue.release[0].grDate,
+          sgrNumber: oldValue.release[0].sgrNumber,
+          payOrderId:po.id,
+          totalPercent: value.releases
+        };
+        let response= await ReleaseRepository.createRelease(release);
+      }else{
         let release = await this.getReleaseByPoId(po.id);
-          let invoice = await this.getInvoiceByPayOrderId(release.payOrderId);
+        release.totalPercent = value.releases;
+        release.save();
+      }   
+          let releaseData = await this.getReleaseByPoId(po.id);
+          let invoice = await this.getInvoiceByPayOrderId(releaseData.payOrderId);
           var that = this;
           if (invoice) {
             value.invoices.forEach(async function (invoiceUpdate, i) {
@@ -216,7 +220,7 @@ class PayOrderRepository {
             });
 
           }
-
+          
         
       }
 
