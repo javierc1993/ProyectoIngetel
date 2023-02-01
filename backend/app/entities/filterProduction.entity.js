@@ -83,6 +83,10 @@ class FilterProductionEntity {
         type: 'number'
       }
     ];
+    this.sumPercentInvoice = {
+        data: data.porcentajeFacturacionAcomulado || null,
+        operator: data.operadorPorcentajeFacturacionAcomulado || null
+    };
     this.payOrder = [
       {
         data: data.PO || null,

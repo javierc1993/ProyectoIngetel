@@ -43,9 +43,10 @@ class PayOrderService {
 
   async getPayOrders (filters = null) {
     filters = new FilterProductionEntity(filters);
+    const having = await createHavingGetAll(filters);
     const include = await createIncludeGetAll(filters);
     const where = await createWhereGetAll(filters);
-    const payOrders = await PayOrderRepository.getAll(include, where);
+    const payOrders = await PayOrderRepository.getAll(include, where, having);
     return payOrders;
   }
 
@@ -104,6 +105,18 @@ const createWhereGetAll = async (filters = null) => {
     }
     if (Object.keys(where).length) return where
   }
+  return null;
+}
+const createHavingGetAll = async (filters = null) => {
+  const data = filters?.sumPercentInvoice?.data;
+  const operator = filters?.sumPercentInvoice?.operator;
+  if(filters) delete filters.sumPercentInvoice;
+  if (data) {
+    let resp = {invoicePercentTotal: data};
+    if(operator == 'top') resp.invoicePercentTotal={[Op.gte]: data}
+    if(operator == 'button') resp.invoicePercentTotal={[Op.lte]: data}
+    return resp;
+    }
   return null;
 }
 
