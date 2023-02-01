@@ -157,7 +157,7 @@ class PayOrderRepository {
 
 
   async updatePayOrder (reference, value, oldValue) {
-    console.log(oldValue.invoice);
+    console.log(oldValue);
     let po = await this.getPoByReference(reference);
     if (po) {
       po.value = value.valorPo;
@@ -209,12 +209,10 @@ class PayOrderRepository {
                   invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
                   invoiceUpdated.percentInvoice = invoiceUpdate.percentInvoice;
                   invoice[j].save();
-
-
-                  
                   let payData = await that.getPayByPrk(invoice[j].id);
                   let pay = new Object();
                   if (payData) {
+                    let pay = await that.getPayByPrk(invoice[j].id);
                     pay.documentNumber = invoiceUpdate.pay.documentNumber;
                     pay.amountUtilized = invoiceUpdate.pay.amountUtilized;
                     pay.financialCost = invoiceUpdate.pay.financialCost;
