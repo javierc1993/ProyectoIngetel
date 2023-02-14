@@ -119,8 +119,7 @@ export class ExampleComponent implements OnInit{
                 this.listPO = response.result.reduce((acc, el)=>({
                   ...acc, 
                   [el.reference]:el,
-                }),{}); 
-                //console.log(this.listPO);
+                }),{});
                 this.loadDataTable();  
                 this.updateTotalValues();                  
             },

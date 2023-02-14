@@ -82,7 +82,6 @@ export class BillingStatusComponent implements OnInit {
     ) { 
     this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Eliminar','Estado'];     
     const initDateBilling = this.getFilterLastYear();
-    //console.log(JSON.stringify(initDateBilling))
     this.getData(initDateBilling);
   }
   
@@ -124,13 +123,9 @@ export class BillingStatusComponent implements OnInit {
   }
 
   getData(objectToFilter){
-
    // console.log("cargando el componente billing status: "+JSON.stringify(objectToFilter));
-    
     this._httpClient.post(variablesGlobales.urlBackend + '/invoice/',objectToFilter)
       .subscribe((response:any) => { 
-        //  console.log("response: ") 
-         // console.log(response)  
         this.listInvoice = response.reduce((acc, el)=>({
           ...acc, 
           [el.invoice]:el,
@@ -148,7 +143,6 @@ export class BillingStatusComponent implements OnInit {
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
     var fechaPago = thisBill.pay ? new Date (thisBill.pay.datePay):null;
     fechaPago = fechaPago ? new Date (fechaPago.getTime() + (3600000 * 5) ):null;
-    //console.log("thisdate: "+thisDate) ;      
     return {
       fechaFactura: fechaFactura,
       numeroFactura: thisBill.invoice,
@@ -171,8 +165,7 @@ export class BillingStatusComponent implements OnInit {
       valorPagado: thisBill.pay ? thisBill.pay.totalPaid:0
 
     }
-    }); 
-    //console.log(this.datosHoja);        
+    });        
     this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
     this.recentTransactionsDataSource.paginator = this.paginator;
   }
@@ -208,11 +201,9 @@ export class BillingStatusComponent implements OnInit {
       this.recentTransactionsDataSource.paginator.firstPage();
     }
     this.updateTotalValues();
-    //console.log($event);
   }
   exportAsXLSX():void{
-    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Billing_status')
-    console.log("descargando")
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'Billing_status');
   }
   getDataFilter(){    
     if(this.filterForm.value.fechaDesdeFactura){
@@ -261,16 +252,12 @@ export class BillingStatusComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if(result == "confirmed"){
         this.deleteInvoice(numeroFactura);        
-      }else{
-        console.log("dont delete");
-      }       
+      }      
     });
   }
   deleteInvoice(numeroFactura){ 
-    console.log("eliminar: "+numeroFactura);
     this._httpClient.delete(variablesGlobales.urlBackend+'/invoice/'+numeroFactura)
       .subscribe((data) => {
-        console.log("delete OK");
         delete this.listInvoice[numeroFactura];  
         this.loadDataTable();
         this.updateTotalValues();

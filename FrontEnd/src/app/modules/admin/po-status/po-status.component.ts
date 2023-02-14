@@ -116,15 +116,13 @@ export class PoStatusComponent implements OnInit {
   }
 
   getData(objectToFilter){
-    console.log(objectToFilter);
+    //console.log(objectToFilter);
     this._httpClient.post(variablesGlobales.urlBackend + '/production/', objectToFilter)
       .subscribe((response:any) => {
-        // console.log(response.result);
         this.listPO = response.result.reduce((acc, el)=>({
           ...acc, 
           [el.reference]:el,
-        }),{});         
-        //console.log(this.listPO);
+        }),{}); 
         this.loadDataTable();
         this.updateTotalValues();
       },
@@ -134,7 +132,6 @@ export class PoStatusComponent implements OnInit {
 
   loadDataTable(): void {
     this.datosHoja = Object.values(this.listPO).map(function(thisBill : any){
-      //console.log(thisBill);
       var percentLiberado;
       var percentFacturado;
       var percentPagado;
@@ -233,8 +230,7 @@ export class PoStatusComponent implements OnInit {
     this.updateTotalValues();
   }
   exportAsXLSX():void{
-    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status')
-    console.log("descargando")
+    this.excelService.exportToExcel(this.recentTransactionsDataSource.filteredData, 'PO_status');
   }
 
   getDataFilter(){
@@ -258,15 +254,16 @@ export class PoStatusComponent implements OnInit {
   
   verPO(po, statusPO):void {
     this.thisPO = this.listPO[po];
-    this.thisPO.status =  statusPO;  
+    this.thisPO.status =  statusPO;
+    this.thisPO.isChange =  false;  
     const dialogRef = this.dialog.open(PoStatusDialog,{
       data: this.thisPO
     });    
     
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed'); 
-      //console.log(result);       
-      this.loadDataTable();   
+    dialogRef.afterClosed().subscribe(result => { 
+      if(this.thisPO.isChange){
+        this.loadDataTable();
+      }  
     });
   }
 
@@ -297,10 +294,8 @@ export class PoStatusComponent implements OnInit {
     });
   }
   deleteInvoice(numeroPo){
-    console.log("eliminar: "+numeroPo);
     this._httpClient.delete(variablesGlobales.urlBackend + '/payOrder/'+ numeroPo)
       .subscribe((data) => {
-        console.log("delete OK");
         delete this.listPO[numeroPo];
         this.loadDataTable();
         this.updateTotalValues();
@@ -400,8 +395,6 @@ export class PoStatusDialog implements OnInit {
     //this.chartBarValues.plotOptions.bar.columnWidth = "15";
     var porcentajeTotalLiberado;
     porcentajeTotalLiberado = this.isRelease?this.thisPO.release[0].totalPercent:0;
-    
-    //console.log(this.thisPO); 
     this.updatePOForm = this._formBuilder.group({
       po:  new FormControl(this.thisPO.reference), 
       poDate : new FormControl(this.thisPO.poDate.slice(0,10)),    
@@ -485,30 +478,19 @@ export class PoStatusDialog implements OnInit {
       })
       refInvoices.push(thisInvoice);      
     });
-
-    
     this.chartBarValues.series[0].data[1] = parseFloat(subtotalInvoices.toFixed(2));
     this.chartBarValues.series[0].data[2] = parseFloat(subtotalIvaInvoices.toFixed(2));
     this.chartBarValues.series[0].data[3] = parseFloat(amountUtilicedInvoices.toFixed(2));
-     
-
-    
   }
-
   getCtrl(key:string, form:FormGroup):any{
     return form.get(key)
   }
-
-  
   updatePO(){
     this.updatePOForm.value.payOrderId = this.thisPO.id;
     if(!this.updatePOForm.value.smp){
       this.updatePOForm.value.smp = this.thisPO.site?.mainSmp;
     }
-    // console.log("actuaizar PO value form");
-    // console.log(this.updatePOForm.value);
-    // console.log("value thisPOAfter");
-    // console.log(this.thisPO);
+     console.log("actuaizar PO value form");
     var date = Date.now()
     var thisDate = new Date(date);
     this.thisPO.poDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
@@ -554,9 +536,6 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.datePay = element.datePay ? element.datePay+"T00:00:00.000Z": thisDate.toISOString();
       })
     }
-    //console.log("valor PO before")
-    //console.log(this.thisPO);
-    // this.poID.emit(this.updatePOForm.value.po);
     this._httpClient
     .post(
         variablesGlobales.urlBackend + '/production/update',
@@ -564,8 +543,8 @@ export class PoStatusDialog implements OnInit {
     )
     .subscribe(
         (response:any) => {
-          console.log("updateOK");
-          console.log(response);
+          this.thisPO.isChange = true;
+          //console.log(response);
           this.dialogRef.close();
         },
         (error) => {

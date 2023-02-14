@@ -174,8 +174,7 @@ export class InicioComponent implements OnInit {
     return {'fechaDesdePoDate':thisDateLastYearFormat,'fechaHastaPoDate':thisDateFormat};
   }
 
-  formatoFecha(fecha) { 
-    //console.log(this.initDateBilling)   
+  formatoFecha(fecha) {   
     var thisDate = fecha.getDate()+'/';     
     thisDate += (fecha.getMonth() + 1)+'/';
     thisDate += fecha.getFullYear();
@@ -183,8 +182,6 @@ export class InicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //console.log(this.initDateBilling);
-    
     this.filterForm = this._formBuilder.group({ 
       fechaDesdePoDate:[''],
       fechaHastaPoDate:[''],
@@ -275,7 +272,6 @@ export class InicioComponent implements OnInit {
         if(thisPO.instalacion != 'pendiente'){quantityInstalling.push(thisPO.instalacion)}
         else{quantityPending.push(thisPO.instalacion)}
     })
-    //console.log(this.datosHoja);
     dataSeries.push(quantityPending.length)
     dataSeries.push(quantityInstalling.length)
     this.instalationPO.series = dataSeries;
@@ -317,7 +313,6 @@ export class InicioComponent implements OnInit {
         default:
       }       
     })
-    //console.log(this.datosHoja);
     dataSeries.push(quantityErrorFacturacion.length);
     dataSeries.push(quantityPendiente.length);
     dataSeries.push(quantityLiberado.length);
