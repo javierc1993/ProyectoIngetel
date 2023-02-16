@@ -12,12 +12,14 @@ const invoiceRepository = require('../repositories/invoice.repository');
 
 class PayService {
   async createPay (pays) {
-    return Promise.all(pays.filter(paid => paid['Invoice Number'] && paid['Total Pagado']).map(async pay => {
+    return Promise.all(pays.filter(paid => paid['Total Pagado'] && paid['Invoice Number'] && paid['Amount Utilized'] && paid['Upload Date']).map(async pay => {
       const payDoc = new PayDocEntity(pay);
       const invoice = await invoiceRepository.getInvoiceByNumber(payDoc.invoice);
-      const newPay = await PayRepository.createPay(new PayEntity(payDoc), invoice);
-      if (newPay) {
-        return { ...newPay, statePay: 'new' };
+      if(invoice){
+        const newPay = await PayRepository.createPay(new PayEntity(payDoc), invoice);
+        if (newPay) {
+          return { ...newPay, statePay: 'new' };
+        }
       }
       return { ...payDoc, statePay: 'omited' };
     }));

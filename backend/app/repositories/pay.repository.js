@@ -1,17 +1,17 @@
 'use strict';
-const { Pay } = require('../models');
+const { Pay, Invoice } = require('../models');
 
 class PayRepository {
 
 
   async createPay (pay, invoice = null) {
     try {
-      let resp = await this.getPayByNumber(pay.documentNumber);
-      if (!resp) {
-        resp = await Pay.create(pay);
-      } else {
+      let resp = await this.getInvoiceAndPay(pay.invoice);
+      if (resp?.pay) {
         resp.set(pay);
         await resp.save();
+      } else {
+        resp = await Pay.create(pay);
       }
 
 
@@ -44,14 +44,18 @@ class PayRepository {
   //   }
   // }
 
-  async getPayByNumber (numberPay) {
+  async getInvoiceAndPay (invoiceNumber) {
     try {
-      const pay = await Pay.findOne({
+      const invoice = await Invoice.findOne({
         where: {
-          documentNumber: numberPay
+          invoice: invoiceNumber
+        },
+        include:{
+          model:Pay,
+          as: 'pay'
         }
       });
-      return pay;
+      return invoice;
     } catch (error) {
       console.log(error)
       return null;
