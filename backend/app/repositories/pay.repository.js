@@ -4,10 +4,10 @@ const { Pay, Invoice } = require('../models');
 class PayRepository {
 
 
-  async createPay (pay, invoice = null) {
+  async createPay (pay, invoice) {
     try {
-      let resp = await this.getInvoiceAndPay(pay.invoice);
-      if (resp?.pay) {
+      let resp = await this.getPayByInvoiceId(invoice.id);
+      if (resp) {
         resp.set(pay);
         await resp.save();
       } else {
@@ -44,18 +44,14 @@ class PayRepository {
   //   }
   // }
 
-  async getInvoiceAndPay (invoiceNumber) {
+  async getPayByInvoiceId (invoiceId) {
     try {
-      const invoice = await Invoice.findOne({
-        where: {
-          invoice: invoiceNumber
-        },
-        include:{
-          model:Pay,
-          as: 'pay'
+      const pay = await Pay.findOne({
+        where:{
+          invoiceId:invoiceId
         }
       });
-      return invoice;
+      return pay;
     } catch (error) {
       console.log(error)
       return null;
