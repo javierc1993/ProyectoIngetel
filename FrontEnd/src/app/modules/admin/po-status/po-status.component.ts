@@ -432,6 +432,7 @@ export class PoStatusDialog implements OnInit {
     var subtotalInvoices = 0;
     var subtotalIvaInvoices = 0;
     var amountUtilicedInvoices = 0;
+    console.log(this.thisPO);
     this.thisPO.invoice.forEach(element => {
       var statusPay = (!element.pay) ? false:true;
       var statusInvoice;
@@ -535,7 +536,7 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.datePay = element.datePay ? element.datePay+"T00:00:00.000Z": thisDate.toISOString();
         this.updatePOForm.value.invoices[index].pay = new Object();
         this.updatePOForm.value.invoices[index].pay.id = this.thisPO.invoice[index]?.pay?.id;
-        this.updatePOForm.value.invoices[index].pay.invoiceId = this.thisPO.invoice[index]?.id;
+        this.updatePOForm.value.invoices[index].pay.invoiceId = this.thisPO.invoice[index]?.pay?.invoiceId;
         this.updatePOForm.value.invoices[index].pay.documentNumber = this.thisPO.invoice[index].pay.documentNumber;
         this.updatePOForm.value.invoices[index].pay.amountUtilized = this.thisPO.invoice[index].pay.amountUtilized;
         this.updatePOForm.value.invoices[index].pay.financialCost = this.thisPO.invoice[index].pay.financialCost;
