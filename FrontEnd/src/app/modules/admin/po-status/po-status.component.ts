@@ -515,8 +515,7 @@ export class PoStatusDialog implements OnInit {
     }   
     this.thisPO.release[0].totalPercent = this.updatePOForm.value.releases;
     if(this.updatePOForm.value.invoices){
-      var index = 0;
-      this.updatePOForm.value.invoices.forEach((element, index) => {
+      this.updatePOForm.value.invoices.forEach((element, index) => {        
         this.thisPO.invoice[index].date = element.date+"T00:00:00.000Z";
         this.thisPO.invoice[index].invoice = element.invoice;
         this.thisPO.invoice[index].percentInvoice = element.percentInvoice;
@@ -534,15 +533,24 @@ export class PoStatusDialog implements OnInit {
         this.thisPO.invoice[index].pay.financialCost = element.financialCost ? element.financialCost:0;
         this.thisPO.invoice[index].pay.totalPaid = element.totalPaid ? element.totalPaid : element.valorUtilizado+element.financialCost;
         this.thisPO.invoice[index].pay.datePay = element.datePay ? element.datePay+"T00:00:00.000Z": thisDate.toISOString();
+        this.updatePOForm.value.invoices[index].pay = new Object();
+        this.updatePOForm.value.invoices[index].pay.id = this.thisPO.invoice[index]?.pay?.id;
+        this.updatePOForm.value.invoices[index].pay.invoiceId = this.thisPO.invoice[index]?.id;
+        this.updatePOForm.value.invoices[index].pay.documentNumber = this.thisPO.invoice[index].pay.documentNumber;
+        this.updatePOForm.value.invoices[index].pay.amountUtilized = this.thisPO.invoice[index].pay.amountUtilized;
+        this.updatePOForm.value.invoices[index].pay.financialCost = this.thisPO.invoice[index].pay.financialCost;
+        this.updatePOForm.value.invoices[index].pay.totalPaid = this.thisPO.invoice[index].pay.totalPaid;
+        this.updatePOForm.value.invoices[index].pay.datePay = this.thisPO.invoice[index].pay.datePay;
       })
     }
+    console.log(this.updatePOForm.value);
     this._httpClient
     .post(
         variablesGlobales.urlBackend + '/production/update',
          {"valueUpdate": this.updatePOForm.value , "reference":this.thisPO.reference, "OldValue":this.thisPO}
     )
     .subscribe(
-        (response:any) => {
+        (response:any) => {          
           this.thisPO.isChange = true;
           //console.log(response);
           this.dialogRef.close();
