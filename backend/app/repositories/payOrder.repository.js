@@ -212,7 +212,7 @@ class PayOrderRepository {
                   let payData = await that.getPayByPrk(invoice[j].id);
                   let pay = new Object();
                   if (payData) {
-                    let pay = await that.getPayByPrk(invoice[j].id);
+                    let pay = await that.getPayByPrk(invoice[j].pay.id);
                     pay.documentNumber = invoiceUpdate.pay.documentNumber;
                     pay.amountUtilized = invoiceUpdate.pay.amountUtilized;
                     pay.financialCost = invoiceUpdate.pay.financialCost;
