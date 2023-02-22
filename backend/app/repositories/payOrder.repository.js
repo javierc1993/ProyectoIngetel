@@ -30,7 +30,9 @@ class PayOrderRepository {
     return site;
   }
   async getPayByPrk (prk) {
-    const pay = await Pay.findByPk(prk);
+    const pay = await Pay.findOne({
+      where:{
+        invoiceId:prk}});
     return pay;
   }
   async getReleaseByPoId (poId) {
@@ -157,7 +159,7 @@ class PayOrderRepository {
 
 
   async updatePayOrder (reference, value, oldValue) {
-    console.log(oldValue);
+    //console.log(oldValue);
     let po = await this.getPoByReference(reference);
     if (po) {
       po.value = value.valorPo;
@@ -209,10 +211,12 @@ class PayOrderRepository {
                   invoiceUpdated.totalPaid = invoiceUpdate.totalPaid;
                   invoiceUpdated.percentInvoice = invoiceUpdate.percentInvoice;
                   invoice[j].save();
+                  console.log(invoice[j]);
                   let payData = await that.getPayByPrk(invoice[j].id);
                   let pay = new Object();
                   if (payData) {
-                    let pay = await that.getPayByPrk(invoice[j].pay.id);
+                    console.log(invoice[j].id)
+                    let pay = await that.getPayByPrk(invoice[j].id);
                     pay.documentNumber = invoiceUpdate.pay.documentNumber;
                     pay.amountUtilized = invoiceUpdate.pay.amountUtilized;
                     pay.financialCost = invoiceUpdate.pay.financialCost;
