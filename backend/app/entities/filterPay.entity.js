@@ -27,20 +27,20 @@ class FilterInvoiceEntity {
       fieldName: 'totalPaid',
     };
     this.maturityDate = {
-      init: data.vencimientoFechaInicio ? new Date(ddmmaaaaTommddaaaa(data.vencimientoFechaInicio) + ' 00:00:00') : null,
-      until: data.vencimientoFechaFinal ? new Date(ddmmaaaaTommddaaaa(data.vencimientoFechaFinal) + ' 00:00:00') : null,
+      init: data.vencimientoFechaInicio ? new Date(ddmmaaaaTommddaaaa(data.vencimientoFechaInicio) + ' 00:00:00+00:00') : null,
+      until: data.vencimientoFechaFinal ? new Date(ddmmaaaaTommddaaaa(data.vencimientoFechaFinal) + ' 00:00:00+00:00') : null,
       fieldName: 'maturityDate',
       type: 'date',
     };
     this.publishDate = {
-      init: data.publicacionFechaInicio ? new Date(ddmmaaaaTommddaaaa(data.publicacionFechaInicio) + ' 00:00:00') : null,
-      until: data.publicacionFechaFin ? new Date(ddmmaaaaTommddaaaa(data.publicacionFechaFin) + ' 00:00:00') : null,
+      init: data.publicacionFechaInicio ? new Date(ddmmaaaaTommddaaaa(data.publicacionFechaInicio) + ' 00:00:00+00:00') : null,
+      until: data.publicacionFechaFin ? new Date(ddmmaaaaTommddaaaa(data.publicacionFechaFin) + ' 00:00:00+00:00') : null,
       fieldName: 'publishDate',
       type: 'date',
     };
     this.datePay = {
-      init: data.actualizacionFechaInicio ? new Date(ddmmaaaaTommddaaaa(data.actualizacionFechaInicio) + ' 00:00:00') : null,
-      until: data.actualizacionFechaFin ? new Date(ddmmaaaaTommddaaaa(data.actualizacionFechaFin) + ' 00:00:00') : null,
+      init: data.actualizacionFechaInicio ? new Date(ddmmaaaaTommddaaaa(data.actualizacionFechaInicio) + ' 00:00:00+00:00') : null,
+      until: data.actualizacionFechaFin ? new Date(ddmmaaaaTommddaaaa(data.actualizacionFechaFin) + ' 00:00:00+00:00') : null,
       fieldName: 'datePay',
       type: 'date',
     };

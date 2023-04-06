@@ -4,24 +4,24 @@ class FilterProductionEntity {
   constructor (data) {
     this.instalation = [
       {
-        init: data.fechaDesdeInstalacion ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeInstalacion) + ' 00:00:00') : null,
-        until: data.fechaHastaInstalacion ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaInstalacion) + ' 00:00:00') : null,
+        init: data.fechaDesdeInstalacion ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeInstalacion) + ' 00:00:00+00:00') : null,
+        until: data.fechaHastaInstalacion ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaInstalacion) + ' 00:00:00+00:00') : null,
         fieldName: 'date',
         type: 'date'
       }
     ];
     this.integration = [
       {
-        init: data.fechaDesdeIntegracion ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeIntegracion) + ' 00:00:00') : null,
-        until: data.fechaHastaIntegracion ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaIntegracion) + ' 00:00:00') : null,
+        init: data.fechaDesdeIntegracion ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeIntegracion) + ' 00:00:00+00:00') : null,
+        until: data.fechaHastaIntegracion ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaIntegracion) + ' 00:00:00+00:00') : null,
         fieldName: 'date',
         type: 'date'
       }
     ];
     this.mosHw = [
       {
-        init: data.fechaDesdeMosHw ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeMosHw) + ' 00:00:00') : null,
-        until: data.fechaHastaMosHw ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaMosHw) + ' 00:00:00') : null,
+        init: data.fechaDesdeMosHw ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeMosHw) + ' 00:00:00+00:00') : null,
+        until: data.fechaHastaMosHw ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaMosHw) + ' 00:00:00+00:00') : null,
         fieldName: 'date',
         type: 'date'
       }
@@ -113,8 +113,8 @@ class FilterProductionEntity {
         fieldName: 'band',
       },
       {
-        init: data.fechaDesdePoDate ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdePoDate) + ' 00:00:00') : null,
-        until: data.fechaHastaPoDate ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaPoDate) + ' 00:00:00') : null,
+        init: data.fechaDesdePoDate ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdePoDate) + ' 00:00:00+00:00') : null,
+        until: data.fechaHastaPoDate ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaPoDate) + ' 00:00:00+00:00') : null,
         fieldName: 'poDate',
         type: 'date'
       }

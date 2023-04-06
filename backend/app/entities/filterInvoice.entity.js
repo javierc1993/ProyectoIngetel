@@ -10,8 +10,8 @@ class FilterInvoiceEntity {
         fieldName: 'client',
       },
       {
-        init: data.fechaDesdeFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeFactura) + ' 00:00:00') : null,
-        until: data.fechaHastaFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaFactura) + ' 00:00:00') : null,
+        init: data.fechaDesdeFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdeFactura) + ' 00:00:00+00:00') : null,
+        until: data.fechaHastaFactura ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaFactura) + ' 00:00:00+00:00') : null,
         fieldName: 'date',
         type: 'date',
       },
@@ -64,8 +64,8 @@ class FilterInvoiceEntity {
         fieldName: 'totalPaid',
       },
       {
-        init: data.fechaDesdePago ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdePago) + ' 00:00:00') : null,
-        until: data.fechaHastaPago ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaPago) + ' 00:00:00') : null,
+        init: data.fechaDesdePago ? new Date(ddmmaaaaTommddaaaa(data.fechaDesdePago) + ' 00:00:00+00:00') : null,
+        until: data.fechaHastaPago ? new Date(ddmmaaaaTommddaaaa(data.fechaHastaPago) + ' 00:00:00+00:00') : null,
         fieldName: 'datePay',
         type: 'date'
       },
