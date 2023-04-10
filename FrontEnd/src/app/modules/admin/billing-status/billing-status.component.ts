@@ -63,14 +63,14 @@ export class BillingStatusComponent implements OnInit {
     fechaDesdeInstalacion:new FormControl<Date | null>(null),
   });
   operatorsValue: Operator[] = [
-    {value: 'igual', viewValue: 'igual'},
-    {value: 'top', viewValue: 'mayor'},
-    {value: 'button', viewValue: 'menor'}
+    {value: 'igual', viewValue: 'Igual'},
+    {value: 'top', viewValue: 'Mayor o igual'},
+    {value: 'button', viewValue: 'Menor o igual'}
   ];
 
   operatorsString: Operator[] = [
-    {value: 'content', viewValue: 'contiene'},
-    {value: 'noContent', viewValue: 'no contiene'}
+    {value: 'content', viewValue: 'Contiene'},
+    {value: 'noContent', viewValue: 'No contiene'}
   ];
 
   constructor(
@@ -229,7 +229,8 @@ export class BillingStatusComponent implements OnInit {
     //       });
     // };
 
-     this.getData(this.filterForm.value);
+    this.getData(this.filterForm.value);
+    this.toggleDrawerClose();
   }
 
   confirmDelete(numeroFactura):void {

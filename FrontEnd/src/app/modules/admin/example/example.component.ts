@@ -62,13 +62,14 @@ export class ExampleComponent implements OnInit{
 
     /*Inicializador de interfaz para filtros*/
     operatorsValue: Operator[] = [
-        {value: 'igual', viewValue: 'igual'},
-        {value: 'top', viewValue: 'mayor'},
-        {value: 'button', viewValue: 'menor'}
+        {value: 'igual', viewValue: 'Igual'},
+        {value: 'top', viewValue: 'Mayor o igual'},
+        {value: 'button', viewValue: 'Menor o igual'}
       ];
     operatorsString: Operator[] = [
-        {value: 'content', viewValue: 'contiene'},
-        {value: 'noContent', viewValue: 'no contiene'}];
+        {value: 'content', viewValue: 'Contiene'},
+        {value: 'noContent', viewValue: 'No contiene'}
+    ];
 
     /*constructor*/
     constructor (private _httpClient: HttpClient,private _formBuilder: UntypedFormBuilder,private excelService:ExporterService) {       
@@ -257,7 +258,7 @@ export class ExampleComponent implements OnInit{
     if(!this.filterForm.value.valorPO){this.filterForm.value.operadorValorPO = null}
     if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}    
     this.getData(this.filterForm.value);
-
+    this.toggleDrawerClose();
    }
    
    toggleDrawerOpen(): void{this.drawerOpened = !this.drawerOpened;}

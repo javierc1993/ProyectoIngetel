@@ -56,13 +56,13 @@ export class PoStatusComponent implements OnInit {
   drawerOpened=false;
   drawerMode='side';
   operatorsValue: Operator[] = [
-    {value: 'igual', viewValue: 'igual'},
-    {value: 'top', viewValue: 'mayor'},
-    {value: 'button', viewValue: 'menor'}
+    {value: 'igual', viewValue: 'Igual'},
+    {value: 'top', viewValue: 'Mayor o igual'},
+    {value: 'button', viewValue: 'Menor o igual'}
   ];
   operatorsString: Operator[] = [
-    {value: 'content', viewValue: 'contiene'},
-    {value: 'noContent', viewValue: 'no contiene'}
+    {value: 'content', viewValue: 'Contiene'},
+    {value: 'noContent', viewValue: 'No contiene'}
   ];
 
   constructor(
@@ -234,6 +234,7 @@ export class PoStatusComponent implements OnInit {
   }
 
   getDataFilter(){
+    console.log(this.filterForm.value)
     //console.log("value to filter:"+JSON.stringify(this.filterForm.value));
     if(this.filterForm.value.fechaDesdePoDate){
       this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
@@ -248,8 +249,8 @@ export class PoStatusComponent implements OnInit {
     if(!this.filterForm.value.escenario){this.filterForm.value.operadorEscenario = ""}
     if(!this.filterForm.value.porcentajeLiberacion){this.filterForm.value.operadorPorcentajeLiberacion = ""}
     if(!this.filterForm.value.porcentajeFacturacionAcumulado){this.filterForm.value.operadorPorcentajeFacturacionAcumulado = ""}
-
     this.getData(this.filterForm.value);
+    this.toggleDrawerClose();
   }
   
   verPO(po, statusPO):void {
@@ -259,7 +260,7 @@ export class PoStatusComponent implements OnInit {
     const dialogRef = this.dialog.open(PoStatusDialog,{
       data: this.thisPO
     });    
-    
+    //console.log(this.thisPO)
     dialogRef.afterClosed().subscribe(result => { 
       if(this.thisPO.isChange){
         this.loadDataTable();
@@ -496,7 +497,7 @@ export class PoStatusDialog implements OnInit {
     var thisDate = new Date(date);
     this.thisPO.poDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
     this.thisPO.site.smp = this.updatePOForm.value.smp;
-    this.thisPO.site.name = this.updatePOForm.value.regionName;
+    this.thisPO.site.name = this.updatePOForm.value.siteName;
     this.thisPO.site.region = this.updatePOForm.value.regionName;
     this.thisPO.scenery = this.updatePOForm.value.scenery;
     this.thisPO.band = this.updatePOForm.value.band;
