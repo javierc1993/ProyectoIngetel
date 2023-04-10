@@ -178,8 +178,8 @@
                 <ng-container matColumnDef="ver PO">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>ver PO</th>
                     <td mat-cell *matCellDef="let transaction">
-                        <button mat-mini-fab color="primary" (click)="verPO(transaction.po, transaction.estado);">
-                            <mat-icon svgIcon="mat_outline:remove_red_eye"></mat-icon>
+                        <button mat-icon-button color="primary" (click)="verPO(transaction.po, transaction.estado);">
+                            <mat-icon svgIcon="mat_solid:remove_red_eye"></mat-icon>
                         </button>
                     </td>
                 </ng-container>
@@ -188,8 +188,8 @@
                 <ng-container matColumnDef="eliminar PO">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Eliminar PO</th>
                     <td mat-cell *matCellDef="let transaction">
-                        <button mat-mini-fab color="warn" (click)="confirmDelete(transaction.po);">
-                            <mat-icon svgIcon="mat_outline:delete"></mat-icon>
+                        <button mat-icon-button color="warn" (click)="confirmDelete(transaction.po);">
+                            <mat-icon svgIcon="mat_solid:delete_forever"></mat-icon>
                         </button>
                     </td>
                 </ng-container>

@@ -234,7 +234,7 @@ export class PoStatusComponent implements OnInit {
   }
 
   getDataFilter(){
-    console.log(this.filterForm.value)
+    //console.log(this.filterForm.value)
     //console.log("value to filter:"+JSON.stringify(this.filterForm.value));
     if(this.filterForm.value.fechaDesdePoDate){
       this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
@@ -433,7 +433,7 @@ export class PoStatusDialog implements OnInit {
     var subtotalInvoices = 0;
     var subtotalIvaInvoices = 0;
     var amountUtilicedInvoices = 0;
-    console.log(this.thisPO);
+    //console.log(this.thisPO);
     this.thisPO.invoice.forEach(element => {
       var statusPay = (!element.pay) ? false:true;
       var statusInvoice;
@@ -545,7 +545,7 @@ export class PoStatusDialog implements OnInit {
         this.updatePOForm.value.invoices[index].pay.datePay = this.thisPO.invoice[index].pay.datePay;
       })
     }
-    console.log(this.updatePOForm.value);
+    //console.log(this.updatePOForm.value);
     this._httpClient
     .post(
         variablesGlobales.urlBackend + '/production/update',
