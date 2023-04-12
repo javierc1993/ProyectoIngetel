@@ -29,6 +29,23 @@ class SiteRepository {
     }
   }
 
+  async createOrUpdateSite(site) {
+    try {
+      let resp = await this.getSiteBySmp(site.smp);
+      if (resp) {
+        resp.set(site);
+        await resp.save();
+        return resp;
+      }
+      resp = await Site.create(site);
+      return resp;
+
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
   async newSite(site) {
     try {
       return Site.create(site);

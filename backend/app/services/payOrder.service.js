@@ -70,7 +70,7 @@ class PayOrderService {
         mainSmp: po['SMP Principal']
       }
      
-      const resp = await SiteRepository.createSite(site);
+      const resp = await SiteRepository.createOrUpdateSite(site);
       return resp;
     })
     );
