@@ -50,6 +50,7 @@ export class BillingStatusComponent implements OnInit {
   datosHoja: transaction[] =[];
   valorTotalFacturado: number = 0;
   valorTotalIva: number = 0;
+  valorTotalRetenciones: number = 0;
   valorTotalUtilizado: number = 0;
   valorTotalCostoTransaccion: number = 0;
   valorTotalPagado: number = 0;
@@ -80,7 +81,7 @@ export class BillingStatusComponent implements OnInit {
     public _fuseConfirmationService: FuseConfirmationService,
     private _fuseAlertService: FuseAlertService
     ) { 
-    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total factura', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', '# Documento', 'Valor pagado', 'Eliminar','Estado'];     
+    this.recentTransactionsTableColumns=['Fecha factura','Numero factura', 'Subtotal', 'Total IVA', 'RTF', 'RTIVA', 'PO', 'SMP', 'Sitio', 'Proyecto', 'Porcentaje factura', 'Fecha pago', 'Valor pagado', 'Eliminar','Estado'];     
     const initDateBilling = this.getFilterLastYear();
     this.getData(initDateBilling);
   }
@@ -137,12 +138,27 @@ export class BillingStatusComponent implements OnInit {
     );
   }
 
-  loadDataTable(): void {    
+  loadDataTable(): void {   
+    console.log(this.listInvoice)    
     this.datosHoja = Object.values(this.listInvoice).map(function(thisBill : any){ 
     var fechaFactura = new Date(thisBill.date);  
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
     var fechaPago = thisBill.pay ? new Date (thisBill.pay.datePay):null;
     fechaPago = fechaPago ? new Date (fechaPago.getTime() + (3600000 * 5) ):null;
+    var estado;
+    if(thisBill.percentInvoice > 100){
+      estado = 'Error facturacion';
+    }else if(!thisBill.pay){
+      estado = 'Pendiente';
+    }else{
+      var amountUtilized = thisBill.pay.amountUtilized;
+      var toPaid = thisBill.subTotal + thisBill.iva - thisBill.rtf - thisBill.rtIva;
+      if(amountUtilized != toPaid){
+        estado = 'Error pago';
+      }else{
+        estado = 'Pagado';
+      }
+    }
     return {
       fechaFactura: fechaFactura,
       numeroFactura: thisBill.invoice,
@@ -159,13 +175,12 @@ export class BillingStatusComponent implements OnInit {
       fechaPago: fechaPago,
       documentNumber: thisBill.pay ? thisBill.pay.documentNumber:null,
       valorUtilizado: thisBill.pay ? thisBill.pay.amountUtilized:0,
-      estado: thisBill.pay ? 'Pagado':'Pendiente',
+      estado: estado,
       iva: thisBill.iva,
       valorTransaccion: thisBill.pay ? thisBill.pay.financialCost:0,
       valorPagado: thisBill.pay ? thisBill.pay.totalPaid:0
-
     }
-    });        
+    }); 
     this.recentTransactionsDataSource = new MatTableDataSource(this.datosHoja);
     this.recentTransactionsDataSource.paginator = this.paginator;
   }
@@ -175,17 +190,20 @@ export class BillingStatusComponent implements OnInit {
     this.valorTotalIva = 0;
     this.valorTotalUtilizado = 0;   
     this.valorTotalCostoTransaccion = 0;
+    this.valorTotalRetenciones = 0;
     this.valorTotalPagado = 0;
 
     this.recentTransactionsDataSource.filteredData.forEach(element => {
       this.valorTotalFacturado += element.subtotal;
-      this.valorTotalIva += element.iva;          
+      this.valorTotalIva += element.iva;   
+      this.valorTotalRetenciones += element.rtf + element.rtiva;
       this.valorTotalUtilizado += element.valorUtilizado;
       this.valorTotalCostoTransaccion += element.valorTransaccion;
       this.valorTotalPagado += element.valorPagado;          
     });
     this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
     this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+    this.valorTotalRetenciones = parseFloat(this.valorTotalRetenciones.toFixed(2));
     this.valorTotalUtilizado = parseFloat(this.valorTotalUtilizado.toFixed(2));
     this.valorTotalCostoTransaccion = parseFloat(this.valorTotalCostoTransaccion.toFixed(2));
     this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));

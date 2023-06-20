@@ -71,8 +71,8 @@
                     <div class="mt-2 font-sans">{{valorTotalIva|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
-                    <div class="font-medium text-secondary">Facturado + IVA</div>
-                    <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva)|currency:"USD":"symbol"}}</div>
+                    <div class="font-medium text-secondary">Fact + IVA - RET</div>
+                    <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva - valorTotalRetenciones)|currency:"USD":"symbol"}}</div>
                 </div>
                 <div class="p-4 leading-none border border-r-0">
                     <div class="font-medium text-secondary">Total Pagado</div>
@@ -80,7 +80,7 @@
                 </div>
                 <div class="p-4 leading-none rounded-r-xl border">
                     <div class="font-medium text-secondary">Por pagar</div>
-                    <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva - valorTotalPagado).toFixed(2)|currency:"USD":"symbol"}}</div>
+                    <div class="mt-2 font-sans">{{(valorTotalFacturado + valorTotalIva - valorTotalRetenciones - valorTotalPagado).toFixed(2)|currency:"USD":"symbol"}}</div>
                 </div>
             </div>
         </div>

@@ -21,6 +21,7 @@ export interface transaction {
     instalacion: string;
     valorPoFacturado : number;    
     valorPoIva: number;
+    valorPoRetenciones: number;
     valorPoPagado: number;
 }
 interface Operator {
@@ -50,6 +51,7 @@ export class ExampleComponent implements OnInit{
      valorTotalPO: number = 0;
      valorTotalFacturado: number = 0;
      valorTotalIva: number = 0;
+     valorTotalRetenciones: number = 0;
      valorTotalPagado: number = 0;
      listPO: any;
      drawerOpened=false;
@@ -132,6 +134,7 @@ export class ExampleComponent implements OnInit{
             var thisInstalationDate : any = 'Pendiente';
             var valorPoFacturado;
             var valorPoIva;
+            var valorPoRetenciones;
             var valorPoPagado;
             if(thisPO.instalation?.date){
                 var thisDate = new Date(thisPO.instalation.date);
@@ -141,13 +144,16 @@ export class ExampleComponent implements OnInit{
             }
             if(thisPO.invoice){
                 var valorFacturado = thisPO.invoice.map(thisInvoice => thisInvoice.subTotal);
-                var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva);                        
+                var valorIva = thisPO.invoice.map(thisInvoice => thisInvoice.iva); 
+                var valorRtf = thisPO.invoice.map(thisInvoice => thisInvoice.rtf);
+                var valorRtiva = thisPO.invoice.map(thisInvoice => thisInvoice.rtIva);                       
                 var valorPagado = thisPO.invoice.map(function(thisInvoice:any){
                     if(thisInvoice.pay && thisInvoice.pay.createdAt){return thisInvoice.pay.amountUtilized;}
                     else{return 0;}
                 });
                 valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
                 valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
+                valorPoRetenciones = valorRtf.reduce((acc,valor)=>acc+valor,0) + valorRtiva.reduce((acc,valor)=>acc+valor,0);
                 valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0); 
             }
             
@@ -165,6 +171,7 @@ export class ExampleComponent implements OnInit{
                 instalacion: thisInstalationDate,
                 valorPoFacturado,
                 valorPoIva,
+                valorPoRetenciones,
                 valorPoPagado
             }
         });
@@ -176,16 +183,19 @@ export class ExampleComponent implements OnInit{
         this.valorTotalPO = 0;
         this.valorTotalFacturado = 0;
         this.valorTotalIva = 0;
+        this.valorTotalRetenciones = 0;
         this.valorTotalPagado = 0;   
         this.recentTransactionsDataSource.filteredData.forEach(element => {
           this.valorTotalPO += element.Valor_PO;
           this.valorTotalFacturado += element.valorPoFacturado;
           this.valorTotalIva += element.valorPoIva;
+          this.valorTotalRetenciones += element.valorPoRetenciones;
           this.valorTotalPagado += element.valorPoPagado;
         });
         this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
         this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
         this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+        this.valorTotalRetenciones = parseFloat(this.valorTotalRetenciones.toFixed(2));
         this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
     }
 

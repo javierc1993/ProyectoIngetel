@@ -25,6 +25,7 @@ export interface transaction {
     estado: string;
     valorPoFacturado : number;    
     valorPoIva: number;
+    valorPoRetenciones :number;
     valorPoPagado: number;
     porcentajesConcat:string;
 }
@@ -50,6 +51,7 @@ export class PoStatusComponent implements OnInit {
   valorTotalPO: number = 0;
   valorTotalFacturado: number = 0;
   valorTotalIva: number = 0;
+  valorTotalRetenciones: number = 0;
   valorTotalPagado: number = 0;
   listPO: any;
   thisPO: any;
@@ -138,6 +140,7 @@ export class PoStatusComponent implements OnInit {
       var valorPoTotal = thisBill.value;
       var valorPoFacturado;
       var valorPoIva;
+      var valorPoRetenciones;
       var valorPoPagado;
       var estado;
 
@@ -149,6 +152,8 @@ export class PoStatusComponent implements OnInit {
         var porcentajeFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.percentInvoice);
         var valorFacturado = thisBill.invoice.map(thisInvoice => thisInvoice.subTotal);
         var valorIva = thisBill.invoice.map(thisInvoice => thisInvoice.iva);
+        var valorRtf = thisBill.invoice.map(thisInvoice => thisInvoice.rtf);
+        var valorRtiva = thisBill.invoice.map(thisInvoice => thisInvoice.rtIva);
         var porcentajePagado = thisBill.invoice.map(function(thisInvoice:any){
             if(thisInvoice.pay && thisInvoice.pay.datePay && thisInvoice.pay.amountUtilized > 0){return thisInvoice.percentInvoice;}
             else{return 0;}
@@ -161,6 +166,7 @@ export class PoStatusComponent implements OnInit {
         percentFacturado = porcentajeFacturado.reduce((acc,valor)=>acc+valor,0);
         valorPoFacturado = valorFacturado.reduce((acc,valor)=>acc+valor,0);
         valorPoIva = valorIva.reduce((acc,valor)=>acc+valor,0);
+        valorPoRetenciones = valorRtf.reduce((acc,valor)=>acc+valor,0) + valorRtiva.reduce((acc,valor)=>acc+valor,0);
         percentPagado = porcentajePagado.reduce((acc,valor)=>acc+valor,0);
         valorPoPagado = valorPagado.reduce((acc,valor)=>acc+valor,0);            
       }         
@@ -170,12 +176,13 @@ export class PoStatusComponent implements OnInit {
         estado = 'Error facturacion';
       }
       // else if(percentLiberado == 0){estado = 'Pendiente';}
-      else if(percentLiberado > percentFacturado){estado = 'Liberado';}
-      else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
-      else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.round(valorPoFacturado + valorPoIva) == Math.round(valorPoPagado)){estado = 'Finalizado';}
+      else if(percentFacturado == percentPagado && Math.round(valorPoFacturado + valorPoIva - valorPoRetenciones) != Math.round(valorPoPagado)){estado = 'Error pago';}
+      else if(percentLiberado > percentFacturado){estado = 'Por facturar';}
+      else if(percentLiberado <= percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
+      else if(percentLiberado == percentPagado && percentLiberado == 100 && Math.round(valorPoFacturado + valorPoIva  - valorPoRetenciones) == Math.round(valorPoPagado)){estado = 'Finalizado';}
       else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
-      else if(percentFacturado == percentPagado && Math.round(valorPoFacturado + valorPoIva) != Math.round(valorPoPagado)){estado = 'Error pago';}
       else if(percentFacturado > percentLiberado){estado = 'Por liberar';}
+      else{estado = 'Sin estado';}
       
 
       return {
@@ -193,6 +200,7 @@ export class PoStatusComponent implements OnInit {
         estado,
         valorPoFacturado,
         valorPoIva,
+        valorPoRetenciones,
         valorPoPagado,
         porcentajesConcat:percentLiberado+'%'+percentFacturado+'%'+percentPagado+'%'
       }
@@ -205,16 +213,19 @@ export class PoStatusComponent implements OnInit {
     this.valorTotalPO = 0;
     this.valorTotalFacturado = 0;
     this.valorTotalIva = 0;
+    this.valorTotalRetenciones = 0;
     this.valorTotalPagado = 0;   
     this.recentTransactionsDataSource.filteredData.forEach(element => {
       this.valorTotalPO += element.valorPo;
       this.valorTotalFacturado += element.valorPoFacturado;
       this.valorTotalIva += element.valorPoIva;
+      this.valorTotalRetenciones += element.valorPoRetenciones;
       this.valorTotalPagado += element.valorPoPagado;
     });
     this.valorTotalPO = parseFloat(this.valorTotalPO.toFixed(2));
     this.valorTotalFacturado = parseFloat(this.valorTotalFacturado.toFixed(2));
     this.valorTotalIva = parseFloat(this.valorTotalIva.toFixed(2));
+    this.valorTotalRetenciones = parseFloat(this.valorTotalRetenciones.toFixed(2));
     this.valorTotalPagado = parseFloat(this.valorTotalPagado.toFixed(2));
   }
 
@@ -365,7 +376,7 @@ export class PoStatusDialog implements OnInit {
         text: "Valores PO"
       },
       xaxis: {
-        categories: ["Valor PO", "Valor facturado",  "Faturado + iva",  "Valor pagado"]
+        categories: ["Valor PO", "Valor facturado",  "Fact + iva - RET",  "Valor pagado"]
       },
       yaxis: {
         labels: {
@@ -433,13 +444,15 @@ export class PoStatusDialog implements OnInit {
     var subtotalInvoices = 0;
     var subtotalIvaInvoices = 0;
     var amountUtilicedInvoices = 0;
-    //console.log(this.thisPO);
+    console.log(this.thisPO);
     this.thisPO.invoice.forEach(element => {
       var statusPay = (!element.pay) ? false:true;
       var statusInvoice;
       subtotalInvoices += element.subTotal;
       subtotalIvaInvoices += element.subTotal;
       subtotalIvaInvoices += element.iva;
+      subtotalIvaInvoices -= element.rtf;
+      subtotalIvaInvoices -= element.rtIva;
       if(statusPay){
         amountUtilicedInvoices += element.pay.amountUtilized;
       }
@@ -449,12 +462,12 @@ export class PoStatusDialog implements OnInit {
         statusInvoice = "Error facturacion";
       }
       else if(!statusPay || element.pay.amountUtilized == 0){statusInvoice = "Por pagar"}
-      else if(statusPay && Math.round(element.pay.amountUtilized) != Math.round(element.subTotal + element.iva)){statusInvoice = "Error pago"}
+      else if(statusPay && Math.round(element.pay.amountUtilized) != Math.round(element.subTotal + element.iva - element.rtf - element.rtIva)){statusInvoice = "Error pago"}
       else{statusInvoice = "Pagado"}
 // if(percentFacturado > 100){estado = 'Error facturacion';}
 //           else if(valorPoFacturado != (valorPoTotal*percentFacturado/100)){estado = 'Error facturacion';}
 //           else if(percentLiberado == 0){estado = 'Pendiente';}
-//           else if(percentLiberado > percentFacturado){estado = 'Liberado';}
+//           else if(percentLiberado > percentFacturado){estado = 'Por facturar';}
 //           else if(percentLiberado == percentFacturado && percentFacturado > percentPagado){estado = 'Por pagar';}          
 //           else if(percentLiberado == percentPagado && percentLiberado == 100){estado = 'Finalizado';}
 //           else if(percentLiberado == percentPagado && percentLiberado < 100){estado = 'Pendiente';}
