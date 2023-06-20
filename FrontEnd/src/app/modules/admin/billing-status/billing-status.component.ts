@@ -139,7 +139,7 @@ export class BillingStatusComponent implements OnInit {
   }
 
   loadDataTable(): void {   
-    console.log(this.listInvoice)    
+    //console.log(this.listInvoice)    
     this.datosHoja = Object.values(this.listInvoice).map(function(thisBill : any){ 
     var fechaFactura = new Date(thisBill.date);  
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
