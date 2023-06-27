@@ -401,6 +401,8 @@ export class PoStatusDialog implements OnInit {
   }
 
   initUpdatePOForm():void{
+    console.log("version 27/06/2023");
+    console.log(this.thisPO);
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
     this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;    
     this.chartBarValues.series[0].data[0] = parseFloat(this.thisPO.value.toFixed(2));
@@ -505,7 +507,7 @@ export class PoStatusDialog implements OnInit {
     if(!this.updatePOForm.value.smp){
       this.updatePOForm.value.smp = this.thisPO.site?.mainSmp;
     }
-     console.log("actuaizar PO value form");
+    console.log("actuaizar PO value form");
     var date = Date.now()
     var thisDate = new Date(date);
     this.thisPO.poDate = this.updatePOForm.value.poDate+"T00:00:00.000Z";
