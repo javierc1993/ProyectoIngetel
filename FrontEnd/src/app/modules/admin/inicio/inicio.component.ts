@@ -71,7 +71,7 @@ export class InicioComponent implements OnInit {
   valorTotalRetenciones: number = 0;
   valorTotalPagado: number = 0;
   initDateBilling;
-
+  listPO: any;
   constructor(private _httpClient: HttpClient, private _formBuilder: UntypedFormBuilder) {     
     this.optionsValuesPO = {
       
@@ -195,10 +195,17 @@ export class InicioComponent implements OnInit {
   }
 
   getData(objectToFilter){
+    console.log(objectToFilter);
     this._httpClient.post(variablesGlobales.urlBackend + '/production/',objectToFilter)
     .subscribe(
-      (response:any) => {         
-        this.clearData(response.result); 
+      (response:any) => {
+        console.log(response.result);
+        this.listPO = response.result.reduce((acc, el)=>({
+          ...acc, 
+          [el.reference]:el,
+        }),{});        
+        //this.clearData(response.result); 
+        this.clearData(); 
         this.updateTotalValues();
         this.updateInstalationPO();
         this.updateStatusPO();       
@@ -206,8 +213,10 @@ export class InicioComponent implements OnInit {
       (error) => {console.log(error);}                
     );                
   }
-  clearData(dataPO){
-    this.datosHoja = dataPO.map(function(thisPO){  
+  clearData(){
+  //clearData(dataPO){
+    this.datosHoja = Object.values(this.listPO).map(function(thisPO : any){   
+    //this.datosHoja = dataPO.map(function(thisPO){  
       var porcentajeTotalLiberado;
       var porcentajeTotalFacturado;
       var porcentajeTotalPagado;
@@ -252,10 +261,12 @@ export class InicioComponent implements OnInit {
       else if(porcentajeTotalFacturado == porcentajeTotalPagado && Math.round(valorPoFacturado + valorPoIva - valorPoRetenciones) != Math.round(valorPoPagado)){estadoPO = 'Error pago';}
       else if(porcentajeTotalLiberado > porcentajeTotalFacturado){estadoPO = 'Por facturar';}
       else if(porcentajeTotalLiberado <= porcentajeTotalFacturado && porcentajeTotalFacturado > porcentajeTotalPagado){estadoPO = 'Por pagar';}          
-      else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado == 100 && Math.round(valorPoFacturado + valorPoIva) == Math.round(valorPoPagado)){estadoPO = 'Finalizado';}
+      else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado == 100 && Math.round(valorPoFacturado + valorPoIva - valorPoRetenciones) == Math.round(valorPoPagado)){estadoPO = 'Finalizado';}
       else if(porcentajeTotalLiberado == porcentajeTotalPagado && porcentajeTotalLiberado < 100){estadoPO = 'Pendiente';}
       else if(porcentajeTotalFacturado > porcentajeTotalLiberado){estadoPO = 'Por liberar';}
-      else{estadoPO = 'Sin estado';}
+      else{estadoPO = 'Sin estado';
+        console.log("sin estado: "+thisPO.reference);
+      }
 
       return {
         valorPO: thisPO.value,
@@ -294,6 +305,7 @@ export class InicioComponent implements OnInit {
     var quantityFinalizado = new Array;
     var quantityErrorPago = new Array;
     var quantityPorLiberar = new Array;
+    //var quantitySinEstado = new Array;
       
     this.datosHoja.map (function(thisPO){
       switch(thisPO.estadoPO){
@@ -319,6 +331,8 @@ export class InicioComponent implements OnInit {
           quantityPorLiberar.push(thisPO.estadoPO);
         break;
         default:
+          //quantitySinEstado.push(thisPO.estadoPO);
+        break;
       }       
     })
     dataSeries.push(quantityErrorFacturacion.length);
@@ -328,10 +342,12 @@ export class InicioComponent implements OnInit {
     dataSeries.push(quantityFinalizado.length);
     dataSeries.push(quantityErrorPago.length);
     dataSeries.push(quantityPorLiberar.length);
-    this.statusPO.series = dataSeries;
+    //dataSeries.push(quantitySinEstado.length);
+    this.statusPO.series = dataSeries;    
   } 
 
   updateTotalValues(){
+    //console.log(this.datosHoja);
     this.valorTotalPO = 0;
     this.valorTotalFacturado = 0;
     this.valorTotalIva = 0;

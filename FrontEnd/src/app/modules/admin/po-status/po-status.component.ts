@@ -118,9 +118,10 @@ export class PoStatusComponent implements OnInit {
   }
 
   getData(objectToFilter){
-    //console.log(objectToFilter);
+    console.log(objectToFilter);
     this._httpClient.post(variablesGlobales.urlBackend + '/production/', objectToFilter)
       .subscribe((response:any) => {
+        console.log(response.result);
         this.listPO = response.result.reduce((acc, el)=>({
           ...acc, 
           [el.reference]:el,
