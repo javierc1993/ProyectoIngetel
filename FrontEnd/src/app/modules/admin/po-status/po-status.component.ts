@@ -246,8 +246,6 @@ export class PoStatusComponent implements OnInit {
   }
 
   getDataFilter(){
-    //console.log(this.filterForm.value)
-    //console.log("value to filter:"+JSON.stringify(this.filterForm.value));
     if(this.filterForm.value.fechaDesdePoDate){
       this.filterForm.value.fechaDesdePoDate = this.filterForm.value.fechaDesdePoDate.format('DD/MM/YYYY');
     };
@@ -271,8 +269,7 @@ export class PoStatusComponent implements OnInit {
     this.thisPO.isChange =  false;  
     const dialogRef = this.dialog.open(PoStatusDialog,{
       data: this.thisPO
-    });    
-    //console.log(this.thisPO)
+    }); 
     dialogRef.afterClosed().subscribe(result => { 
       if(this.thisPO.isChange){
         this.loadDataTable();
@@ -402,7 +399,7 @@ export class PoStatusDialog implements OnInit {
   }
 
   initUpdatePOForm():void{
-    console.log("version 27/06/2023");
+    console.log("version 02/08/2023");
     console.log(this.thisPO);
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
     this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;    
