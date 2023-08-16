@@ -8,7 +8,7 @@ const PayRepository = require('../repositories/pay.repository');
 const { PayOrder, Pay, Site } = require('../models');
 const { filters, createQueryField } = require('../lib/utils');
 const { NotFoundError } = require('../entities/error-entity');
-
+const { deleteDuplicateByLabel } = require('../lib/formatData');
 class InvoiceService {
 
   async deleteInvoice (invoiceNumber) {

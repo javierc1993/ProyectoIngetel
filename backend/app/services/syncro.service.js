@@ -2,7 +2,7 @@
 const { SyncroDocEntity } = require('../entities/syncroDoc.entity');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 const { hashText } = require('../lib/crypto');
-
+const { deleteDuplicateByLabel } = require('../lib/formatData');
 
 class SyncroService {
   async createSyncro (syncros) {
