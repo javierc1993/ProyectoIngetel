@@ -6,7 +6,8 @@ const { hashText } = require('../lib/crypto');
 
 class SyncroService {
   async createSyncro (syncros) {
-    return Promise.all(syncros.filter(sync => sync['Purchase Doc Number'] && sync['Net Price']).map(async syncro => {
+    const syncrosFiltered = await deleteDuplicateByLabel(syncros, 'Purchase Doc Number')
+    return Promise.all(syncrosFiltered.filter(sync => sync['Purchase Doc Number'] && sync['Net Price']).map(async syncro => {
       const syncroDoc = new SyncroDocEntity(syncro);
       const poUpdated = await PayOrderRepository.updateValuePayOrder(syncroDoc.purchaseDocNumber, syncroDoc.netPrice);
       return { ...syncro, updatedValue: poUpdated };

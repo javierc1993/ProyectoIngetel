@@ -51,8 +51,9 @@ class PayOrderService {
   }
 
   async createPayOrders (request) {
-    const sitesOnly = await deleteDuplicateByLabel(request, 'SMP')
-    const leadersOnly = await deleteDuplicateByLabel(request, 'Lider ')
+    const requestFilteredPO = await deleteDuplicateByLabel(request, 'PO')
+    const sitesOnly = await deleteDuplicateByLabel(requestFilteredPO, 'SMP')
+    const leadersOnly = await deleteDuplicateByLabel(requestFilteredPO, 'Lider ')
 
     const leadersCreated = await Promise.all(leadersOnly.filter(po => po['Lider ']).map(async po => {
       const resp = await UserRepository.newLeader(po['Lider ']);
@@ -75,7 +76,7 @@ class PayOrderService {
     })
     );
 
-    const response = Promise.all(request.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO' && po.SMP).map(async po => {
+    const response = Promise.all(requestFilteredPO.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO' && po.SMP).map(async po => {
       const payOrder = new PayOrderEntity(po);
       return PayOrderRepository.createPayOrder(payOrder);
     })
