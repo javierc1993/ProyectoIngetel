@@ -23,7 +23,8 @@ class InvoiceService {
   }
 
   async createInvoice (invoices) {
-    return Promise.all(invoices.filter(inv => inv['PO'] && inv['SUBTOTAL']).map(async invoice => {
+    const invoicesFiltered = await deleteDuplicateByLabel(invoices, 'No FACTURA')
+    return Promise.all(invoicesFiltered.filter(inv => inv['PO'] && inv['SUBTOTAL']).map(async invoice => {
       const invoiceDoc = new InvoiceDocEntity(invoice);
       const payOrder = await PayOrderRepository.getPoByReference(invoiceDoc.po);
       if(payOrder){

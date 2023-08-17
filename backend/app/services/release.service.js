@@ -8,8 +8,8 @@ const { deleteDuplicateByLabel } = require('../lib/formatData');
 
 class ReleaseService {
   async createRelease (releases) {
-    const releasesFiltered = await deleteDuplicateByLabel(releases, 'Services Good receipt number (sGR)')
-    return Promise.all(releasesFiltered.filter(rel => rel['Services Good receipt number (sGR)']).map(async release => {
+    const releasesFiltered = await deleteDuplicateByLabel(releases, 'SPO Number')
+    return Promise.all(releasesFiltered.filter(rel => rel['SPO Number']).map(async release => {
       const releaseDoc = new ReleaseDocEntity(release);
       const payOrder = await PayOrderRepository.getPoByReference(releaseDoc.poNumber);
       const releaseToCreate = new ReleaseEntity({
