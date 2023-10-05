@@ -139,7 +139,7 @@ export class BillingStatusComponent implements OnInit {
   }
 
   loadDataTable(): void {   
-    //console.log(this.listInvoice)    
+    console.log(this.listInvoice)    
     this.datosHoja = Object.values(this.listInvoice).map(function(thisBill : any){ 
     var fechaFactura = new Date(thisBill.date);  
     fechaFactura = new Date (fechaFactura.getTime() + (3600000 * 5) );
@@ -151,9 +151,9 @@ export class BillingStatusComponent implements OnInit {
     }else if(!thisBill.pay){
       estado = 'Pendiente';
     }else{
-      var amountUtilized = thisBill.pay.amountUtilized;
-      var toPaid = thisBill.subTotal + thisBill.iva - thisBill.rtf - thisBill.rtIva;
-      if(amountUtilized != toPaid){
+      var amountUtilized = parseFloat(thisBill.pay.amountUtilized.toFixed(2));
+      var toPaid = parseFloat((thisBill.subTotal + thisBill.iva - thisBill.rtf - thisBill.rtIva).toFixed(2));      
+      if(Math.round(amountUtilized) != Math.round(toPaid)){
         estado = 'Error pago';
       }else{
         estado = 'Pagado';

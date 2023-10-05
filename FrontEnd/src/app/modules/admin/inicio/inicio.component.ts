@@ -108,7 +108,7 @@ export class InicioComponent implements OnInit {
         text: "Valores PO"
       },
       xaxis: {
-        categories: ["Valor PO", "Valor facturado", "IVA",  "Fact + IVA - RET",  "Valor pagado"]
+        categories: ["Valor PO", "Valor facturado", "IVA",  "Fact + IVA - RET",  "Valor utilizado"]
       },
       series: [
         {

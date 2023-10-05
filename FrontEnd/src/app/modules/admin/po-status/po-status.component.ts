@@ -374,7 +374,7 @@ export class PoStatusDialog implements OnInit {
         text: "Valores PO"
       },
       xaxis: {
-        categories: ["Valor PO", "Valor facturado",  "Fact + iva - RET",  "Valor pagado"]
+        categories: ["Valor PO", "Valor facturado",  "Fact + iva - RET",  "Valor utilizado"]
       },
       yaxis: {
         labels: {
