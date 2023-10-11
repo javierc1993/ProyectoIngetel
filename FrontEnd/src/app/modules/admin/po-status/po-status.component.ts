@@ -399,7 +399,7 @@ export class PoStatusDialog implements OnInit {
   }
 
   initUpdatePOForm():void{
-    console.log("version 02/08/2023");
+    console.log("version 11/10/2023");
     console.log(this.thisPO);
     this.isRelease = this.thisPO.release.length >= 1 ? true:false;
     this.isInvoice = this.thisPO.invoice.length >= 1 ? true:false;    
