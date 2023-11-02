@@ -8,18 +8,23 @@ const { deleteDuplicateByLabel } = require('../lib/formatData');
 
 class ReleaseService {
   async createRelease (releases) {
-    const releasesFiltered = await deleteDuplicateByLabel(releases, 'SPO Number')
-    return Promise.all(releasesFiltered.filter(rel => rel['SPO Number']).map(async release => {
-      const releaseDoc = new ReleaseDocEntity(release);
-      const payOrder = await PayOrderRepository.getPoByReference(releaseDoc.poNumber);
-      const releaseToCreate = new ReleaseEntity({
-        ...releaseDoc,
-        payOrder: payOrder?.id,
-        totalPercent: +releaseDoc.serviceExecutedPercent + releaseDoc.totalTss + releaseDoc.totalCw + releaseDoc.totalImp
-      });
-      return ReleaseRepository.createRelease(releaseToCreate);
-    }));
-  }
+    try {
+      const releasesFiltered = await deleteDuplicateByLabel(releases, 'sponumber')
+      return Promise.all(releasesFiltered.filter(rel => rel.sponumber).map(async release => {
+        const releaseDoc = new ReleaseDocEntity(release);
+        const payOrder = await PayOrderRepository.getPoByReference(releaseDoc.poNumber);
+        const releaseToCreate = new ReleaseEntity({
+          ...releaseDoc,
+          payOrder: payOrder?.id,
+          totalPercent: +releaseDoc.serviceExecutedPercent + releaseDoc.totalTss + releaseDoc.totalCw + releaseDoc.totalImp
+        });
+        return ReleaseRepository.createRelease(releaseToCreate);
+      }));
+    } catch (error) {
+      console.log(error);
+      throw error; 
+    }
+  } 
 }
 
 

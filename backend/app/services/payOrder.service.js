@@ -51,24 +51,24 @@ class PayOrderService {
   }
 
   async createPayOrders (request) {
-    const requestFilteredPO = await deleteDuplicateByLabel(request, 'PO')
-    const sitesOnly = await deleteDuplicateByLabel(requestFilteredPO, 'SMP')
-    const leadersOnly = await deleteDuplicateByLabel(requestFilteredPO, 'Lider ')
+    const requestFilteredPO = await deleteDuplicateByLabel(request, 'po')
+    const sitesOnly = await deleteDuplicateByLabel(requestFilteredPO, 'smp')
+    const leadersOnly = await deleteDuplicateByLabel(requestFilteredPO, 'lider')
 
-    const leadersCreated = await Promise.all(leadersOnly.filter(po => po['Lider ']).map(async po => {
-      const resp = await UserRepository.newLeader(po['Lider ']);
+    const leadersCreated = await Promise.all(leadersOnly.filter(po => po['lider']).map(async po => {
+      const resp = await UserRepository.newLeader(po['lider']);
       return resp;
     })
     );
 
-    const siteSaved = await Promise.all(sitesOnly.filter(po => po.SMP).map(async po => {
+    const siteSaved = await Promise.all(sitesOnly.filter(po => po.smp).map(async po => {
      
       const site = {
-        name: po['SITE NAME'],
-        smp: po.SMP,
-        region: po['Regional'],
-        proyect: po['Proyecto '],
-        mainSmp: po['SMP Principal']
+        name: po.sitename,
+        smp: po.smp,
+        region: po.regional,
+        proyect: po.proyecto,
+        mainSmp: po.smpprincipal
       }
      
       const resp = await SiteRepository.createOrUpdateSite(site);
@@ -76,7 +76,7 @@ class PayOrderService {
     })
     );
 
-    const response = Promise.all(requestFilteredPO.filter(po => po.PO && po.PO != '' && po.PO != 'No aplica PO' && po.SMP).map(async po => {
+    const response = Promise.all(requestFilteredPO.filter(po => po.po && po.po != '' && po.po != 'No aplica PO' && po.smp).map(async po => {
       const payOrder = new PayOrderEntity(po);
       return PayOrderRepository.createPayOrder(payOrder);
     })

@@ -3,16 +3,16 @@ const { excelDateToJSDate } = require('../lib/utils')
 class PayDocEntity {
   constructor (data) {
 
-    this.documentNumber = data['Document Number'];
-    this.amountUtilized = data[' Amount Utilized '];
-    this.financialCost = data[' Financial Cost '];
-    this.invoice = data['Invoice Number'];
-    this.totalPaid = data['Total Pagado'];
-    this.maturityDate = data['Maturity Date'];
-    this.publishDate = data['Publish Date'];
-    this.datePay = data['Upload Date'];
-    this.state = data['Status'];
-    this.discountTime = data['Discount Time'];
+    this.documentNumber = data['documentnumber'];
+    this.amountUtilized = data['amountutilized'];
+    this.financialCost = data['financialcost'];
+    this.invoice = data['invoicenumber'];
+    this.totalPaid = data['totalpagado'];
+    this.maturityDate = data['maturitydate'];
+    this.publishDate = data['publishdate'];
+    this.datePay = data['uploaddate'];
+    this.state = data['status'];
+    this.discountTime = data['discounttime'];
   }
 }
 

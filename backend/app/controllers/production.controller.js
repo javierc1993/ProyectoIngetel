@@ -5,6 +5,7 @@ const FileService = require('../services/file.service');
 const PayOrderService = require('../services/payOrder.service');
 const PayOrderRepository = require('../repositories/payOrder.repository');
 
+const {totalCleanString} = require('../lib/formatData')
 
 
 class ProductionController {
@@ -12,7 +13,11 @@ class ProductionController {
     try {
       const registerUploadFile = await FileService.registerUploadFile(req.file)
       const file = await XLSX.readFile(req.file.path);
-      const data = await XLSX.utils.sheet_to_json(file.Sheets[file.SheetNames[0]]);
+      const workbookHeaders = XLSX.readFile(req.file.path, { sheetRows: 1 });
+      const columnsArray = XLSX.utils.sheet_to_json(workbookHeaders.Sheets[file.SheetNames[0]], { header: 1 })[0];
+      const columnsArrayFormated = columnsArray.map(header => totalCleanString(header));
+      const data = await XLSX.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], { header:columnsArrayFormated});
+      delete data[0];
       const resp = await PayOrderService.createPayOrders(data);
       return res.status(200).json({
         resultMsg: 'OK',
