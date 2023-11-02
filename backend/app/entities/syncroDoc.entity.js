@@ -2,18 +2,18 @@
 
 class SyncroDocEntity {
   constructor (data) {
-    this.lineStatus = data['Line Status'] || null;
-    this.supplierNumber = data['Supplier Number'] || null;
-    this.docDate = data['Doc Date'] || null;
-    this.purchaseDocNumber = data['Purchase Doc Number'] || null;
-    this.line = data['Line'] || null;
-    this.materialCode = data['Material Code'] || null;
-    this.description = data['Description'] || null;
-    this.plant = data['Plant'] || null;
-    this.deliveryDate = data['Delivery Date'] || null;
-    this.netPrice = data['Net Price'] || null;
-    this.wbs = data['WBS'] || null;
-    this.deliveryAddress = data['Delivery Address'] || null;
+    this.lineStatus = data.linestatus || null;
+    this.supplierNumber = data.suppliernumber || null;
+    this.docDate = data.docdate || null;
+    this.purchaseDocNumber = data.purchasedocnumber || null;
+    this.line = data.line || null;
+    this.materialCode = data.materialcode || null;
+    this.description = data.description || null;
+    this.plant = data.plant || null;
+    this.deliveryDate = data.deliverydate || null;
+    this.netPrice = data.netprice || null;
+    this.wbs = data.wbs || null;
+    this.deliveryAddress = data.deliveryaddress || null;
   }
 }
 

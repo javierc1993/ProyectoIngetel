@@ -2,31 +2,31 @@ const { excelDateToJSDate } = require('../lib/utils')
 
 class PayOrderEntity {
   constructor (data) {
-    this.proyect = data['Proyecto '] || null;
-    this.reference = data['PO'] || null;
-    this.scenery = data['Escenario '] || null;
-    this.value = data[' VALOR PO '] || null;
-    this.band = data['Banda'] || null;
-    this.poDate = data['Producción'] ? excelDateToJSDate(data['Producción']) : null
+    this.proyect = data.proyecto || null;
+    this.reference = data.po || null;
+    this.scenery = data.escenario || null;
+    this.value = data.valorpo || null;
+    this.band = data.banda || null;
+    this.poDate = data.produccion ? excelDateToJSDate(data.produccion) : null
     this.Sites = {
-      name: data['SITE NAME'] || null,
-      smp: data['SMP'] || null,
-      region: data['Regional'] || null
+      name: data.sitename|| null,
+      smp: data.smp || null,
+      region: data.regional || null
     };
     this.Instalations = {
-      date: data['instalacion'] ? excelDateToJSDate(data['instalacion']) : null
+      date: data.instalacion ? excelDateToJSDate(data.instalacion) : null
     };
     this.Integrations = {
-      date: data['Fecha de Integracion'] ? excelDateToJSDate(data['Fecha de Integracion']) : null
+      date: data.fechadeinstalacion ? excelDateToJSDate(data.fechadeinstalacion) : null
     };
     this.MosHws = {
-      date: data['mos_HW'] ? excelDateToJSDate(data['mos_HW']) : null
+      date: data.moshw ? excelDateToJSDate(data.moshw) : null
     };
     this.OnAirs = {
-      date: data['ON AIR'] || null
+      date: data.onair|| null
     };
     this.Leaders = {
-      name: data['Lider '] || null
+      name: data.lider || null
     };
   }
 }

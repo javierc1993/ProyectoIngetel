@@ -2,26 +2,26 @@ const { excelDateToJSDate } = require('../lib/utils')
 
 class InvoiceDocEntity {
   constructor (data) {
-    this.client = data['CLIENTE'] || null;
-    this.date = data['FECHA'] ? excelDateToJSDate(data['FECHA']) : null;
-    this.invoice = data['No FACTURA'] || null;
-    this.proyect = data['PROYECTO'] || null;
-    this.month = data['MES'] || null;
-    this.subTotal = data['SUBTOTAL'] || null;
-    this.iva = data['IVA'] || null;
-    this.total = data['TOTAL FACTURA'] || null;
-    this.rtf = data['RTF'] || null;
-    this.rtIva = data['RTIVA'] || null;
-    this.toPay = data['A PAGAR'] || null;
-    this.totalPaid = data['TOTAL PAGADO'] || null;
-    this.po = data['PO'] || null;
-    this.wp = data['WP'] || null;
-    this.datePay = data['FECHA PAGO'] ? excelDateToJSDate(data['FECHA PAGO']) : null;
-    this.nameSite = data['SITIO'] || null;
-    this.proyectRelated = data['PROYECTO2'] || null;
-    this.percentInvoice = data['% FACT'] || null;
-    this.observation = data['OBSERVACION'] || null;
-    this.state = data['ESTADO'] || null;
+    this.client = data['client'] || null;
+    this.date = data['fecha'] ? excelDateToJSDate(data['fecha']) : null;
+    this.invoice = data['nofactura'] || null;
+    this.proyect = data['proyecto'] || null;
+    this.month = data['mes'] || null;
+    this.subTotal = data['subtotal'] || null;
+    this.iva = data['iva'] || null;
+    this.total = data['totalfactura'] || null;
+    this.rtf = data['rtf'] || null;
+    this.rtIva = data['rtiva'] || null;
+    this.toPay = data['apagar'] || null;
+    this.totalPaid = data['totalpagado'] || null;
+    this.po = data['po'] || null;
+    this.wp = data['wp'] || null;
+    this.datePay = data['fechapago'] ? excelDateToJSDate(data['fechapago']) : null;
+    this.nameSite = data['sitio'] || null;
+    this.proyectRelated = data['proyecto2'] || null;
+    this.percentInvoice = data['fact'] || null;
+    this.observation = data['observacion'] || null;
+    this.state = data['estado'] || null;
   }
 }
 

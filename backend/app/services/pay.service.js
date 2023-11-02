@@ -12,8 +12,8 @@ const { deleteDuplicateByLabel } = require('../lib/formatData');
 
 class PayService {
   async createPay (pays) {
-    const paysFiltered = await deleteDuplicateByLabel(pays, 'Invoice Number')
-    return Promise.all(paysFiltered.filter(paid => paid['Total Pagado'] && paid['Invoice Number'] && paid[' Amount Utilized '] && paid['Upload Date']).map(async pay => {
+    const paysFiltered = await deleteDuplicateByLabel(pays, 'invoicenumber')
+    return Promise.all(paysFiltered.filter(paid => paid['totalpagado'] && paid['invoicenumber'] && paid['amountutilized'] && paid['uploaddate']).map(async pay => {
       const payDoc = new PayDocEntity(pay);
       const invoice = await invoiceRepository.getInvoiceByNumber(payDoc.invoice);
       if(invoice){
